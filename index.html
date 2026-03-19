@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cameron Rumford — Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #131110;
+      --bg2:        #1c1917;
+      --fg:         #ede8e0;
+      --fg-mid:     #a89e90;
+      --fg-dim:     #5a5248;
+      --fg-dimmer:  #2a2623;
+      --accent:     #c9a96e;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+      --nav-h:      60px;
+      --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body { min-height: 100vh; }
+
+    /* subtle film grain */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 44px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--fg-dimmer);
+    }
+
+    .nav-brand {
+      display: flex; align-items: baseline; gap: 14px;
+      cursor: pointer; text-decoration: none;
+    }
+    .nav-brand-name {
+      font-family: var(--font-serif);
+      font-size: 19px; font-weight: 500;
+      letter-spacing: 0.02em; color: var(--fg); line-height: 1;
+    }
+    .nav-brand-rule { width: 1px; height: 13px; background: var(--fg-dim); }
+    .nav-brand-title {
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--fg-mid); font-weight: 300;
+    }
+
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--fg-dim); transition: color 0.25s var(--ease);
+      font-weight: 400; cursor: pointer;
+      position: relative; padding-bottom: 3px;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s var(--ease);
+    }
+    .nav-links a:hover { color: var(--fg-mid); }
+    .nav-links a:hover::after { transform: scaleX(0.5); }
+    .nav-links a.active { color: var(--fg); }
+    .nav-links a.active::after { transform: scaleX(1); }
+
+    /* hamburger — mobile only */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 1px;
+      background: var(--fg-mid); transition: all 0.25s var(--ease);
+    }
+
+    /* mobile nav drawer */
+    .nav-drawer {
+      display: none; position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--fg-dimmer);
+      padding: 20px 24px 24px; z-index: 190;
+    }
+    .nav-drawer.open { display: block; }
+    .nav-drawer a {
+      display: block; text-decoration: none;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--fg-dim); padding: 12px 0;
+      border-bottom: 1px solid var(--fg-dimmer);
+      cursor: pointer; transition: color 0.2s;
+      font-weight: 400;
+    }
+    .nav-drawer a:last-child { border-bottom: none; }
+    .nav-drawer a:hover, .nav-drawer a.active { color: var(--fg); }
+
+    /* ── MAIN ── */
+    main { padding-top: var(--nav-h); }
+
+    .page { display: none; }
+    .page.visible { display: block; animation: pageIn 0.35s var(--ease) both; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── GRID — DESKTOP ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px; padding: 3px;
+    }
+
+    .grid-item {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden; cursor: pointer;
+      background: var(--bg2);
+      animation: gridIn 0.45s var(--ease) both;
+    }
+    .grid-item:nth-child(1)  { animation-delay: 0.02s; }
+    .grid-item:nth-child(2)  { animation-delay: 0.07s; }
+    .grid-item:nth-child(3)  { animation-delay: 0.12s; }
+    .grid-item:nth-child(4)  { animation-delay: 0.17s; }
+    .grid-item:nth-child(5)  { animation-delay: 0.22s; }
+    .grid-item:nth-child(6)  { animation-delay: 0.27s; }
+    .grid-item:nth-child(n+7){ animation-delay: 0.32s; }
+
+    @keyframes gridIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .grid-thumb {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.65s var(--ease), filter 0.65s var(--ease);
+      filter: saturate(0.8) brightness(0.85);
+    }
+    .grid-item:hover .grid-thumb {
+      transform: scale(1.04);
+      filter: saturate(0.55) brightness(0.28);
+    }
+
+    .grid-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg2);
+      transition: background 0.5s var(--ease);
+    }
+    .grid-item:hover .grid-placeholder { background: #1e1b17; }
+
+    .grid-placeholder-icon {
+      width: 28px; height: 20px;
+      border: 1.5px solid var(--fg-dim);
+      border-radius: 2px; position: relative; opacity: 0.2;
+    }
+    .grid-placeholder-icon::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      transform: translate(-38%, -50%);
+      border-left: 7px solid var(--fg-dim);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+
+    /* ── CENTERED TEXT — DESKTOP ── */
+    .grid-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 12px 16px;
+      pointer-events: none;
+    }
+
+    .grid-client {
+      font-size: 8px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--accent);
+      font-weight: 400; line-height: 1;
+      opacity: 0.7;
+      transition: font-size 0.4s var(--ease),
+                  letter-spacing 0.4s var(--ease),
+                  opacity 0.4s var(--ease),
+                  margin-bottom 0.4s var(--ease);
+      margin-bottom: 0;
+    }
+
+    .grid-title {
+      font-family: var(--font-serif);
+      font-size: 9px; font-style: italic; font-weight: 400;
+      color: var(--fg); line-height: 1.35; opacity: 0.45;
+      transition: font-size 0.4s var(--ease),
+                  opacity 0.4s var(--ease),
+                  margin-top 0.4s var(--ease);
+      margin-top: 4px;
+    }
+
+    .grid-award {
+      font-size: 7px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      font-weight: 400; margin-top: 0;
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.3s 0.1s var(--ease),
+                  opacity 0.3s 0.1s var(--ease),
+                  margin-top 0.3s var(--ease);
+    }
+
+    /* hover — scale up */
+    .grid-item:hover .grid-client {
+      font-size: 10px; letter-spacing: 0.26em;
+      opacity: 1; margin-bottom: 6px;
+    }
+    .grid-item:hover .grid-title {
+      font-size: 17px; opacity: 1; margin-top: 8px;
+    }
+    .grid-item:hover .grid-award {
+      max-height: 28px; opacity: 1; margin-top: 10px;
+    }
+
+    /* title-only items (no client) */
+    .grid-center.solo .grid-title { font-size: 10px; opacity: 0.55; }
+    .grid-item:hover .grid-center.solo .grid-title { font-size: 19px; opacity: 1; }
+
+    /* ── MOBILE LIST VIEW ── */
+    .mobile-list { display: none; }
+
+    .mobile-item {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid var(--fg-dimmer);
+      cursor: pointer; transition: background 0.2s;
+      animation: gridIn 0.4s var(--ease) both;
+    }
+    .mobile-item:hover { background: var(--bg2); }
+
+    .mobile-thumb-wrap {
+      width: 120px; flex-shrink: 0;
+      aspect-ratio: 16/9; overflow: hidden;
+      background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-thumb-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(0.8) brightness(0.88);
+    }
+    .mobile-placeholder-icon {
+      width: 20px; height: 14px;
+      border: 1px solid var(--fg-dim);
+      border-radius: 1px; position: relative; opacity: 0.2;
+    }
+    .mobile-placeholder-icon::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      transform: translate(-38%, -50%);
+      border-left: 5px solid var(--fg-dim);
+      border-top: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+    }
+
+    .mobile-meta {
+      padding: 12px 16px;
+      display: flex; flex-direction: column; justify-content: center; gap: 3px;
+    }
+    .mobile-client {
+      font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); font-weight: 400;
+    }
+    .mobile-title {
+      font-family: var(--font-serif);
+      font-size: 14px; font-style: italic; font-weight: 400;
+      color: var(--fg); line-height: 1.3;
+    }
+    .mobile-award {
+      font-size: 9px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+      opacity: 0.7; margin-top: 2px;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(9, 7, 6, 0.97);
+      flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .lightbox.open {
+      display: flex;
+      animation: lbIn 0.28s var(--ease);
+    }
+
+    @keyframes lbIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .lb-inner {
+      width: 100%; max-width: 1020px;
+      padding: 0 24px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .lb-image-wrap {
+      width: 100%; aspect-ratio: 16/9;
+      background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .lb-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+    .lb-ph {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+    }
+    .lb-ph-icon {
+      width: 52px; height: 36px;
+      border: 2px solid var(--fg-dim);
+      border-radius: 3px; position: relative; opacity: 0.15;
+    }
+    .lb-ph-icon::after {
+      content: ''; position: absolute; left: 50%; top: 50%;
+      transform: translate(-38%, -50%);
+      border-left: 14px solid var(--fg-dim);
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+    }
+
+    .lb-meta {
+      width: 100%; margin-top: 20px;
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 24px;
+    }
+    .lb-info {}
+    .lb-client {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .lb-title {
+      font-family: var(--font-serif);
+      font-size: 21px; font-weight: 400; font-style: italic;
+      color: var(--fg); line-height: 1.3;
+    }
+    .lb-award {
+      margin-top: 7px; font-size: 10px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); display: none;
+    }
+    .lb-link {
+      display: none; margin-top: 10px;
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--fg-dim); text-decoration: none; transition: color 0.2s;
+    }
+    .lb-link:hover { color: var(--accent); }
+
+    .lb-controls {
+      display: flex; align-items: center; gap: 16px; flex-shrink: 0;
+    }
+    .lb-btn {
+      background: none; border: 1px solid var(--fg-dimmer);
+      color: var(--fg-mid); cursor: pointer;
+      font-family: var(--font-sans); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 8px 16px; transition: border-color 0.2s, color 0.2s;
+    }
+    .lb-btn:hover { border-color: var(--fg-dim); color: var(--fg); }
+    .lb-btn:disabled { opacity: 0.18; cursor: default; }
+
+    .lb-counter {
+      font-size: 11px; color: var(--fg-dim);
+      letter-spacing: 0.08em; min-width: 48px; text-align: center;
+    }
+
+    .lb-close {
+      position: fixed; top: 22px; right: 30px;
+      background: none; border: none; cursor: pointer;
+      color: var(--fg-dim); font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      font-family: var(--font-sans); transition: color 0.2s;
+    }
+    .lb-close:hover { color: var(--fg); }
+
+    /* ── ABOUT ── */
+    .about-wrap {
+      max-width: 680px; margin: 0 auto;
+      padding: 72px 44px 100px;
+    }
+    .about-eyebrow {
+      font-size: 9px; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--fg-dim); margin-bottom: 36px;
+    }
+    .about-bio {
+      font-family: var(--font-serif);
+      font-size: 20px; font-weight: 400;
+      line-height: 1.75; color: var(--fg); margin-bottom: 12px;
+    }
+    .about-bio2 {
+      font-family: var(--font-serif);
+      font-size: 17px; font-weight: 400;
+      line-height: 1.8; color: var(--fg-mid); margin-bottom: 36px;
+    }
+    .about-contact {
+      font-size: 12px; color: var(--fg-dim);
+      font-style: italic; margin-bottom: 56px;
+    }
+    .about-contact a {
+      color: var(--accent); text-decoration: none; transition: color 0.2s;
+    }
+    .about-contact a:hover { color: var(--fg); }
+    .about-divider {
+      width: 40px; height: 1px;
+      background: var(--fg-dimmer); margin-bottom: 44px;
+    }
+    .about-cols {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; margin-bottom: 52px;
+    }
+    .about-col-label {
+      font-size: 9px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--fg-dim); margin-bottom: 16px;
+    }
+    .about-col-list { list-style: none; }
+    .about-col-list li {
+      font-family: var(--font-serif);
+      font-size: 15px; color: var(--fg-mid); line-height: 2;
+    }
+    .about-awards { margin-bottom: 52px; }
+    .award-item {
+      font-family: var(--font-serif);
+      font-size: 15px; font-style: italic;
+      color: var(--fg-mid); line-height: 2;
+    }
+    .award-badge {
+      font-style: normal; font-size: 9px;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--accent); font-family: var(--font-sans);
+      font-weight: 400; margin-left: 10px;
+    }
+    .about-footer {
+      border-top: 1px solid var(--fg-dimmer); padding-top: 28px;
+    }
+    .about-footer p {
+      font-size: 12px; color: var(--fg-dim); line-height: 2.4;
+    }
+    .about-footer a {
+      color: var(--fg-dim); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .about-footer a:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-brand-rule, .nav-brand-title { display: none; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* switch to list on mobile */
+      .gallery-grid { display: none; }
+      .mobile-list { display: block; }
+
+      .about-wrap { padding: 48px 24px 72px; }
+      .about-cols { grid-template-columns: 1fr; gap: 36px; }
+      .about-bio { font-size: 17px; }
+      .about-bio2 { font-size: 15px; }
+
+      .lb-inner { padding: 0 16px; }
+      .lb-meta { flex-direction: column; gap: 16px; }
+      .lb-title { font-size: 17px; }
+      .lb-controls { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" onclick="showPage('unscripted')">
+    <span class="nav-brand-name">Cameron Rumford</span>
+    <span class="nav-brand-rule"></span>
+    <span class="nav-brand-title">Editor</span>
+  </a>
+  <ul class="nav-links">
+    <li><a id="nav-unscripted" onclick="showPage('unscripted')">Unscripted</a></li>
+    <li><a id="nav-scripted"   onclick="showPage('scripted')">Scripted</a></li>
+    <li><a id="nav-videogames" onclick="showPage('videogames')">Video Games</a></li>
+    <li><a id="nav-about"      onclick="showPage('about')">About</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" id="drawer">
+  <a id="dnav-unscripted" onclick="showPage('unscripted');closeDrawer()">Unscripted</a>
+  <a id="dnav-scripted"   onclick="showPage('scripted');closeDrawer()">Scripted</a>
+  <a id="dnav-videogames" onclick="showPage('videogames');closeDrawer()">Video Games</a>
+  <a id="dnav-about"      onclick="showPage('about');closeDrawer()">About</a>
+</div>
+
+<main>
+  <div id="page-unscripted" class="page">
+    <div class="gallery-grid" id="grid-unscripted"></div>
+    <div class="mobile-list" id="mlist-unscripted"></div>
+  </div>
+  <div id="page-scripted" class="page">
+    <div class="gallery-grid" id="grid-scripted"></div>
+    <div class="mobile-list" id="mlist-scripted"></div>
+  </div>
+  <div id="page-videogames" class="page">
+    <div class="gallery-grid" id="grid-videogames"></div>
+    <div class="mobile-list" id="mlist-videogames"></div>
+  </div>
+
+  <div id="page-about" class="page">
+    <div class="about-wrap">
+      <p class="about-eyebrow">About</p>
+      <p class="about-bio"><strong>Cameron Rumford</strong> is a Los Angeles based editor, proficient in Adobe Premiere, AVID, and DaVinci Resolve.</p>
+      <p class="about-bio2">With over 18 years in post-production, Cameron brings a keen eye for detail and a deep appreciation for the art of crafting narratives — shaping structure, fine-tuning dialogue, and perfecting pacing. Additional skills include color grading and audio mixing. Career highlights include working as an assistant editor on the 2011 Oscar-winning Best Documentary <em>Undefeated</em>.</p>
+      <p class="about-contact">For work inquiries: <a href="mailto:camrumford@gmail.com">camrumford@gmail.com</a></p>
+      <div class="about-divider"></div>
+      <div class="about-cols">
+        <div>
+          <p class="about-col-label">Agencies &amp; Production</p>
+          <ul class="about-col-list">
+            <li>Lifeboat Productions</li><li>Ayzenberg Group</li><li>eMotion Studios</li>
+            <li>Space.Camp</li><li>Image Line Media</li><li>Color Creative</li>
+            <li>Blacksmith Productions</li><li>Curator Pictures</li><li>42 Entertainment</li>
+            <li>Yeti Films</li><li>Xlantic</li><li>Ferguson Presents</li>
+            <li>Endomol</li><li>Light in the Attic Records</li>
+            <li>Animal Style Productions</li><li>BQ Productions</li>
+          </ul>
+        </div>
+        <div>
+          <p class="about-col-label">Clients</p>
+          <ul class="about-col-list">
+            <li>Gates Foundation</li><li>Microsoft</li><li>Adobe</li><li>Intel</li>
+            <li>Oculus</li><li>Mattel</li><li>Bethesda Game Studio</li>
+            <li>Disney Interactive</li><li>Interscope Records</li><li>Nordstrom</li>
+            <li>Nestlé</li><li>Ford</li><li>American Express</li>
+            <li>Hollywood Reporter</li><li>SAP</li><li>Condé Nast</li>
+            <li>Restoration Hardware</li><li>Allure</li><li>OPI</li><li>Teen Vogue</li>
+          </ul>
+        </div>
+      </div>
+      <div class="about-awards">
+        <p class="about-col-label">Awards</p>
+        <p class="award-item"><em>The Power of a Postcard</em> (editor)<span class="award-badge">Golden &amp; Bronze Telly, 2023</span></p>
+        <p class="award-item"><em>Undefeated</em> (assistant editor)<span class="award-badge">Oscar — Best Documentary, 2012</span></p>
+      </div>
+      <div class="about-footer">
+        <p>
+          <a href="mailto:camrumford@gmail.com">camrumford@gmail.com</a><br>
+          <a href="tel:+12069202364">206.920.2364</a><br>
+          <a href="http://www.imdb.com/name/nm2801725/" target="_blank" rel="noopener">IMDB Profile ↗</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLb()">✕ &nbsp;close</button>
+  <div class="lb-inner">
+    <div class="lb-image-wrap" id="lb-img"></div>
+    <div class="lb-meta">
+      <div class="lb-info">
+        <div class="lb-client" id="lb-client"></div>
+        <div class="lb-title"  id="lb-title"></div>
+        <div class="lb-award"  id="lb-award"></div>
+        <a   class="lb-link"   id="lb-link" href="#" target="_blank" rel="noopener">Watch ↗</a>
+      </div>
+      <div class="lb-controls">
+        <button class="lb-btn" id="lb-prev" onclick="lbNav(-1)">← Prev</button>
+        <span   class="lb-counter" id="lb-counter"></span>
+        <button class="lb-btn" id="lb-next" onclick="lbNav(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// HOW TO ADD A NEW PROJECT
+// Open projects.json and add an entry to the array:
+//
+// {
+//   "category": "unscripted",        ← unscripted | scripted | videogames
+//   "title": "Project Name",
+//   "client": "Client Name",         ← shown small at rest, golden accent
+//   "thumbnail": "thumbs/name.jpg",  ← path to your still image
+//   "url": "https://vimeo.com/...",  ← optional link to video
+//   "award": "Telly Award 2023"      ← optional, leave "" if none
+// }
+//
+// Save the file. That's it — desktop and mobile both update automatically.
+// ─────────────────────────────────────────────────────────────────────────────
+
+let projects = [];
+let lbCat = '', lbIdx = 0;
+
+async function init() {
+  try {
+    const res = await fetch('projects.json');
+    projects = await res.json();
+  } catch(e) { projects = []; }
+  buildAll();
+  showPage('unscripted');
+}
+
+function buildAll() {
+  ['unscripted','scripted','videogames'].forEach(cat => {
+    const items = projects.filter(p => p.category === cat);
+    buildDesktopGrid(cat, items);
+    buildMobileList(cat, items);
+  });
+}
+
+/* ── Desktop grid ── */
+function buildDesktopGrid(cat, items) {
+  document.getElementById('grid-' + cat).innerHTML = items.map((p, i) => {
+    const hasClient = p.client && p.client.trim();
+    return `
+      <div class="grid-item" onclick="openLb('${cat}',${i})">
+        ${p.thumbnail
+          ? `<img class="grid-thumb" src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
+          : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
+        <div class="grid-center${hasClient ? '' : ' solo'}">
+          ${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
+          <div class="grid-title">${x(p.title)}</div>
+          ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Mobile list ── */
+function buildMobileList(cat, items) {
+  document.getElementById('mlist-' + cat).innerHTML = items.map((p, i) => `
+    <div class="mobile-item" onclick="openLb('${cat}',${i})">
+      <div class="mobile-thumb-wrap">
+        ${p.thumbnail
+          ? `<img src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
+          : `<div class="mobile-placeholder-icon"></div>`}
+      </div>
+      <div class="mobile-meta">
+        ${p.client ? `<div class="mobile-client">${x(p.client)}</div>` : ''}
+        <div class="mobile-title">${x(p.title)}</div>
+        ${p.award ? `<div class="mobile-award">${x(p.award)}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+/* ── Page nav ── */
+function showPage(name) {
+  ['unscripted','scripted','videogames','about'].forEach(p => {
+    document.getElementById('page-'+p).classList.remove('visible');
+    const n = document.getElementById('nav-'+p);
+    if (n) n.classList.remove('active');
+    const d = document.getElementById('dnav-'+p);
+    if (d) d.classList.remove('active');
+  });
+  document.getElementById('page-'+name).classList.add('visible');
+  const nav = document.getElementById('nav-'+name);
+  if (nav) nav.classList.add('active');
+  const dnav = document.getElementById('dnav-'+name);
+  if (dnav) dnav.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ── Mobile drawer ── */
+function toggleDrawer() {
+  document.getElementById('drawer').classList.toggle('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+}
+
+/* ── Lightbox ── */
+function openLb(cat, idx) {
+  lbCat = cat; lbIdx = idx;
+  renderLb();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbNav(dir) {
+  const items = projects.filter(p => p.category === lbCat);
+  lbIdx = Math.max(0, Math.min(items.length-1, lbIdx+dir));
+  renderLb();
+}
+function renderLb() {
+  const items = projects.filter(p => p.category === lbCat);
+  const p = items[lbIdx]; if (!p) return;
+
+  document.getElementById('lb-img').innerHTML = p.thumbnail
+    ? `<img src="${x(p.thumbnail)}" alt="${x(p.title)}">`
+    : `<div class="lb-ph"><div class="lb-ph-icon"></div></div>`;
+
+  const clientEl = document.getElementById('lb-client');
+  clientEl.textContent = p.client || '';
+  clientEl.style.display = p.client ? 'block' : 'none';
+
+  document.getElementById('lb-title').textContent = p.title;
+
+  const awardEl = document.getElementById('lb-award');
+  awardEl.textContent = p.award || '';
+  awardEl.style.display = p.award ? 'block' : 'none';
+
+  const linkEl = document.getElementById('lb-link');
+  linkEl.href = p.url || '#';
+  linkEl.style.display = p.url ? 'inline-block' : 'none';
+
+  document.getElementById('lb-counter').textContent = `${lbIdx+1} / ${items.length}`;
+  document.getElementById('lb-prev').disabled = lbIdx === 0;
+  document.getElementById('lb-next').disabled = lbIdx === items.length-1;
+}
+
+/* keyboard */
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') lbNav(1);
+  if (e.key === 'ArrowLeft')  lbNav(-1);
+  if (e.key === 'Escape')     closeLb();
+});
+
+/* click outside lightbox to close */
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox')) closeLb();
+});
+
+function x(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>
