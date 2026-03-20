@@ -192,21 +192,22 @@
       border-bottom: 4px solid transparent;
     }
 
-    /* play icon overlaid on thumbnails — also hidden at rest */
+    /* play icon — centered between client and title */
     .grid-play {
-      position: absolute;
       width: 28px; height: 19px;
-      border: 1.5px solid rgba(237,232,224,0.45);
+      border: 1.5px solid rgba(237,232,224,0.35);
       border-radius: 2px;
-      bottom: 10px; right: 10px;
+      position: relative;
       opacity: 0;
+      margin: 0 auto;
       transition: opacity 0.4s var(--ease);
       pointer-events: none;
+      flex-shrink: 0;
     }
     .grid-play::after {
       content: ''; position: absolute; left: 50%; top: 50%;
       transform: translate(-38%, -50%);
-      border-left: 7px solid rgba(237,232,224,0.45);
+      border-left: 7px solid rgba(237,232,224,0.35);
       border-top: 4px solid transparent;
       border-bottom: 4px solid transparent;
     }
@@ -218,9 +219,9 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center;
-      /* padding-bottom pushes text up so it clears the play icon */
-      padding: 8px 18px 72px;
+      padding: 12px 18px;
       pointer-events: none;
+      gap: 0;
     }
 
     .grid-client {
@@ -258,16 +259,16 @@
     /* hover — scale up */
     .grid-item:hover .grid-client {
       font-size: 10px; letter-spacing: 0.26em;
-      opacity: 1; margin-bottom: 12px;
+      opacity: 1; margin-bottom: 14px;
     }
     .grid-item:hover .grid-title {
-      font-size: 14px; opacity: 1; margin-top: 12px;
+      font-size: 14px; opacity: 1; margin-top: 14px;
     }
     .grid-item:hover .grid-award {
-      max-height: 28px; opacity: 1; margin-top: 14px;
+      max-height: 28px; opacity: 1; margin-top: 10px;
     }
 
-    /* title-only items (no client) */
+    /* title-only items (no client) — no play icon between lines */
     .grid-center.solo .grid-title { font-size: 10px; opacity: 0.55; }
     .grid-item:hover .grid-center.solo .grid-title { font-size: 15px; opacity: 1; }
 
@@ -670,10 +671,10 @@ function buildDesktopGrid(cat, items) {
           : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
         <div class="grid-center${hasClient ? '' : ' solo'}">
           ${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
+          ${p.url ? `<div class="grid-play"></div>` : ''}
           <div class="grid-title">${x(p.title)}</div>
           ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
         </div>
-        ${p.url ? `<div class="grid-play"></div>` : ''}
       </div>`;
   }).join('');
 }
