@@ -659,15 +659,20 @@ function buildAll() {
 function buildDesktopGrid(cat, items) {
   document.getElementById('grid-' + cat).innerHTML = items.map((p, i) => {
     const hasClient = p.client && p.client.trim();
+    const isShort = p.type === 'short';
     return `
       <div class="grid-item" onclick="openLb('${cat}',${i})">
         ${p.thumbnail
           ? `<img class="grid-thumb" src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
           : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
         <div class="grid-center${hasClient ? '' : ' solo'}">
-          ${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
-          ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
-          <div class="grid-title">${x(p.title)}</div>
+          ${isShort
+            ? `<div class="grid-title">${x(p.title)}</div>
+               <div class="grid-client">${x(p.client)}</div>`
+            : `${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
+               ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
+               <div class="grid-title">${x(p.title)}</div>`
+          }
           ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
         </div>
       </div>`;
