@@ -200,7 +200,8 @@
       position: relative;
       opacity: 0;
       margin: 0 auto;
-      transition: opacity 0.4s var(--ease);
+      transition: opacity 0.4s var(--ease),
+                  margin 0.4s var(--ease);
       pointer-events: none;
       flex-shrink: 0;
     }
@@ -211,7 +212,11 @@
       border-top: 4px solid transparent;
       border-bottom: 4px solid transparent;
     }
-    .grid-item:hover .grid-play { opacity: 1; }
+    .grid-item:hover .grid-play {
+      opacity: 1;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
 
     /* ── CENTERED TEXT — DESKTOP ── */
     .grid-center {
@@ -259,10 +264,10 @@
     /* hover — scale up */
     .grid-item:hover .grid-client {
       font-size: 10px; letter-spacing: 0.26em;
-      opacity: 1; margin-bottom: 14px;
+      opacity: 1; margin-bottom: 0;
     }
     .grid-item:hover .grid-title {
-      font-size: 14px; opacity: 1; margin-top: 20px;
+      font-size: 14px; opacity: 1; margin-top: 0;
     }
     .grid-item:hover .grid-award {
       max-height: 28px; opacity: 1; margin-top: 10px;
@@ -671,7 +676,7 @@ function buildDesktopGrid(cat, items) {
           : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
         <div class="grid-center${hasClient ? '' : ' solo'}">
           ${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
-          ${p.url ? `<div class="grid-play"></div>` : ''}
+          ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
           <div class="grid-title">${x(p.title)}</div>
           ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
         </div>
