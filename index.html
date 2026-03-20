@@ -195,10 +195,10 @@
     /* play icon overlaid on thumbnails — also hidden at rest */
     .grid-play {
       position: absolute;
-      width: 32px; height: 22px;
-      border: 1.5px solid rgba(237,232,224,0.5);
-      border-radius: 2px; position: absolute;
-      bottom: 12px; right: 14px;
+      width: 28px; height: 19px;
+      border: 1.5px solid rgba(237,232,224,0.45);
+      border-radius: 2px;
+      bottom: 10px; right: 10px;
       opacity: 0;
       transition: opacity 0.4s var(--ease);
       pointer-events: none;
@@ -206,9 +206,9 @@
     .grid-play::after {
       content: ''; position: absolute; left: 50%; top: 50%;
       transform: translate(-38%, -50%);
-      border-left: 8px solid rgba(237,232,224,0.5);
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
+      border-left: 7px solid rgba(237,232,224,0.45);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
     }
     .grid-item:hover .grid-play { opacity: 1; }
 
@@ -219,7 +219,7 @@
       align-items: center; justify-content: center;
       text-align: center;
       /* padding-bottom pushes text up so it clears the play icon */
-      padding: 8px 18px 52px;
+      padding: 8px 18px 72px;
       pointer-events: none;
     }
 
@@ -261,7 +261,7 @@
       opacity: 1; margin-bottom: 12px;
     }
     .grid-item:hover .grid-title {
-      font-size: 16px; opacity: 1; margin-top: 12px;
+      font-size: 14px; opacity: 1; margin-top: 12px;
     }
     .grid-item:hover .grid-award {
       max-height: 28px; opacity: 1; margin-top: 14px;
@@ -269,7 +269,7 @@
 
     /* title-only items (no client) */
     .grid-center.solo .grid-title { font-size: 10px; opacity: 0.55; }
-    .grid-item:hover .grid-center.solo .grid-title { font-size: 18px; opacity: 1; }
+    .grid-item:hover .grid-center.solo .grid-title { font-size: 15px; opacity: 1; }
 
     /* ── MOBILE LIST VIEW ── */
     .mobile-list { display: none; }
