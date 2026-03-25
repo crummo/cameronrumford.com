@@ -43,8 +43,8 @@
     "client": "Gates Ventures",
     "thumbnail": "thumbs/yee_sml.jpg",
     "url": "https://www.youtube.com/watch?v=2djGA861KP4",
-    "award": ""
-    "opacity": 0 
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 6,
@@ -124,7 +124,7 @@
     "category": "unscripted",
     "title": "Gates Notes: Finding a Path to College During the Pandemic",
     "client": "Gates Ventures",
-    "thumbnail": "covid",
+    "thumbnail": "",
     "url": "https://youtu.be/6D_kPgqUa-0",
     "award": ""
   },
@@ -151,7 +151,7 @@
     "category": "unscripted",
     "title": "Big Boys: Looking Back It's Just Reflections",
     "client": "Light In The Attic",
-    "thumbnail": "thumbs//thumbnails/bigboys.jpeg",
+    "thumbnail": "thumbsthumbs/bigboys.jpeg",
     "url": "https://www.youtube.com/watch?v=jHSYDCyBv5Q",
     "award": "",
     "type": "short"
@@ -317,9 +317,9 @@
     "client": "Nordstrom",
     "thumbnail": "thumbs/Nordstrom_make-up_BTS01.jpeg",
     "url": "https://vimeo.com/157676316",
-    "award": ""
-"opacity": 0   
-},
+    "award": "",
+    "opacity": 0
+  },
   {
     "id": 36,
     "category": "unscripted",
