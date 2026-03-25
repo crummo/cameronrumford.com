@@ -4,7 +4,7 @@
     "category": "unscripted",
     "title": "I Was There",
     "client": "Short Documentary",
-    "thumbnail": "",
+    "thumbnail": "thumbs/iwasthere_sml.jpeg",
     "url": "https://youtu.be/mgthUaDaYIY?rel=0?version=3&autoplay=1&controls=0&&loop=1",
     "award": "",
     "type": "short"
@@ -51,9 +51,10 @@
     "category": "unscripted",
     "title": "Adobe Stock Artist Spotlight | Patrick Masse",
     "client": "Adobe",
-    "thumbnail": "",
+    "thumbnail": "thumbs/adobe_patrick_sml.jpeg",
     "url": "https://youtu.be/bNpwoq_KIFQ",
-    "award": ""
+    "award": "",
+	    "opacity": 0
   },
   {
     "id": 7,
@@ -179,7 +180,7 @@
     "category": "unscripted",
     "title": "Adobe Stock Artist Spotlight: Lynne Hardy",
     "client": "Adobe",
-    "thumbnail": "",
+    "thumbnail": "thumbs/adobe_lynn_sml.jpeg",
     "url": "https://youtu.be/zIyTNELCfHc",
     "award": ""
   },
@@ -334,7 +335,7 @@
     "category": "unscripted",
     "title": "Excerpt",
     "client": "Ajna Biosciences",
-    "thumbnail": "",
+    "thumbnail": "thumbs/ajna_sml.jpeg",
     "url": "https://youtu.be/Tnge02XA4GE",
     "award": ""
   },
