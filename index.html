@@ -227,7 +227,7 @@
     .grid-client {
       font-size: 8px; letter-spacing: 0.22em;
       text-transform: uppercase; color: var(--accent);
-      font-weight: 400; line-height: 1; opacity: 1;
+      font-weight: 400; line-height: 1;
       transition: font-size 0.4s var(--ease),
                   letter-spacing 0.4s var(--ease),
                   opacity 0.4s var(--ease),
@@ -237,7 +237,7 @@
     .grid-title {
       font-family: var(--font-serif);
       font-size: 9px; font-style: italic; font-weight: 400;
-      color: var(--fg); line-height: 1.35; opacity: 0.8;
+      color: var(--fg); line-height: 1.35;
       transition: font-size 0.4s var(--ease),
                   opacity 0.4s var(--ease),
                   transform 0.4s var(--ease);
@@ -668,7 +668,9 @@ function buildAll() {
 function buildDesktopGrid(cat, items) {
   document.getElementById('grid-' + cat).innerHTML = items.map((p, i) => {
     const hasClient = p.client && p.client.trim();
-    const isShort = p.type === 'short';
+    const isShort   = p.type === 'short';
+    const clientOp  = p.opacity !== undefined ? p.opacity : 1;
+    const titleOp   = p.opacity !== undefined ? p.opacity : 0.8;
     return `
       <div class="grid-item" onclick="openLb('${cat}',${i})">
         ${p.thumbnail
@@ -676,11 +678,11 @@ function buildDesktopGrid(cat, items) {
           : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
         <div class="grid-center${hasClient ? '' : ' solo'}${isShort ? ' short' : ''}">
           ${isShort
-            ? `<div class="grid-client">${x(p.client)}</div>
-               <div class="grid-title">${x(p.title)}</div>`
-            : `${hasClient ? `<div class="grid-client">${x(p.client)}</div>` : ''}
+            ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>
+               <div class="grid-title" style="opacity:${titleOp}">${x(p.title)}</div>`
+            : `${hasClient ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>` : ''}
                ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
-               <div class="grid-title">${x(p.title)}</div>`
+               <div class="grid-title" style="opacity:${titleOp}">${x(p.title)}</div>`
           }
           ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
         </div>
