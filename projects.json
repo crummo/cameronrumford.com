@@ -4,7 +4,7 @@
     "category": "unscripted",
     "title": "I Was There",
     "client": "Short Documentary",
-    "thumbnail": "thumbs/iwasthere_sml.jpeg",
+    "thumbnail": "thumbs/IWasThere_sml.jpeg",
     "url": "https://youtu.be/mgthUaDaYIY?rel=0?version=3&autoplay=1&controls=0&&loop=1",
     "award": "",
     "type": "short"
@@ -14,7 +14,7 @@
     "category": "unscripted",
     "title": "Data Centered: Farm City Fence",
     "client": "Amazon Web Services",
-    "thumbnail": "thumbs/AWS Farm City Fence.jpeg",
+    "thumbnail": "thumbs/AWS_FarmCityFence01.jpeg",
     "url": "https://youtu.be/7wDqCjuf7aw?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
     "award": ""
   },
@@ -23,7 +23,7 @@
     "category": "unscripted",
     "title": "Bill Gates's Heroes in the Field: Dr. Mara Lawniczak",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/mara_sml.jpeg",
+    "thumbnail": "thumbs/GV_mara01_sml.jpeg",
     "url": "https://youtu.be/d7YYKAJvNek",
     "award": ""
   },
@@ -41,7 +41,7 @@
     "category": "unscripted",
     "title": "Bill Gates's Heroes in the Field | Dr. Shannon Yee",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/yee_sml.jpeg",
+    "thumbnail": "thumbs/GV_Yee_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=2djGA861KP4",
     "award": "",
     "opacity": 0
@@ -51,17 +51,16 @@
     "category": "unscripted",
     "title": "Adobe Stock Artist Spotlight | Patrick Masse",
     "client": "Adobe",
-    "thumbnail": "thumbs/adobe_patrick_sml.jpeg",
+    "thumbnail": "thumbs/Adobe_Patrick_sml.jpeg",
     "url": "https://youtu.be/bNpwoq_KIFQ",
-    "award": "",
-	    "opacity": 0
+    "award": ""
   },
   {
     "id": 7,
     "category": "unscripted",
     "title": "Azure Quantum + NASA's JPL",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_quantum_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
     "award": ""
   },
@@ -70,7 +69,7 @@
     "category": "unscripted",
     "title": "Data Centered | Xocolatl Bakery",
     "client": "Amazon Web Services",
-    "thumbnail": "thumbs/AWS Xoltotl.jpeg",
+    "thumbnail": "thumbs/AWS_Xoltotl.jpeg",
     "url": "https://youtu.be/hc7ErWr_gvs?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
     "award": ""
   },
@@ -88,7 +87,7 @@
     "category": "unscripted",
     "title": "Skid Row",
     "client": "Documentary Sizzle",
-    "thumbnail": "",
+    "thumbnail": "thumbs/SkidRow_sml.jpeg",
     "url": "https://camrumford.wistia.com/medias/utxvkx7lq0",
     "award": "",
     "type": "short"
@@ -98,7 +97,7 @@
     "category": "unscripted",
     "title": "Gates Notes: The U.S. Military Versus the Mosquito",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/wrair_sml.jpeg",
+    "thumbnail": "thumbs/GV_WRAIR_sml.jpeg",
     "url": "https://youtu.be/rQ8IwVpzAic",
     "award": ""
   },
@@ -125,7 +124,7 @@
     "category": "unscripted",
     "title": "Gates Notes: Finding a Path to College During the Pandemic",
     "client": "Gates Ventures",
-    "thumbnail": "",
+    "thumbnail": "thumbs/GV_covid_sml.jpeg",
     "url": "https://youtu.be/6D_kPgqUa-0",
     "award": ""
   },
@@ -134,7 +133,7 @@
     "category": "unscripted",
     "title": "Flikshop: The Power of a Postcard",
     "client": "Amazon Web Services",
-    "thumbnail": "",
+    "thumbnail": "thumbs/AWS_Flikshop_sml.jpeg",
     "url": "https://youtu.be/Jpy2O2zcq-0",
     "award": "Winner of a Golden and Bronze Telly Award, 2023"
   },
@@ -143,7 +142,7 @@
     "category": "unscripted",
     "title": "Windows 10 Pro | Remote Desktop",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_RemoteDesktop_sml.jpeg",
     "url": "https://youtu.be/OX4oEYIkhi4",
     "award": ""
   },
@@ -152,7 +151,7 @@
     "category": "unscripted",
     "title": "Big Boys: Looking Back It's Just Reflections",
     "client": "Light In The Attic",
-    "thumbnail": "thumbsthumbs/bigboys.jpeg",
+    "thumbnail": "thumbs/BigBoys01_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=jHSYDCyBv5Q",
     "award": "",
     "type": "short"
@@ -171,7 +170,7 @@
     "category": "unscripted",
     "title": "Windows 10 Pro | Windows Ink",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_Ink01_sml.jpeg",
     "url": "https://youtu.be/WdTyXmr7Z-c",
     "award": ""
   },
@@ -180,7 +179,7 @@
     "category": "unscripted",
     "title": "Adobe Stock Artist Spotlight: Lynne Hardy",
     "client": "Adobe",
-    "thumbnail": "thumbs/adobe_lynn_sml.jpeg",
+    "thumbnail": "thumbs/Adobe_Lynn_sml.jpeg",
     "url": "https://youtu.be/zIyTNELCfHc",
     "award": ""
   },
@@ -189,7 +188,7 @@
     "category": "unscripted",
     "title": "Gates Notes: \"I couldn't believe that wasn't butter\"",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/GV_Savor_sml.jpg",
+    "thumbnail": "thumbs/GV_Savor_sml.jpeg",
     "url": "https://youtu.be/OJpAsIDL-3M",
     "award": ""
   },
@@ -216,7 +215,7 @@
     "category": "unscripted",
     "title": "Data Centered: Blue Mountain Community College",
     "client": "Amazon Web Services",
-    "thumbnail": "thumbs/AWS BMCC 01.jpeg",
+    "thumbnail": "thumbs/AWS_BMCC01.jpeg",
     "url": "https://youtu.be/edDEReQKx4s",
     "award": ""
   },
@@ -225,7 +224,7 @@
     "category": "unscripted",
     "title": "Surface Ergonomic Keyboard",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_Keyboard_sml.jpeg",
     "url": "https://youtu.be/kbPHc0L2Tys",
     "award": ""
   },
@@ -234,7 +233,7 @@
     "category": "unscripted",
     "title": "Behind the Scenes: New Orleans Collection",
     "client": "OPI",
-    "thumbnail": "thumbs/OPI_New_Orleans_BTS.jpg",
+    "thumbnail": "thumbs/OPI_New_Orleans_BTS.jpeg",
     "url": "https://www.youtube.com/watch?v=pIpldh3G8B8",
     "award": ""
   },
@@ -243,7 +242,7 @@
     "category": "unscripted",
     "title": "Telefonica + AI",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_Telefonica_sml.jpeg",
     "url": "https://youtu.be/DG-kPAaDj3M",
     "award": ""
   },
@@ -261,7 +260,7 @@
     "category": "unscripted",
     "title": "HoloLens 2 Partner Spotlight: Bentley",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_HoloLens_Bentley.jpg",
+    "thumbnail": "thumbs/MS_Bentley_Hololens_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pHjjqKLFMXM",
     "award": ""
   },
@@ -288,7 +287,7 @@
     "category": "unscripted",
     "title": "Minecraft Community Celebration: Creating Terra Swoop Force and Simburbia",
     "client": "Mojang",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Minecraft_NoxCrew_sml.jpeg",
     "url": "https://youtu.be/HZtio0wZCRs",
     "award": ""
   },
@@ -297,7 +296,7 @@
     "category": "unscripted",
     "title": "Behind the Scenes: OPI Starlight Collection",
     "client": "OPI",
-    "thumbnail": "thumbs/OPI_starlight_BTS.jpg",
+    "thumbnail": "thumbs/OPI_starlight_BTS.jpeg",
     "url": "https://www.youtube.com/watch?v=fZBh4tiJfe4",
     "award": ""
   },
@@ -335,7 +334,7 @@
     "category": "unscripted",
     "title": "Excerpt",
     "client": "Ajna Biosciences",
-    "thumbnail": "thumbs/ajna_sml.jpeg",
+    "thumbnail": "thumbs/Ajna_sml.jpeg",
     "url": "https://youtu.be/Tnge02XA4GE",
     "award": ""
   },
@@ -344,7 +343,7 @@
     "category": "unscripted",
     "title": "HoloLens 2 | Partner Spotlight with thyssenkrupp",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_hololens_thyssen_thumb.jpg",
+    "thumbnail": "thumbs/MS_hololens_thyssen_thumb.jpeg",
     "url": "https://www.youtube.com/watch?time_continue=0&v=IgtHnCJJUMU&feature=emb_logo",
     "award": "",
     "year": "2017"
@@ -354,7 +353,7 @@
     "category": "unscripted",
     "title": "Gates Notes | At Chaffey College, the Path to Work Runs Through Cybersecurity",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/GV_Chaffey.jpeg",
+    "thumbnail": "thumbs/GV_Chaffey_.jpeg",
     "url": "https://youtu.be/8A6GfAuBSGU",
     "award": ""
   },
@@ -372,7 +371,7 @@
     "category": "unscripted",
     "title": "Gates Notes | How to Make Concrete Green",
     "client": "Gates Ventures",
-    "thumbnail": "thumbs/GatesCarbonCure01.jpeg",
+    "thumbnail": "thumbs/GV_CarbonCure_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=0pAH-6R5J2A",
     "award": ""
   },
@@ -408,7 +407,7 @@
     "category": "unscripted",
     "title": "Designed on Surface | Meet Jasper",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_Jasper_sml.jpeg",
     "url": "https://youtu.be/x7o_qtfN3jA",
     "award": ""
   },
@@ -435,7 +434,7 @@
     "category": "scripted",
     "title": "Hot Pockets | You Got What I Eat Hot Pockets Music Video starring Snoop Dogg and Kate Upton",
     "client": "Nestlé",
-    "thumbnail": "thumbs/HotPockets02",
+    "thumbnail": "thumbs/HotPockets02.jpeg",
     "url": "https://youtu.be/9iR2glnpS_Y",
     "award": ""
   },
@@ -453,7 +452,7 @@
     "category": "scripted",
     "title": "Starlight Holiday Collection",
     "client": "OPI",
-    "thumbnail": "thumbs/OPI_thumbnail.jpg",
+    "thumbnail": "thumbs/OPI_thumbnail.jpeg",
     "url": "https://www.youtube.com/watch?v=jl72f4iXJnk",
     "award": ""
   },
@@ -462,7 +461,7 @@
     "category": "scripted",
     "title": "X-Box Game Pass | V.A.T.S.",
     "client": "Microsoft",
-    "thumbnail": "thumbs/xboxVATS.jpeg",
+    "thumbnail": "thumbs/MS_Ink02_sml.jpeg",
     "url": "https://youtu.be/rFUSlKg1LzA",
     "award": ""
   },
@@ -471,7 +470,7 @@
     "category": "scripted",
     "title": "Lumia 950 Lumia 950XL",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_Lumia01.jpeg",
+    "thumbnail": "",
     "url": "https://youtu.be/zOdK1nvSa24",
     "award": ""
   },
@@ -525,7 +524,7 @@
     "category": "scripted",
     "title": "Band 2",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_Band2_01.jpeg",
+    "thumbnail": "thumbs/MS_Band01_sml.jpeg",
     "url": "https://youtu.be/CkivqQeTgvA",
     "award": "",
     "year": "2015"
@@ -553,7 +552,7 @@
     "category": "scripted",
     "title": "X-Box Game Pass | Wrestler",
     "client": "Microsoft",
-    "thumbnail": "thumbs/XBOX_wrestler_thumb.jpg",
+    "thumbnail": "thumbs/XBOX_wrestler_thumb.jpeg",
     "url": "https://www.youtube.com/watch?v=ON7tyOX3_gM",
     "award": ""
   },
@@ -580,7 +579,7 @@
     "category": "videogames",
     "title": "Minecraft: The Hero's Path",
     "client": "Mojang",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Minecraft_Pixelheads_sml.jpeg",
     "url": "https://youtu.be/zmTuTUzUUvc",
     "award": ""
   },
