@@ -225,7 +225,7 @@
     }
 
     .grid-client {
-      font-size: 8px; letter-spacing: 0.22em;
+      font-size: 10px; letter-spacing: 0.22em;
       text-transform: uppercase; color: var(--accent);
       font-weight: 400; line-height: 1;
       transition: font-size 0.4s var(--ease),
@@ -236,7 +236,7 @@
 
     .grid-title {
       font-family: var(--font-serif);
-      font-size: 9px; font-style: italic; font-weight: 400;
+      font-size: 11px; font-style: italic; font-weight: 400;
       color: var(--fg); line-height: 1.35;
       transition: font-size 0.4s var(--ease),
                   opacity 0.4s var(--ease),
@@ -670,7 +670,7 @@ function buildDesktopGrid(cat, items) {
     const hasClient = p.client && p.client.trim();
     const isShort   = p.type === 'short';
     const clientOp  = p.opacity !== undefined ? p.opacity : 1;
-    const titleOp   = p.opacity !== undefined ? p.opacity : 0.8;
+    const titleOp   = p.opacity !== undefined ? p.opacity : 1;
     return `
       <div class="grid-item" onclick="openLb('${cat}',${i})">
         ${p.thumbnail
