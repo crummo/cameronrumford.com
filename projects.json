@@ -262,7 +262,8 @@
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_Bentley_Hololens_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pHjjqKLFMXM",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 30,
@@ -289,7 +290,8 @@
     "client": "Mojang",
     "thumbnail": "thumbs/Minecraft_NoxCrew_sml.jpeg",
     "url": "https://youtu.be/HZtio0wZCRs",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 33,
@@ -481,7 +483,8 @@
     "client": "L'Oreal",
     "thumbnail": "thumbs/loreal_glossy01.jpeg",
     "url": "https://youtu.be/flV-AXmr7u0",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 54,
@@ -499,7 +502,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_RagingPlanet.jpeg",
     "url": "https://youtu.be/p3VUcFdDkK0",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 56,
@@ -517,7 +521,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_Update2Highlights01.jpeg",
     "url": "",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 58,
@@ -572,7 +577,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_Update2Highlights01.jpeg",
     "url": "https://www.youtube.com/watch?v=9zEwUvC5eEY",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 64,
@@ -581,7 +587,8 @@
     "client": "Mojang",
     "thumbnail": "thumbs/Minecraft_Pixelheads_sml.jpeg",
     "url": "https://youtu.be/zmTuTUzUUvc",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 65,
@@ -590,7 +597,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_RagingPlanet.jpeg",
     "url": "https://youtu.be/p3VUcFdDkK0",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 66,
@@ -617,7 +625,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_WhatSquirms.jpeg",
     "url": "https://youtu.be/RT4qbyqnACo",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 69,
