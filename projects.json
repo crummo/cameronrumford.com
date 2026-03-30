@@ -366,9 +366,10 @@
     "category": "unscripted",
     "title": "Minecraft Community Celebration | Creating Bloom and Farm Life",
     "client": "Mojang",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Minecraft_Pixelheads_sml.jpeg",
     "url": "https://youtu.be/NYv9PzK8Yu0",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 41,
@@ -393,7 +394,7 @@
     "category": "unscripted",
     "title": "Gates Notes | How to Build a Better Battery",
     "client": "Gates Ventures",
-    "thumbnail": "/thumbs/GV_Quantumscape_sml.jpeg",
+    "thumbnail": "thumbs/GV_Quantumscape_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=5oPP4tXOAVM",
     "award": ""
   },
@@ -559,7 +560,7 @@
     "category": "scripted",
     "title": "X-Box Game Pass | Wrestler",
     "client": "Microsoft",
-    "thumbnail": "thumbs/XBOX_wrestler_thumb.jpeg",
+    "thumbnail": "thumbs/XBOX_wrestler_thumb_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=ON7tyOX3_gM",
     "award": ""
   },
