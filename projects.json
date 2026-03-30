@@ -236,7 +236,7 @@
     "thumbnail": "thumbs/OPI_NewOrleans_BTS.jpeg",
     "url": "https://www.youtube.com/watch?v=pIpldh3G8B8",
     "award": "",
-   "opacity": 0
+    "opacity": 0
   },
   {
     "id": 27,
@@ -302,7 +302,7 @@
     "thumbnail": "thumbs/OPI_Starlight_BTS_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=fZBh4tiJfe4",
     "award": "",
-   "opacity": 0
+    "opacity": 0
   },
   {
     "id": 34,
@@ -329,7 +329,7 @@
     "category": "unscripted",
     "title": "Contemporary Artist Profile: Bas Van Den Hurk",
     "client": "Restoration Hardware",
-    "thumbnail": "",
+    "thumbnail": "thumbs/RH_Bas_sml.jpeg",
     "url": "http://vimeo.com/107011852",
     "award": ""
   },
@@ -384,7 +384,7 @@
     "category": "unscripted",
     "title": "Dana Carvey and Bill Hader",
     "client": "The Hollywood Reporter",
-    "thumbnail": "",
+    "thumbnail": "thumbs/THR_Hader-Carvey_sml.jpeg",
     "url": "https://camrumford.wistia.com/medias/cbo89rijhw",
     "award": ""
   },
@@ -456,7 +456,7 @@
     "category": "scripted",
     "title": "Starlight Holiday Collection",
     "client": "OPI",
-    "thumbnail": "thumbs/OPI_thumbnail.jpeg",
+    "thumbnail": "thumbs/OPI_Starlight_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=jl72f4iXJnk",
     "award": ""
   },
@@ -474,7 +474,7 @@
     "category": "scripted",
     "title": "Lumia 950 Lumia 950XL",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/MS_Lumia01_sml.jpeg",
     "url": "https://youtu.be/zOdK1nvSa24",
     "award": ""
   },
