@@ -233,9 +233,10 @@
     "category": "unscripted",
     "title": "Behind the Scenes: New Orleans Collection",
     "client": "OPI",
-    "thumbnail": "thumbs/OPI_New_Orleans_BTS.jpeg",
+    "thumbnail": "thumbs/OPI_NewOrleans_BTS.jpeg",
     "url": "https://www.youtube.com/watch?v=pIpldh3G8B8",
-    "award": ""
+    "award": "",
+   "opacity": 0
   },
   {
     "id": 27,
@@ -300,7 +301,8 @@
     "client": "OPI",
     "thumbnail": "thumbs/OPI_Starlight_BTS_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=fZBh4tiJfe4",
-    "award": ""
+    "award": "",
+   "opacity": 0
   },
   {
     "id": 34,
@@ -391,7 +393,7 @@
     "category": "unscripted",
     "title": "Gates Notes | How to Build a Better Battery",
     "client": "Gates Ventures",
-    "thumbnail": "",
+    "thumbnail": "/thumbs/GV_Quantumscape_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=5oPP4tXOAVM",
     "award": ""
   },
@@ -456,7 +458,8 @@
     "client": "OPI",
     "thumbnail": "thumbs/OPI_thumbnail.jpeg",
     "url": "https://www.youtube.com/watch?v=jl72f4iXJnk",
-    "award": ""
+    "award": "",
+	
   },
   {
     "id": 51,
