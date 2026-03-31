@@ -460,7 +460,8 @@
     "client": "OPI",
     "thumbnail": "thumbs/OPI_Starlight_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=jl72f4iXJnk",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 51,
@@ -618,7 +619,7 @@
     "category": "videogames",
     "title": "Jurassic World Alive | Sanctuaries Out Now!",
     "client": "Universal Interactive",
-    "thumbnail": "",
+    "thumbnail": "thumbs/JurassicWorldAlive01.jpeg",
     "url": "https://www.youtube.com/watch?v=N9zi10NQLqs",
     "award": ""
   },
