@@ -107,7 +107,7 @@
     "category": "unscripted",
     "title": "Surface Studio App Partners",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_SurfaceStudio01.jpeg",
+    "thumbnail": "thumbs/MS_StudioAppPartners_sml.jpeg",
     "url": "https://youtu.be/VJRFuIICc1s",
     "award": ""
   },
@@ -262,7 +262,7 @@
     "category": "unscripted",
     "title": "HoloLens 2 Partner Spotlight: Bentley",
     "client": "Microsoft",
-    "thumbnail": "thumbs/MS_Bentley_Hololens_sml.jpeg",
+    "thumbnail": "thumbs/MS_BentleyHoloLens_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pHjjqKLFMXM",
     "award": "",
     "opacity": 0
@@ -610,7 +610,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | Big Fun Deal",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_BigFun_sml.jpeg",
     "url": "https://youtu.be/-Wsrm9xB96w",
     "award": ""
   },
@@ -628,7 +628,7 @@
     "category": "videogames",
     "title": "Rage 2 DLC | What Squirms Beneath",
     "client": "Bethesda Softworks",
-    "thumbnail": "thumbs/Rage2_WhatSquirms.jpeg",
+    "thumbnail": "thumbs/Rage2_WhatSquirms_sml.jpeg",
     "url": "https://youtu.be/RT4qbyqnACo",
     "award": "",
     "opacity": 0
@@ -656,7 +656,7 @@
     "category": "videogames",
     "title": "Rage 2 DLC | Rejector Seats",
     "client": "Bethesda Softworks",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Rage2_Rejector_sml.jpeg",
     "url": "https://youtu.be/BYnfaPp7kW8",
     "award": ""
   },
@@ -665,7 +665,7 @@
     "category": "videogames",
     "title": "Discover Game Pass for PC",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_GamessForPC_sml.jpeg",
     "url": "https://youtu.be/rO9XrQsjixA",
     "award": ""
   },
@@ -683,9 +683,10 @@
     "category": "videogames",
     "title": "Rage 2 DLC | Count Squad",
     "client": "Bethesda Softworks",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Rage2_CountSquad_sml.jpeg",
     "url": "https://youtu.be/TnHJ2UNHszM",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 75,
@@ -710,7 +711,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | Forza :15",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_Forza15_sml.jpeg",
     "url": "https://youtu.be/KBsbWs_9i4o",
     "award": ""
   },
@@ -721,6 +722,15 @@
     "client": "Microsoft",
     "thumbnail": "",
     "url": "https://youtu.be/9WJeI6JKbCk",
+    "award": ""
+  },
+  {
+    "id": 79,
+    "category": "unscripted",
+    "client": "Microsoft",
+    "title": "Windows 10 Pro | Autopilot",
+    "thumbnail": "thumbs/MS_WindowsAuto_sml.jpeg",
+    "url": "https://www.youtube.com/watch?v=dhy6v4naMUo",
     "award": ""
   }
 ]
