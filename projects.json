@@ -638,7 +638,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | Chicken Dinner",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_chicken_sml.jpeg",
     "url": "https://youtu.be/EE2p3U1ONjw",
     "award": ""
   },
@@ -674,7 +674,7 @@
     "category": "videogames",
     "title": "Minecraft | Survive and Thrive",
     "client": "Mojang",
-    "thumbnail": "Minecraft_survive_sml.jpg",
+    "thumbnail": "thumbs/Minecraft_survive_sml.jpeg",
     "url": "https://youtu.be/k1AogAZ9FKo",
     "award": ""
   },
@@ -693,7 +693,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | Discover Your Next Favorite Game :06",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_discover_sml.jpeg",
     "url": "https://youtu.be/fRrO5RFc9Nk",
     "award": ""
   },
@@ -702,7 +702,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | This Guy",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_thisguy_sml.jpeg",
     "url": "https://youtu.be/tzsUgkd_etk",
     "award": ""
   },
@@ -720,7 +720,7 @@
     "category": "videogames",
     "title": "X-Box Game Pass | More Adventure :06",
     "client": "Microsoft",
-    "thumbnail": "",
+    "thumbnail": "thumbs/XBOX_adventure_sml.jpeg",
     "url": "https://youtu.be/9WJeI6JKbCk",
     "award": ""
   },
