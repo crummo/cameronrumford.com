@@ -590,7 +590,7 @@
     "category": "videogames",
     "title": "Minecraft: The Hero's Path",
     "client": "Mojang",
-    "thumbnail": "thumbs/Minecraft_Pixelheads_sml.jpeg",
+    "thumbnail": "thumbs/Minecraft_hero_sml.jpeg",
     "url": "https://youtu.be/zmTuTUzUUvc",
     "award": "",
     "opacity": 0
@@ -647,7 +647,7 @@
     "category": "videogames",
     "title": "Minecraft | Marketplace Blockbusters",
     "client": "Mojang",
-    "thumbnail": "",
+    "thumbnail": "thumbs/Minecraf_Blockbuster01_sml.jpeg",
     "url": "https://youtu.be/yTML3nmMrEE",
     "award": ""
   },
@@ -674,7 +674,7 @@
     "category": "videogames",
     "title": "Minecraft | Survive and Thrive",
     "client": "Mojang",
-    "thumbnail": "",
+    "thumbnail": "Minecraft_survive_sml.jpg",
     "url": "https://youtu.be/k1AogAZ9FKo",
     "award": ""
   },
