@@ -4,7 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cameron Rumford — Editor</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23131110'/%3E%3Crect x='2' y='4' width='28' height='24' rx='2' fill='none' stroke='%23c9a96e' stroke-width='1.2'/%3E%3Crect x='3' y='5' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='9' y='5' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='15' y='5' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='21' y='5' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='27' y='5' width='2' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='3' y='24' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='9' y='24' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='15' y='24' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='21' y='24' width='4' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Crect x='27' y='24' width='2' height='3' rx='0.5' fill='%23c9a96e'/%3E%3Ctext x='16' y='20' font-family='Georgia%2C serif' font-size='12' font-weight='400' fill='%23c9a96e' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E" />
+  <script>
+    (function(){
+      var c=document.createElement('canvas');c.width=32;c.height=32;
+      var x=c.getContext('2d');
+      // background
+      x.fillStyle='#131110';
+      roundRect(x,0,0,32,32,4);x.fill();
+      // film frame border
+      x.strokeStyle='#c9a96e';x.lineWidth=1.2;
+      roundRect(x,2,4,28,24,2);x.stroke();
+      // sprocket holes top
+      x.fillStyle='#c9a96e';
+      [[3,5],[9,5],[15,5],[21,5],[27,5]].forEach(function(h){
+        roundRect(x,h[0],h[1],4,3,0.5);x.fill();
+      });
+      // sprocket holes bottom
+      [[3,24],[9,24],[15,24],[21,24],[27,24]].forEach(function(h){
+        roundRect(x,h[0],h[1],4,3,0.5);x.fill();
+      });
+      // CR text
+      x.fillStyle='#c9a96e';
+      x.font='500 12px Georgia,serif';
+      x.textAlign='center';x.textBaseline='middle';
+      x.fillText('CR',16,18);
+      // set favicon
+      var link=document.createElement('link');
+      link.rel='icon';link.type='image/png';link.href=c.toDataURL();
+      document.head.appendChild(link);
+      function roundRect(ctx,x,y,w,h,r){
+        ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+        ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+        ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+        ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+        ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
@@ -567,7 +603,7 @@
       <p class="about-eyebrow">About</p>
       <p class="about-bio"><strong>Cameron Rumford</strong> is a Los Angeles based editor with over 20 years in post-production, specializing in branded content, documentary, and commercial work for some of the world's leading companies.</p>
       <p class="about-bio2">His work spans the full post-production pipeline — editing, color grading, and audio mixing — with fluency across Adobe Premiere, AVID, and DaVinci Resolve. Recent work includes a Golden and Bronze Telly Award-winning piece for Amazon Web Services. Earlier credits include assistant editor on <em>Undefeated</em>, the 2012 Academy Award winner for Best Documentary.</p>
-      <p class="about-contact">For work inquiries: <a href="mailto:camrumford@gmail.com">camrumford@gmail.com</a></p>
+      <p class="about-contact">For work inquiries: <a href="/cdn-cgi/l/email-protection#b8dbd9d5cacdd5ded7cadcf8dfd5d9d1d496dbd7d5"><span class="__cf_email__" data-cfemail="a2c1c3cfd0d7cfc4cdd0c6e2c5cfc3cbce8cc1cdcf">[email&#160;protected]</span></a></p>
       <div class="about-divider"></div>
       <div class="about-cols">
         <div>
@@ -600,7 +636,7 @@
       </div>
       <div class="about-footer">
         <p>
-          <a href="mailto:camrumford@gmail.com">camrumford@gmail.com</a><br>
+          <a href="/cdn-cgi/l/email-protection#5330323e21263e353c213713343e323a3f7d303c3e"><span class="__cf_email__" data-cfemail="82e1e3eff0f7efe4edf0e6c2e5efe3ebeeace1edef">[email&#160;protected]</span></a><br>
           <a href="http://www.imdb.com/name/nm2801725/" target="_blank" rel="noopener">IMDB Profile ↗</a>
         </p>
       </div>
@@ -628,7 +664,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─────────────────────────────────────────────────────────────────────────────
 // HOW TO ADD A NEW PROJECT
 // Open projects.json and add an entry to the array:
@@ -811,21 +847,4 @@ document.addEventListener('keydown', e => {
   if (!document.getElementById('lightbox').classList.contains('open')) return;
   if (e.key === 'ArrowRight') lbNav(1);
   if (e.key === 'ArrowLeft')  lbNav(-1);
-  if (e.key === 'Escape')     closeLb();
-});
-
-/* click outside lightbox to close */
-document.getElementById('lightbox').addEventListener('click', e => {
-  if (e.target === document.getElementById('lightbox')) closeLb();
-});
-
-function x(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-init();
-</script>
-</body>
-</html>
+  if (e.key =
