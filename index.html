@@ -8,17 +8,17 @@
     (function(){
       var c=document.createElement('canvas');c.width=40;c.height=22;
       var ctx=c.getContext('2d');
-      ctx.strokeStyle='#c9a96e';ctx.fillStyle='#c9a96e';
+      ctx.strokeStyle='#000000';ctx.fillStyle='#000000';
       // outer border
       ctx.lineWidth=1;
       ctx.strokeRect(0.5,0.5,39,21);
-      // sprocket holes top
-      [1,7,13,19,25,31].forEach(function(x){
-        ctx.fillRect(x,1,4,3);
+      // one sprocket hole per frame, centered in each frame zone
+      // frame zones: 0-13, 14-26, 27-39 — centers at ~6, 20, 33
+      [[4,1],[17,1],[30,1]].forEach(function(h){
+        ctx.fillRect(h[0],h[1],6,3);
       });
-      // sprocket holes bottom
-      [1,7,13,19,25,31].forEach(function(x){
-        ctx.fillRect(x,18,4,3);
+      [[4,18],[17,18],[30,18]].forEach(function(h){
+        ctx.fillRect(h[0],h[1],6,3);
       });
       // frame dividers
       ctx.lineWidth=0.8;
