@@ -677,8 +677,13 @@ let lbCat = '', lbIdx = 0;
 async function init() {
   try {
     const res = await fetch('projects.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.url);
     projects = await res.json();
-  } catch(e) { projects = []; }
+  } catch(e) {
+    projects = [];
+    console.error('Failed to load projects.json:', e.message);
+    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red;padding:20px;font-family:monospace;">Error: ' + e.message + '</div>');
+  }
   buildAll();
   showPage('unscripted');
 }
