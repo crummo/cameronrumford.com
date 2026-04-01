@@ -6,26 +6,24 @@
   <title>Cameron Rumford — Editor</title>
   <script>
     (function(){
-      function roundRect(ctx,x,y,w,h,r){
-        ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-        ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
-        ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
-        ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
-        ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
-      }
-      var c=document.createElement('canvas');c.width=32;c.height=32;
+      var c=document.createElement('canvas');c.width=40;c.height=22;
       var ctx=c.getContext('2d');
-      ctx.fillStyle='#131110';
-      roundRect(ctx,0,0,32,32,4);ctx.fill();
-      ctx.strokeStyle='#c9a96e';ctx.lineWidth=1.2;
-      roundRect(ctx,2,4,28,24,2);ctx.stroke();
-      ctx.fillStyle='#c9a96e';
-      [[3,5],[9,5],[15,5],[21,5],[27,5],[3,24],[9,24],[15,24],[21,24],[27,24]].forEach(function(h){
-        roundRect(ctx,h[0],h[1],4,3,0.5);ctx.fill();
+      ctx.strokeStyle='#c9a96e';ctx.fillStyle='#c9a96e';
+      // outer border
+      ctx.lineWidth=1;
+      ctx.strokeRect(0.5,0.5,39,21);
+      // sprocket holes top
+      [1,7,13,19,25,31].forEach(function(x){
+        ctx.fillRect(x,1,4,3);
       });
-      ctx.font='500 12px Georgia,serif';
-      ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillText('CR',16,18);
+      // sprocket holes bottom
+      [1,7,13,19,25,31].forEach(function(x){
+        ctx.fillRect(x,18,4,3);
+      });
+      // frame dividers
+      ctx.lineWidth=0.8;
+      ctx.beginPath();ctx.moveTo(14,4);ctx.lineTo(14,18);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(27,4);ctx.lineTo(27,18);ctx.stroke();
       var link=document.createElement('link');
       link.rel='icon';link.type='image/png';link.href=c.toDataURL();
       document.head.appendChild(link);
