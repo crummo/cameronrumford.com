@@ -4,31 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cameron Rumford — Editor</title>
-  <script>
-    (function(){
-      var c=document.createElement('canvas');c.width=40;c.height=22;
-      var ctx=c.getContext('2d');
-      ctx.strokeStyle='#000000';ctx.fillStyle='#000000';
-      // outer border
-      ctx.lineWidth=1;
-      ctx.strokeRect(0.5,0.5,39,21);
-      // one sprocket hole per frame, centered in each frame zone
-      // frame zones: 0-13, 14-26, 27-39 — centers at ~6, 20, 33
-      [[4,1],[17,1],[30,1]].forEach(function(h){
-        ctx.fillRect(h[0],h[1],6,3);
-      });
-      [[4,18],[17,18],[30,18]].forEach(function(h){
-        ctx.fillRect(h[0],h[1],6,3);
-      });
-      // frame dividers
-      ctx.lineWidth=0.8;
-      ctx.beginPath();ctx.moveTo(14,4);ctx.lineTo(14,18);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(27,4);ctx.lineTo(27,18);ctx.stroke();
-      var link=document.createElement('link');
-      link.rel='icon';link.type='image/png';link.href=c.toDataURL();
-      document.head.appendChild(link);
-    })();
-  </script>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
