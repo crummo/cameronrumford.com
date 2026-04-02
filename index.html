@@ -169,6 +169,14 @@
       filter: saturate(0.55) brightness(0.28);
     }
 
+    /* radial scrim — darkens center behind text at rest, fades out on hover */
+    .grid-scrim {
+      position: absolute; inset: 0; pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.4s var(--ease);
+    }
+    .grid-item:hover .grid-scrim { opacity: 0; }
+
     .grid-placeholder {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
@@ -674,15 +682,20 @@ function buildAll() {
 /* ── Desktop grid ── */
 function buildDesktopGrid(cat, items) {
   document.getElementById('grid-' + cat).innerHTML = items.map((p, i) => {
-    const hasClient = p.client && p.client.trim();
-    const isShort   = p.type === 'short';
-    const clientOp  = p.opacity !== undefined ? p.opacity : 1;
-    const titleOp   = p.opacity !== undefined ? p.opacity : 0.8;
+    const hasClient  = p.client && p.client.trim();
+    const isShort    = p.type === 'short';
+    const clientOp   = p.opacity !== undefined ? p.opacity : 1;
+    const titleOp    = p.opacity !== undefined ? p.opacity : 0.8;
+    const scrimVal   = p.scrim !== undefined ? p.scrim : 0.3;
+    const scrimHtml  = scrimVal > 0
+      ? `<div class="grid-scrim" style="background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,${scrimVal}) 0%, transparent 100%)"></div>`
+      : '';
     return `
       <div class="grid-item" onclick="openLb('${cat}',${i})">
         ${p.thumbnail
           ? `<img class="grid-thumb" src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
           : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
+        ${scrimHtml}
         <div class="grid-center${hasClient ? '' : ' solo'}${isShort ? ' short' : ''}">
           ${isShort
             ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>
