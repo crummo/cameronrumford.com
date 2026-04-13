@@ -1,0 +1,12 @@
+{
+  "categories": [
+    { "id": "unscripted", "label": "Unscripted" },
+    { "id": "scripted",   "label": "Scripted" },
+    { "id": "videogames", "label": "Video Games" }
+  ],
+  "about": {
+    "bio": "<strong>Cameron Rumford</strong> is a Los Angeles based editor with over 20 years in post-production, specializing in branded content, documentary, and commercial work for some of the world's leading companies.",
+    "bio2": "His work spans the full post-production pipeline — editing, color grading, and audio mixing — with fluency across Adobe Premiere, AVID, and DaVinci Resolve. Recent work includes a Golden and Bronze Telly Award-winning piece for Amazon Web Services. Earlier credits include assistant editor on <em>Undefeated</em>, the 2012 Academy Award winner for Best Documentary.",
+    "contactEmail": "camrumford@gmail.com"
+  }
+}

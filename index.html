@@ -631,16 +631,13 @@
 <body>
 
 <nav>
-  <a class="nav-brand" onclick="showPage('unscripted')">
+  <a class="nav-brand" onclick="showFirst()">
     <span class="nav-brand-name">Cameron Rumford</span>
     <span class="nav-brand-rule"></span>
     <span class="nav-brand-title">Editor</span>
   </a>
-  <ul class="nav-links">
-    <li><a id="nav-unscripted" onclick="showPage('unscripted')">Unscripted</a></li>
-    <li><a id="nav-scripted"   onclick="showPage('scripted')">Scripted</a></li>
-    <li><a id="nav-videogames" onclick="showPage('videogames')">Video Games</a></li>
-    <li><a id="nav-about"      onclick="showPage('about')">About</a></li>
+  <ul class="nav-links" id="nav-cat-links">
+    <li><a id="nav-about" onclick="showPage('about')">About</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -648,32 +645,18 @@
 </nav>
 
 <div class="nav-drawer" id="drawer">
-  <a id="dnav-unscripted" onclick="showPage('unscripted');closeDrawer()">Unscripted</a>
-  <a id="dnav-scripted"   onclick="showPage('scripted');closeDrawer()">Scripted</a>
-  <a id="dnav-videogames" onclick="showPage('videogames');closeDrawer()">Video Games</a>
-  <a id="dnav-about"      onclick="showPage('about');closeDrawer()">About</a>
+  <a id="dnav-about" onclick="showPage('about');closeDrawer()">About</a>
 </div>
 
-<main>
-  <div id="page-unscripted" class="page">
-    <div class="gallery-grid" id="grid-unscripted"></div>
-    <div class="mobile-list" id="mlist-unscripted"></div>
-  </div>
-  <div id="page-scripted" class="page">
-    <div class="gallery-grid" id="grid-scripted"></div>
-    <div class="mobile-list" id="mlist-scripted"></div>
-  </div>
-  <div id="page-videogames" class="page">
-    <div class="gallery-grid" id="grid-videogames"></div>
-    <div class="mobile-list" id="mlist-videogames"></div>
-  </div>
+<main id="main-content">
+  <!-- category pages are injected here by buildPages() -->
 
   <div id="page-about" class="page">
     <div class="about-wrap">
       <p class="about-eyebrow">About</p>
-      <p class="about-bio"><strong>Cameron Rumford</strong> is a Los Angeles based editor with over 20 years in post-production, specializing in branded content, documentary, and commercial work for some of the world's leading companies.</p>
-      <p class="about-bio2">His work spans the full post-production pipeline — editing, color grading, and audio mixing — with fluency across Adobe Premiere, AVID, and DaVinci Resolve. Recent work includes a Golden and Bronze Telly Award-winning piece for Amazon Web Services. Earlier credits include assistant editor on <em>Undefeated</em>, the 2012 Academy Award winner for Best Documentary.</p>
-      <p class="about-contact">For work inquiries: <a href="/cdn-cgi/l/email-protection#b8dbd9d5cacdd5ded7cadcf8dfd5d9d1d496dbd7d5"><span class="__cf_email__" data-cfemail="a2c1c3cfd0d7cfc4cdd0c6e2c5cfc3cbce8cc1cdcf">[email&#160;protected]</span></a></p>
+      <p class="about-bio"   id="about-bio"></p>
+      <p class="about-bio2"  id="about-bio2"></p>
+      <p class="about-contact">For work inquiries: <a id="about-email" href=""></a></p>
       <div class="about-divider"></div>
       <div class="about-cols">
         <div>
@@ -706,7 +689,7 @@
       </div>
       <div class="about-footer">
         <p>
-          <a href="/cdn-cgi/l/email-protection#5330323e21263e353c213713343e323a3f7d303c3e"><span class="__cf_email__" data-cfemail="82e1e3eff0f7efe4edf0e6c2e5efe3ebeeace1edef">[email&#160;protected]</span></a><br>
+          <a id="about-email-footer" href=""></a><br>
           <a href="http://www.imdb.com/name/nm2801725/" target="_blank" rel="noopener">IMDB Profile ↗</a>
         </p>
       </div>
@@ -751,10 +734,34 @@
 // Save the file. That's it — desktop and mobile both update automatically.
 // ─────────────────────────────────────────────────────────────────────────────
 
-let projects = [];
+let projects   = [];
+let siteConfig = { categories: [], about: {} };
 let lbCat = '', lbIdx = 0;
 
 async function init() {
+  // Load site config first (drives nav + pages)
+  try {
+    const res = await fetch('site.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    siteConfig = await res.json();
+  } catch(e) {
+    console.error('Failed to load site.json:', e.message);
+    // Fall back to hardcoded defaults so the site still works
+    siteConfig = {
+      categories: [
+        { id: 'unscripted', label: 'Unscripted' },
+        { id: 'scripted',   label: 'Scripted'   },
+        { id: 'videogames', label: 'Video Games' }
+      ],
+      about: { bio: '', bio2: '', contactEmail: '' }
+    };
+  }
+
+  buildNav(siteConfig.categories);
+  buildPages(siteConfig.categories);
+  renderAbout(siteConfig.about);
+
+  // Load projects
   try {
     const res = await fetch('projects.json');
     if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.url);
@@ -764,15 +771,74 @@ async function init() {
     console.error('Failed to load projects.json:', e.message);
     document.body.insertAdjacentHTML('afterbegin', '<div style="color:red;padding:20px;font-family:monospace;">Error: ' + e.message + '</div>');
   }
+
   buildAll();
-  showPage('unscripted');
+  showFirst();
+}
+
+/* ── Build nav links from site.json ── */
+function buildNav(categories) {
+  const ul     = document.getElementById('nav-cat-links');
+  const aboutLi = ul.querySelector('li:last-child'); // the About item
+  const drawer  = document.getElementById('drawer');
+  const dAbout  = document.getElementById('dnav-about');
+
+  categories.forEach(cat => {
+    // Desktop nav
+    const li = document.createElement('li');
+    li.innerHTML = `<a id="nav-${cat.id}" onclick="showPage('${cat.id}')">${cat.label}</a>`;
+    ul.insertBefore(li, aboutLi);
+
+    // Mobile drawer
+    const da = document.createElement('a');
+    da.id = `dnav-${cat.id}`;
+    da.textContent = cat.label;
+    da.onclick = () => { showPage(cat.id); closeDrawer(); };
+    drawer.insertBefore(da, dAbout);
+  });
+}
+
+/* ── Build page divs from site.json ── */
+function buildPages(categories) {
+  const main   = document.getElementById('main-content');
+  const aboutEl = document.getElementById('page-about');
+
+  categories.forEach(cat => {
+    const div = document.createElement('div');
+    div.id        = `page-${cat.id}`;
+    div.className = 'page';
+    div.innerHTML = `<div class="gallery-grid" id="grid-${cat.id}"></div>
+                     <div class="mobile-list"  id="mlist-${cat.id}"></div>`;
+    main.insertBefore(div, aboutEl);
+  });
+}
+
+/* ── Render About section from site.json ── */
+function renderAbout(about) {
+  const bioEl   = document.getElementById('about-bio');
+  const bio2El  = document.getElementById('about-bio2');
+  const emailEl = document.getElementById('about-email');
+  const emailFt = document.getElementById('about-email-footer');
+
+  if (bioEl)   bioEl.innerHTML  = about.bio  || '';
+  if (bio2El)  bio2El.innerHTML = about.bio2 || '';
+  if (about.contactEmail) {
+    if (emailEl) { emailEl.href = `mailto:${about.contactEmail}`; emailEl.textContent = about.contactEmail; }
+    if (emailFt) { emailFt.href = `mailto:${about.contactEmail}`; emailFt.textContent = about.contactEmail; }
+  }
+}
+
+/* ── Show first category page ── */
+function showFirst() {
+  const first = siteConfig.categories[0];
+  showPage(first ? first.id : 'about');
 }
 
 function buildAll() {
-  ['unscripted','scripted','videogames'].forEach(cat => {
-    const items = projects.filter(p => p.category === cat);
-    buildDesktopGrid(cat, items);
-    buildMobileList(cat, items);
+  siteConfig.categories.forEach(cat => {
+    const items = projects.filter(p => p.category === cat.id);
+    buildDesktopGrid(cat.id, items);
+    buildMobileList(cat.id, items);
   });
 }
 
@@ -826,14 +892,17 @@ function buildMobileList(cat, items) {
 
 /* ── Page nav ── */
 function showPage(name) {
-  ['unscripted','scripted','videogames','about'].forEach(p => {
-    document.getElementById('page-'+p).classList.remove('visible');
-    const n = document.getElementById('nav-'+p);
-    if (n) n.classList.remove('active');
-    const d = document.getElementById('dnav-'+p);
-    if (d) d.classList.remove('active');
+  const allIds = [...siteConfig.categories.map(c => c.id), 'about'];
+  allIds.forEach(p => {
+    const pageEl = document.getElementById('page-'+p);
+    if (pageEl) pageEl.classList.remove('visible');
+    const navEl  = document.getElementById('nav-'+p);
+    if (navEl)  navEl.classList.remove('active');
+    const dnavEl = document.getElementById('dnav-'+p);
+    if (dnavEl) dnavEl.classList.remove('active');
   });
-  document.getElementById('page-'+name).classList.add('visible');
+  const target = document.getElementById('page-'+name);
+  if (target) target.classList.add('visible');
   const nav = document.getElementById('nav-'+name);
   if (nav) nav.classList.add('active');
   const dnav = document.getElementById('dnav-'+name);

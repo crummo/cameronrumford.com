@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Cameron Rumford</title>
+  <link rel="icon" type="image/x-icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #131110;
+      --bg2:        #1c1917;
+      --bg3:        #231f1c;
+      --fg:         #ede8e0;
+      --fg-mid:     #a89e90;
+      --fg-dim:     #5a5248;
+      --fg-dimmer:  #2a2623;
+      --accent:     #c9a96e;
+      --danger:     #c96e6e;
+      --success:    #6ec97a;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans:  'DM Sans', sans-serif;
+      --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { min-height: 100vh; }
+
+    /* ── OVERLAY SCREENS ── */
+    .screen {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+    }
+    .screen.hidden { display: none; }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--fg-dimmer);
+      border-radius: 4px;
+      padding: 48px;
+      width: 100%; max-width: 440px;
+    }
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 26px; font-style: italic;
+      color: var(--fg); margin-bottom: 6px;
+    }
+    .card-subtitle {
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--fg-mid);
+      margin-bottom: 40px;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--fg-mid); margin-bottom: 8px; font-weight: 400;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--fg-dimmer);
+      border-radius: 3px; padding: 10px 14px;
+      color: var(--fg); font-family: var(--font-sans);
+      font-size: 14px; font-weight: 300;
+      transition: border-color 0.2s var(--ease);
+      outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--fg-dim);
+    }
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5248'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .field-hint {
+      font-size: 11px; color: var(--fg-dim);
+      margin-top: 6px; line-height: 1.6;
+    }
+    .field-hint a { color: var(--accent); text-decoration: none; }
+    .field-hint a:hover { text-decoration: underline; }
+
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--fg-dim); cursor: pointer;
+      font-size: 13px; padding: 4px;
+      transition: color 0.2s;
+    }
+    .pw-toggle:hover { color: var(--fg-mid); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 10px 24px;
+      border: 1px solid transparent; border-radius: 3px;
+      font-family: var(--font-sans);
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; font-weight: 400;
+      cursor: pointer; transition: all 0.2s var(--ease);
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-ghost { background: transparent; border-color: var(--fg-dimmer); color: var(--fg-mid); }
+    .btn-ghost:hover { border-color: var(--fg-dim); color: var(--fg); }
+    .btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: var(--bg); }
+    .btn-sm { padding: 6px 14px; font-size: 9px; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 44px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--fg-dimmer);
+    }
+    .nav-brand {
+      font-family: var(--font-serif);
+      font-size: 17px; font-style: italic; color: var(--fg-mid);
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .nav-status {
+      font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--fg-dim);
+      margin-right: 6px;
+    }
+    .nav-status.saving { color: var(--accent); }
+    .nav-status.saved  { color: var(--success); }
+    .nav-status.error  { color: var(--danger); }
+    .nav-status.dirty  { color: var(--fg-mid); }
+
+    /* ── MAIN ── */
+    .main { padding: 36px 44px; max-width: 1000px; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--fg-dimmer);
+      margin-bottom: 32px;
+    }
+    .tab {
+      padding: 12px 28px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; font-weight: 400;
+      color: var(--fg-dim); cursor: pointer;
+      border: none; border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      background: none; font-family: var(--font-sans);
+      transition: all 0.2s var(--ease);
+    }
+    .tab:hover { color: var(--fg-mid); }
+    .tab.active { color: var(--fg); border-bottom-color: var(--accent); }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 16px;
+    }
+    .toolbar-label {
+      font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--fg-dim);
+    }
+
+    /* ── SITE SETTINGS ── */
+    .settings-section {
+      margin-bottom: 40px;
+    }
+    .settings-section-title {
+      font-family: var(--font-serif);
+      font-size: 17px; font-style: italic;
+      color: var(--fg); margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--fg-dimmer);
+    }
+    .cat-card {
+      display: grid;
+      grid-template-columns: 20px 1fr auto auto;
+      gap: 12px; align-items: center;
+      background: var(--bg2);
+      border: 1px solid var(--fg-dimmer);
+      border-radius: 3px;
+      padding: 10px 14px;
+      margin-bottom: 6px;
+      transition: border-color 0.2s var(--ease);
+    }
+    .cat-card:hover { border-color: var(--fg-dim); }
+    .cat-card.dragging { opacity: 0.45; border-style: dashed; }
+    .cat-card.drag-over { border-color: var(--accent); background: var(--bg3); }
+    .cat-info { min-width: 0; }
+    .cat-label-text {
+      font-family: var(--font-serif);
+      font-size: 14px; font-style: italic; color: var(--fg);
+    }
+    .cat-id-text {
+      font-size: 10px; color: var(--fg-dim);
+      letter-spacing: 0.1em; margin-top: 2px;
+    }
+    .about-editor .field textarea {
+      min-height: 100px; line-height: 1.6; font-size: 13px;
+    }
+    .about-hint {
+      font-size: 11px; color: var(--fg-dim);
+      margin-bottom: 20px; line-height: 1.6;
+    }
+
+    /* ── PROJECT LIST ── */
+    .project-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .project-card {
+      display: grid;
+      grid-template-columns: 20px 112px 1fr auto;
+      gap: 16px; align-items: center;
+      background: var(--bg2);
+      border: 1px solid var(--fg-dimmer);
+      border-radius: 3px;
+      padding: 12px 16px;
+      transition: border-color 0.2s var(--ease);
+      user-select: none;
+    }
+    .project-card:hover { border-color: var(--fg-dim); }
+    .project-card.dragging { opacity: 0.45; border-style: dashed; }
+    .project-card.drag-over { border-color: var(--accent); background: var(--bg3); }
+
+    .drag-handle {
+      display: flex; flex-direction: column; gap: 3px;
+      align-items: center; cursor: grab;
+      color: var(--fg-dim); padding: 4px 0;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .drag-handle span {
+      display: block; width: 12px; height: 1.5px;
+      background: currentColor; border-radius: 1px;
+    }
+
+    .project-thumb {
+      width: 112px; height: 63px;
+      object-fit: cover; border-radius: 2px;
+      background: var(--bg);
+    }
+    .project-thumb-placeholder {
+      width: 112px; height: 63px;
+      background: var(--bg); border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--fg-dim); font-size: 10px;
+      border: 1px solid var(--fg-dimmer);
+    }
+
+    .project-info { min-width: 0; }
+    .project-client {
+      font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent);
+      font-weight: 500; margin-bottom: 4px;
+    }
+    .project-title {
+      font-family: var(--font-serif);
+      font-size: 14px; font-style: italic;
+      color: var(--fg); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .project-meta {
+      font-size: 10px; color: var(--fg-dim); margin-top: 4px;
+    }
+    .project-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .empty {
+      text-align: center; padding: 48px 20px;
+      color: var(--fg-dim); font-size: 13px;
+    }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(19,17,16,0.9);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.hidden { display: none; }
+
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--fg-dimmer);
+      border-radius: 4px;
+      padding: 36px;
+      width: 100%; max-width: 580px;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 20px; font-style: italic;
+      color: var(--fg); margin-bottom: 28px;
+    }
+    .modal-actions {
+      display: flex; justify-content: flex-end;
+      gap: 10px; margin-top: 28px;
+      padding-top: 20px; border-top: 1px solid var(--fg-dimmer);
+    }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ── THUMB PICKER ── */
+    .thumb-picker { display: none; margin-top: 10px; }
+    .thumb-picker.open { display: block; }
+    .thumb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+      gap: 4px; max-height: 220px; overflow-y: auto;
+      background: var(--bg); border: 1px solid var(--fg-dimmer);
+      border-radius: 3px; padding: 8px; margin-top: 8px;
+    }
+    .thumb-option {
+      aspect-ratio: 16/9; object-fit: cover;
+      border-radius: 2px; cursor: pointer;
+      opacity: 0.55; transition: opacity 0.2s, outline 0.15s;
+    }
+    .thumb-option:hover { opacity: 0.85; }
+    .thumb-option.selected { opacity: 1; outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    #thumb-preview {
+      margin-top: 8px; width: 120px; height: 68px;
+      object-fit: cover; border-radius: 2px;
+      display: none; border: 1px solid var(--fg-dimmer);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--bg2); border: 1px solid var(--fg-dimmer);
+      border-radius: 3px; padding: 13px 20px;
+      font-size: 12px; color: var(--fg-mid);
+      transform: translateY(16px); opacity: 0;
+      transition: all 0.3s var(--ease);
+      z-index: 9999; pointer-events: none;
+      max-width: 320px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .toast.error   { border-color: var(--danger);  color: var(--danger); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ SETUP SCREEN ═══════════════ -->
+<div class="screen" id="screen-setup">
+  <div class="card">
+    <div class="card-title">Welcome, Cameron</div>
+    <div class="card-subtitle">One-time setup</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>GitHub Owner</label>
+        <input type="text" id="setup-owner" value="cameronrumford" />
+      </div>
+      <div class="field">
+        <label>Branch</label>
+        <input type="text" id="setup-branch" value="main" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Repository</label>
+      <input type="text" id="setup-repo" value="cameronrumford.com" />
+    </div>
+    <div class="field">
+      <label>GitHub Personal Access Token</label>
+      <div class="pw-wrap">
+        <input type="password" id="setup-token" placeholder="github_pat_…" />
+        <button class="pw-toggle" type="button" onclick="togglePw('setup-token')" title="Show/hide">●</button>
+      </div>
+      <div class="field-hint">
+        Create at <a href="https://github.com/settings/tokens?type=beta" target="_blank">github.com/settings/tokens</a>.
+        Fine-grained token with <strong>Contents: Read &amp; write</strong> on this repo is all that's needed.
+      </div>
+    </div>
+    <div class="field">
+      <label>Admin Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="setup-pw" placeholder="Choose a password" />
+        <button class="pw-toggle" type="button" onclick="togglePw('setup-pw')" title="Show/hide">●</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Confirm Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="setup-pw2" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doSetup()" />
+        <button class="pw-toggle" type="button" onclick="togglePw('setup-pw2')" title="Show/hide">●</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doSetup()">Complete Setup</button>
+  </div>
+</div>
+
+<!-- ═══════════════ LOGIN SCREEN ═══════════════ -->
+<div class="screen hidden" id="screen-login">
+  <div class="card" style="max-width:360px">
+    <div class="card-title">Admin</div>
+    <div class="card-subtitle">cameronrumford.com</div>
+
+    <div class="field">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="login-pw" placeholder="Enter your password"
+               onkeydown="if(event.key==='Enter')doLogin()" />
+        <button class="pw-toggle" type="button" onclick="togglePw('login-pw')" title="Show/hide">●</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Unlock</button>
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-ghost btn-sm" onclick="resetSetup()">Reset / change credentials</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN APP ═══════════════ -->
+<div id="app" style="display:none">
+  <nav>
+    <div class="nav-brand">Cameron Rumford <span>/ Admin</span></div>
+    <div class="nav-actions">
+      <span class="nav-status" id="nav-status"></span>
+      <button class="btn btn-ghost btn-sm" onclick="reloadFromGitHub()">↺ Reload</button>
+      <button class="btn btn-primary btn-sm" id="save-btn" onclick="saveToGitHub()">Save to GitHub</button>
+      <button class="btn btn-ghost btn-sm" onclick="lock()">Lock</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="tabs" id="main-tabs">
+      <!-- project category tabs are injected here -->
+      <button class="tab" id="tab-site" onclick="switchTab('site')" style="margin-left:auto">Site Settings</button>
+    </div>
+
+    <!-- Project category panes are injected here by buildAdminCategoryPanes() -->
+    <div id="category-panes"></div>
+
+    <!-- ── SITE SETTINGS PANE ── -->
+    <div id="pane-site" style="display:none">
+
+      <div class="settings-section">
+        <div class="settings-section-title">Navigation Sections</div>
+        <p class="about-hint">
+          Drag to reorder. The <strong>Label</strong> is what visitors see in the nav.
+          The <strong>ID</strong> (slug) links to existing projects — don't change it if projects already use it.
+        </p>
+        <div class="toolbar" style="margin-bottom:12px">
+          <span></span>
+          <button class="btn btn-ghost btn-sm" onclick="openAddCategory()">+ Add Section</button>
+        </div>
+        <div id="cat-list"></div>
+      </div>
+
+      <div class="settings-section about-editor">
+        <div class="settings-section-title">About Page</div>
+        <p class="about-hint">
+          Both fields accept basic HTML (e.g. <code style="color:var(--accent)">&lt;strong&gt;</code>,
+          <code style="color:var(--accent)">&lt;em&gt;</code>, <code style="color:var(--accent)">&lt;a href="…"&gt;</code>).
+        </p>
+        <div class="field">
+          <label>Bio — main paragraph</label>
+          <textarea id="about-bio-input" placeholder="Main bio paragraph…"></textarea>
+        </div>
+        <div class="field">
+          <label>Bio — secondary paragraph</label>
+          <textarea id="about-bio2-input" placeholder="Secondary paragraph…"></textarea>
+        </div>
+        <div class="field">
+          <label>Contact email</label>
+          <input type="email" id="about-email-input" placeholder="you@example.com" />
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button class="btn btn-primary btn-sm" onclick="saveAboutFields()">Apply About Changes</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ADD / EDIT MODAL ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-edit">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add Project</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Category</label>
+        <select id="f-category">
+          <option value="unscripted">Unscripted</option>
+          <option value="scripted">Scripted</option>
+          <option value="videogames">Video Games</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select id="f-type">
+          <option value="">Standard</option>
+          <option value="short">Short Film</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Title</label>
+      <input type="text" id="f-title" placeholder="Project title" />
+    </div>
+    <div class="field">
+      <label>Client <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — shown in gold above title)</span></label>
+      <input type="text" id="f-client" placeholder="e.g. Amazon Web Services" />
+    </div>
+    <div class="field">
+      <label>Video URL <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — YouTube, Vimeo, etc.)</span></label>
+      <input type="url" id="f-url" placeholder="https://youtu.be/…" />
+    </div>
+    <div class="field">
+      <label>Award <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <input type="text" id="f-award" placeholder="e.g. Telly Award 2023" />
+    </div>
+
+    <div class="field">
+      <label>Thumbnail</label>
+      <input type="text" id="f-thumbnail" placeholder="thumbs/filename.jpeg" oninput="updateThumbPreview()" />
+      <div class="field-hint">
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px" type="button" onclick="toggleThumbPicker()">Browse existing thumbnails ↓</button>
+      </div>
+      <div class="thumb-picker" id="thumb-picker">
+        <div class="thumb-grid" id="thumb-grid"></div>
+      </div>
+      <img id="thumb-preview" alt="thumbnail preview" />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Scrim opacity <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1 (dark vignette behind text)</span></label>
+        <input type="number" id="f-scrim" min="0" max="1" step="0.05" placeholder="0.3" />
+      </div>
+      <div class="field">
+        <label>Text opacity override <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1, blank = default</span></label>
+        <input type="number" id="f-opacity" min="0" max="1" step="0.05" placeholder="default" />
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CATEGORY MODAL ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-cat">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title" id="modal-cat-title">Add Section</div>
+    <div class="field">
+      <label>Label <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown in nav)</span></label>
+      <input type="text" id="cat-label" placeholder="e.g. Social" />
+    </div>
+    <div class="field" id="cat-id-field">
+      <label>ID / slug <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(used in projects.json — lowercase, no spaces)</span></label>
+      <input type="text" id="cat-id" placeholder="e.g. social" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')" />
+      <div class="field-hint">Set once. Changing after adding projects will orphan them.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCatModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCategoryModal()">Save Section</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DELETE CONFIRM ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-delete">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-title">Remove project?</div>
+    <p style="color:var(--fg-mid);font-size:14px;line-height:1.65" id="delete-msg"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeDelete()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STORAGE KEYS ───────────────────────────────────────────────────────────
+const K_HASH   = 'cr_pw_hash';
+const K_TOKEN  = 'cr_gh_token';
+const K_OWNER  = 'cr_gh_owner';
+const K_REPO   = 'cr_gh_repo';
+const K_BRANCH = 'cr_gh_branch';
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+let projects       = [];
+let siteConfig     = { categories: [], about: {} };
+let thumbFiles     = [];
+let currentTab     = '';
+let editingIdx     = null;   // null = new, number = edit existing
+let deletingIdx    = null;
+let editingCatIdx  = null;   // null = new category
+let isDirty        = false;
+let projectsSha    = null;
+let siteSha        = null;
+let dragSrcIdx     = null;
+let catDragSrcIdx  = null;
+
+// ─── CRYPTO ─────────────────────────────────────────────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ─── SETUP ──────────────────────────────────────────────────────────────────
+function isSetupDone() {
+  return !!localStorage.getItem(K_HASH);
+}
+
+async function doSetup() {
+  const owner  = document.getElementById('setup-owner').value.trim();
+  const branch = document.getElementById('setup-branch').value.trim();
+  const repo   = document.getElementById('setup-repo').value.trim();
+  const token  = document.getElementById('setup-token').value.trim();
+  const pw     = document.getElementById('setup-pw').value;
+  const pw2    = document.getElementById('setup-pw2').value;
+
+  if (!owner || !repo || !branch) { showToast('Fill in all repo fields.', 'error'); return; }
+  if (!token)  { showToast('GitHub token is required.', 'error'); return; }
+  if (!pw)     { showToast('Password cannot be empty.', 'error'); return; }
+  if (pw !== pw2) { showToast('Passwords do not match.', 'error'); return; }
+
+  const hash = await sha256(pw);
+  localStorage.setItem(K_HASH,   hash);
+  localStorage.setItem(K_TOKEN,  token);
+  localStorage.setItem(K_OWNER,  owner);
+  localStorage.setItem(K_REPO,   repo);
+  localStorage.setItem(K_BRANCH, branch);
+
+  showApp();
+}
+
+// ─── LOGIN ───────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pw   = document.getElementById('login-pw').value;
+  const hash = await sha256(pw);
+  if (hash === localStorage.getItem(K_HASH)) {
+    showApp();
+  } else {
+    showToast('Incorrect password.', 'error');
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+  }
+}
+
+function lock() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('screen-login').classList.remove('hidden');
+  document.getElementById('login-pw').value = '';
+  document.getElementById('login-pw').focus();
+}
+
+function resetSetup() {
+  if (!confirm('Clear all saved credentials and start over?')) return;
+  [K_HASH, K_TOKEN, K_OWNER, K_REPO, K_BRANCH].forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+
+function togglePw(id) {
+  const el = document.getElementById(id);
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// ─── APP INIT ────────────────────────────────────────────────────────────────
+async function showApp() {
+  document.getElementById('screen-setup').classList.add('hidden');
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('app').style.display = 'block';
+  await loadAll();
+  loadThumbFiles(); // non-blocking
+}
+
+function ghHeaders() {
+  return {
+    Authorization: `Bearer ${localStorage.getItem(K_TOKEN)}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+}
+
+function ghUrl(filename) {
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  return `https://api.github.com/repos/${o}/${r}/contents/${filename}?ref=${b}`;
+}
+
+async function fetchGhJson(filename) {
+  const res = await fetch(ghUrl(filename), { headers: ghHeaders() });
+  if (!res.ok) throw new Error(`GitHub ${res.status} fetching ${filename}`);
+  const data = await res.json();
+  return { sha: data.sha, content: JSON.parse(atob(data.content.replace(/\s/g, ''))) };
+}
+
+async function loadAll() {
+  setStatus('Loading…', '');
+  try {
+    const [siteData, projData] = await Promise.all([
+      fetchGhJson('site.json'),
+      fetchGhJson('projects.json')
+    ]);
+    siteSha    = siteData.sha;
+    siteConfig = siteData.content;
+    projectsSha = projData.sha;
+    projects    = projData.content;
+
+    buildAdminUI();
+    setStatus('', '');
+  } catch(e) {
+    setStatus('Load failed', 'error');
+    showToast('Failed to load — check your token and repo settings.', 'error');
+    console.error(e);
+  }
+}
+
+async function reloadFromGitHub() {
+  if (isDirty && !confirm('You have unsaved changes. Reload anyway?')) return;
+  isDirty = false;
+  await loadAll();
+  showToast('Reloaded from GitHub.', 'success');
+}
+
+async function loadThumbFiles() {
+  try {
+    const o = localStorage.getItem(K_OWNER);
+    const r = localStorage.getItem(K_REPO);
+    const b = localStorage.getItem(K_BRANCH);
+    const res = await fetch(
+      `https://api.github.com/repos/${o}/${r}/contents/thumbs?ref=${b}`,
+      { headers: ghHeaders() }
+    );
+    if (!res.ok) return;
+    const files = await res.json();
+    thumbFiles = files
+      .filter(f => /\.(jpe?g|png|gif|webp)$/i.test(f.name))
+      .map(f => 'thumbs/' + f.name);
+  } catch(e) { /* non-critical */ }
+}
+
+// ─── BUILD ADMIN UI FROM SITE CONFIG ─────────────────────────────────────────
+function buildAdminUI() {
+  buildAdminTabs();
+  buildAdminCategoryPanes();
+  renderAll();
+  renderCategoryList();
+  populateAboutEditor();
+
+  // Switch to first category tab, or site if none
+  const first = siteConfig.categories[0];
+  switchTab(first ? first.id : 'site');
+}
+
+function buildAdminTabs() {
+  const tabsEl  = document.getElementById('main-tabs');
+  const siteTab = document.getElementById('tab-site');
+
+  // Remove old category tabs
+  tabsEl.querySelectorAll('.tab[data-cat]').forEach(t => t.remove());
+
+  siteConfig.categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'tab';
+    btn.id = 'tab-' + cat.id;
+    btn.dataset.cat = cat.id;
+    btn.textContent = cat.label;
+    btn.onclick = () => switchTab(cat.id);
+    tabsEl.insertBefore(btn, siteTab);
+  });
+}
+
+function buildAdminCategoryPanes() {
+  const container = document.getElementById('category-panes');
+  container.innerHTML = '';
+
+  siteConfig.categories.forEach(cat => {
+    const pane = document.createElement('div');
+    pane.id = 'pane-' + cat.id;
+    pane.style.display = 'none';
+    pane.innerHTML = `
+      <div class="toolbar">
+        <span class="toolbar-label" id="count-${cat.id}"></span>
+        <button class="btn btn-ghost btn-sm" onclick="openAdd('${cat.id}')">+ Add Project</button>
+      </div>
+      <div class="project-list" id="list-${cat.id}"></div>
+    `;
+    container.appendChild(pane);
+  });
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderAll() {
+  siteConfig.categories.forEach(cat => renderCategory(cat.id));
+}
+
+function renderCategory(cat) {
+  const items = projects.filter(p => p.category === cat);
+  const list  = document.getElementById('list-' + cat);
+  const count = document.getElementById('count-' + cat);
+
+  count.textContent = `${items.length} project${items.length !== 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    list.innerHTML = '<div class="empty">No projects yet. Use the button above to add one.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  items.forEach(p => {
+    const globalIdx = projects.indexOf(p);
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.draggable = true;
+    card.dataset.idx = globalIdx;
+
+    card.innerHTML = `
+      <div class="drag-handle" title="Drag to reorder">
+        <span></span><span></span><span></span>
+      </div>
+      ${p.thumbnail
+        ? `<img class="project-thumb" src="${esc(p.thumbnail)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'project-thumb-placeholder\\'>no image</div>'">`
+        : `<div class="project-thumb-placeholder">no image</div>`
+      }
+      <div class="project-info">
+        ${p.client ? `<div class="project-client">${esc(p.client)}</div>` : ''}
+        <div class="project-title">${esc(p.title || '(untitled)')}</div>
+        <div class="project-meta">
+          ${p.url ? '▶ video' : '▣ image only'}
+          ${p.award ? ' · ✦ ' + esc(p.award) : ''}
+          ${p.type === 'short' ? ' · short film' : ''}
+        </div>
+      </div>
+      <div class="project-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEdit(${globalIdx})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="openDelete(${globalIdx})">Remove</button>
+      </div>
+    `;
+
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragover',  onDragOver);
+    card.addEventListener('dragleave', onDragLeave);
+    card.addEventListener('drop',      onDrop);
+    card.addEventListener('dragend',   onDragEnd);
+
+    list.appendChild(card);
+  });
+}
+
+// ─── DRAG-TO-REORDER ─────────────────────────────────────────────────────────
+function onDragStart(e) {
+  dragSrcIdx = parseInt(this.dataset.idx);
+  setTimeout(() => this.classList.add('dragging'), 0);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.project-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+  this.classList.add('drag-over');
+}
+function onDragLeave() {
+  this.classList.remove('drag-over');
+}
+function onDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const targetIdx = parseInt(this.dataset.idx);
+  if (dragSrcIdx === null || dragSrcIdx === targetIdx) return;
+
+  const item = projects.splice(dragSrcIdx, 1)[0];
+  const insertAt = dragSrcIdx < targetIdx ? targetIdx : targetIdx;
+  projects.splice(insertAt, 0, item);
+
+  markDirty();
+  renderAll();
+}
+function onDragEnd() {
+  this.classList.remove('dragging');
+  document.querySelectorAll('.project-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+  dragSrcIdx = null;
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(tabId) {
+  const allTabIds = [...siteConfig.categories.map(c => c.id), 'site'];
+  allTabIds.forEach(id => {
+    const tab  = document.getElementById('tab-'  + id);
+    const pane = document.getElementById('pane-' + id);
+    if (tab)  tab.classList.toggle('active', id === tabId);
+    if (pane) pane.style.display = id === tabId ? '' : 'none';
+  });
+  currentTab = tabId;
+}
+
+// ─── ADD / EDIT ──────────────────────────────────────────────────────────────
+function clearModalForm() {
+  ['f-title','f-client','f-url','f-award','f-thumbnail','f-scrim','f-opacity'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-type').value = '';
+  document.getElementById('thumb-preview').style.display = 'none';
+  document.getElementById('thumb-picker').classList.remove('open');
+  document.getElementById('thumb-grid').innerHTML = '';
+}
+
+function openAdd(cat) {
+  editingIdx = null;
+  document.getElementById('modal-title').textContent = 'Add Project';
+  clearModalForm();
+  document.getElementById('f-category').value = cat;
+  document.getElementById('modal-edit').classList.remove('hidden');
+  document.getElementById('f-title').focus();
+}
+
+function openEdit(globalIdx) {
+  editingIdx = globalIdx;
+  const p = projects[globalIdx];
+  document.getElementById('modal-title').textContent = 'Edit Project';
+  clearModalForm();
+  document.getElementById('f-category').value  = p.category  || 'unscripted';
+  document.getElementById('f-type').value       = p.type      || '';
+  document.getElementById('f-title').value      = p.title     || '';
+  document.getElementById('f-client').value     = p.client    || '';
+  document.getElementById('f-url').value        = p.url       || '';
+  document.getElementById('f-award').value      = p.award     || '';
+  document.getElementById('f-thumbnail').value  = p.thumbnail || '';
+  document.getElementById('f-scrim').value      = p.scrim    !== undefined ? p.scrim    : '';
+  document.getElementById('f-opacity').value    = p.opacity  !== undefined ? p.opacity  : '';
+  updateThumbPreview();
+  document.getElementById('modal-edit').classList.remove('hidden');
+  document.getElementById('f-title').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-edit').classList.add('hidden');
+}
+
+function saveProject() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { showToast('Title is required.', 'error'); return; }
+
+  const scrimRaw   = document.getElementById('f-scrim').value;
+  const opacityRaw = document.getElementById('f-opacity').value;
+  const type       = document.getElementById('f-type').value;
+
+  const proj = {
+    id:        editingIdx !== null ? projects[editingIdx].id : Date.now(),
+    category:  document.getElementById('f-category').value,
+    title,
+    client:    document.getElementById('f-client').value.trim(),
+    thumbnail: document.getElementById('f-thumbnail').value.trim(),
+    url:       document.getElementById('f-url').value.trim(),
+    award:     document.getElementById('f-award').value.trim(),
+  };
+
+  if (type)             proj.type    = type;
+  if (scrimRaw !== '')  proj.scrim   = parseFloat(scrimRaw);
+  if (opacityRaw !== '') proj.opacity = parseFloat(opacityRaw);
+
+  if (editingIdx !== null) {
+    projects[editingIdx] = proj;
+    showToast('Project updated.', 'success');
+  } else {
+    // Insert after the last item of that category, or at the end
+    const catItems  = projects.filter(p => p.category === proj.category);
+    if (catItems.length > 0) {
+      const lastGlobal = projects.lastIndexOf(catItems[catItems.length - 1]);
+      projects.splice(lastGlobal + 1, 0, proj);
+    } else {
+      projects.push(proj);
+    }
+    showToast('Project added.', 'success');
+  }
+
+  markDirty();
+  renderAll();
+  closeModal();
+
+  // switch to the tab where the project lives
+  switchTab(proj.category);
+}
+
+// ─── DELETE ──────────────────────────────────────────────────────────────────
+function openDelete(globalIdx) {
+  deletingIdx = globalIdx;
+  const p = projects[globalIdx];
+  document.getElementById('delete-msg').textContent =
+    `"${p.title || '(untitled)'}" will be removed from the list. This won't go live until you save to GitHub.`;
+  document.getElementById('modal-delete').classList.remove('hidden');
+}
+function closeDelete() {
+  document.getElementById('modal-delete').classList.add('hidden');
+}
+function confirmDelete() {
+  projects.splice(deletingIdx, 1);
+  markDirty();
+  renderAll();
+  closeDelete();
+  showToast('Project removed. Save to GitHub to make it live.', 'success');
+}
+
+// ─── CATEGORY MANAGEMENT ─────────────────────────────────────────────────────
+function renderCategoryList() {
+  const list = document.getElementById('cat-list');
+  list.innerHTML = '';
+
+  siteConfig.categories.forEach((cat, i) => {
+    const card = document.createElement('div');
+    card.className = 'cat-card';
+    card.draggable = true;
+    card.dataset.catIdx = i;
+    card.innerHTML = `
+      <div class="drag-handle" title="Drag to reorder">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="cat-info">
+        <div class="cat-label-text">${esc(cat.label)}</div>
+        <div class="cat-id-text">id: ${esc(cat.id)}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="openEditCategory(${i})">Rename</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})">Remove</button>
+    `;
+
+    card.addEventListener('dragstart', onCatDragStart);
+    card.addEventListener('dragover',  onCatDragOver);
+    card.addEventListener('dragleave', onCatDragLeave);
+    card.addEventListener('drop',      onCatDrop);
+    card.addEventListener('dragend',   onCatDragEnd);
+
+    list.appendChild(card);
+  });
+}
+
+function openAddCategory() {
+  editingCatIdx = null;
+  document.getElementById('modal-cat-title').textContent = 'Add Section';
+  document.getElementById('cat-label').value = '';
+  document.getElementById('cat-id').value = '';
+  document.getElementById('cat-id-field').style.display = '';
+  document.getElementById('modal-cat').classList.remove('hidden');
+  document.getElementById('cat-label').focus();
+  // auto-fill slug from label
+  document.getElementById('cat-label').oninput = () => {
+    if (editingCatIdx === null) {
+      document.getElementById('cat-id').value =
+        document.getElementById('cat-label').value
+          .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    }
+  };
+}
+
+function openEditCategory(idx) {
+  editingCatIdx = idx;
+  const cat = siteConfig.categories[idx];
+  document.getElementById('modal-cat-title').textContent = 'Rename Section';
+  document.getElementById('cat-label').value = cat.label;
+  document.getElementById('cat-id').value = cat.id;
+  document.getElementById('cat-id-field').style.display = '';
+  document.getElementById('cat-label').oninput = null;
+  document.getElementById('modal-cat').classList.remove('hidden');
+  document.getElementById('cat-label').focus();
+}
+
+function closeCatModal() {
+  document.getElementById('modal-cat').classList.add('hidden');
+}
+
+function saveCategoryModal() {
+  const label = document.getElementById('cat-label').value.trim();
+  const id    = document.getElementById('cat-id').value.trim();
+  if (!label) { showToast('Label is required.', 'error'); return; }
+  if (!id)    { showToast('ID/slug is required.', 'error'); return; }
+  if (!/^[a-z0-9-]+$/.test(id)) { showToast('ID must be lowercase letters, numbers, hyphens only.', 'error'); return; }
+
+  if (editingCatIdx !== null) {
+    siteConfig.categories[editingCatIdx].label = label;
+    siteConfig.categories[editingCatIdx].id    = id;
+  } else {
+    if (siteConfig.categories.some(c => c.id === id)) {
+      showToast('A section with that ID already exists.', 'error'); return;
+    }
+    siteConfig.categories.push({ id, label });
+  }
+
+  closeCatModal();
+  markDirty();
+  buildAdminTabs();
+  buildAdminCategoryPanes();
+  renderAll();
+  renderCategoryList();
+  showToast(editingCatIdx !== null ? 'Section renamed.' : 'Section added.', 'success');
+}
+
+function deleteCategory(idx) {
+  const cat = siteConfig.categories[idx];
+  const count = projects.filter(p => p.category === cat.id).length;
+  const warn  = count > 0 ? ` It has ${count} project(s) — those will still exist in projects.json but won't appear on site.` : '';
+  if (!confirm(`Remove the "${cat.label}" section?${warn}`)) return;
+
+  siteConfig.categories.splice(idx, 1);
+  markDirty();
+  buildAdminTabs();
+  buildAdminCategoryPanes();
+  renderAll();
+  renderCategoryList();
+
+  const first = siteConfig.categories[0];
+  switchTab(first ? first.id : 'site');
+  showToast('Section removed. Save to GitHub to make it live.', 'success');
+}
+
+// Category drag-to-reorder
+function onCatDragStart(e) {
+  catDragSrcIdx = parseInt(this.dataset.catIdx);
+  setTimeout(() => this.classList.add('dragging'), 0);
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onCatDragOver(e) {
+  e.preventDefault();
+  document.querySelectorAll('.cat-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+  this.classList.add('drag-over');
+}
+function onCatDragLeave() { this.classList.remove('drag-over'); }
+function onCatDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const targetIdx = parseInt(this.dataset.catIdx);
+  if (catDragSrcIdx === null || catDragSrcIdx === targetIdx) return;
+  const item = siteConfig.categories.splice(catDragSrcIdx, 1)[0];
+  siteConfig.categories.splice(targetIdx, 0, item);
+  markDirty();
+  buildAdminTabs();
+  buildAdminCategoryPanes();
+  renderAll();
+  renderCategoryList();
+}
+function onCatDragEnd() {
+  this.classList.remove('dragging');
+  document.querySelectorAll('.cat-card.drag-over').forEach(el => el.classList.remove('drag-over'));
+  catDragSrcIdx = null;
+}
+
+// ─── ABOUT EDITOR ────────────────────────────────────────────────────────────
+function populateAboutEditor() {
+  const a = siteConfig.about || {};
+  document.getElementById('about-bio-input').value   = a.bio   || '';
+  document.getElementById('about-bio2-input').value  = a.bio2  || '';
+  document.getElementById('about-email-input').value = a.contactEmail || '';
+}
+
+function saveAboutFields() {
+  siteConfig.about = {
+    bio:          document.getElementById('about-bio-input').value,
+    bio2:         document.getElementById('about-bio2-input').value,
+    contactEmail: document.getElementById('about-email-input').value.trim()
+  };
+  markDirty();
+  showToast('About changes staged. Save to GitHub to publish.', 'success');
+}
+
+// ─── THUMB PICKER ────────────────────────────────────────────────────────────
+function toggleThumbPicker() {
+  const picker = document.getElementById('thumb-picker');
+  const grid   = document.getElementById('thumb-grid');
+  picker.classList.toggle('open');
+
+  if (picker.classList.contains('open') && grid.children.length === 0) {
+    if (thumbFiles.length === 0) {
+      grid.innerHTML = '<p style="color:var(--fg-dim);font-size:11px;padding:8px">No thumbnails loaded yet — type a path manually above.</p>';
+      return;
+    }
+    const currentVal = document.getElementById('f-thumbnail').value;
+    thumbFiles.forEach(path => {
+      const img = document.createElement('img');
+      img.src = path; img.className = 'thumb-option';
+      img.title = path.split('/').pop();
+      if (currentVal === path) img.classList.add('selected');
+      img.addEventListener('click', () => {
+        document.getElementById('f-thumbnail').value = path;
+        document.querySelectorAll('.thumb-option').forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
+        updateThumbPreview();
+      });
+      grid.appendChild(img);
+    });
+  }
+}
+
+function updateThumbPreview() {
+  const val     = document.getElementById('f-thumbnail').value.trim();
+  const preview = document.getElementById('thumb-preview');
+  preview.style.display = val ? 'block' : 'none';
+  if (val) preview.src = val;
+}
+
+// ─── GITHUB SAVE ─────────────────────────────────────────────────────────────
+async function putGhFile(filename, content, sha) {
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  const apiUrl = `https://api.github.com/repos/${o}/${r}/contents/${filename}`;
+
+  // Fetch fresh SHA if we don't have it
+  let fileSha = sha;
+  if (!fileSha) {
+    const getRes = await fetch(apiUrl + `?ref=${b}`, { headers: ghHeaders() });
+    if (getRes.ok) fileSha = (await getRes.json()).sha;
+  }
+
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+  const ts = new Date().toISOString().slice(0,16).replace('T',' ');
+  const body = {
+    message: `Update ${filename} via admin — ${ts} UTC`,
+    content: encoded,
+    branch:  b,
+    ...(fileSha ? { sha: fileSha } : {})
+  };
+
+  const putRes = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!putRes.ok) {
+    const err = await putRes.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${putRes.status} on ${filename}`);
+  }
+
+  const result = await putRes.json();
+  return result.content.sha;
+}
+
+async function saveToGitHub() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  setStatus('Saving…', 'saving');
+
+  try {
+    // Save both files in parallel
+    const [newProjSha, newSiteSha] = await Promise.all([
+      putGhFile('projects.json', projects,   projectsSha),
+      putGhFile('site.json',     siteConfig, siteSha)
+    ]);
+
+    projectsSha = newProjSha;
+    siteSha     = newSiteSha;
+    isDirty     = false;
+
+    setStatus('Saved ✓', 'saved');
+    showToast('Saved! GitHub Pages will update in ~30 seconds.', 'success');
+    setTimeout(() => setStatus('', ''), 5000);
+  } catch(e) {
+    setStatus('Save failed', 'error');
+    showToast('Save failed: ' + e.message, 'error');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function markDirty() {
+  isDirty = true;
+  setStatus('Unsaved changes', 'dirty');
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('nav-status');
+  el.textContent = msg;
+  el.className = 'nav-status' + (cls ? ' ' + cls : '');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── KEYBOARD ────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeDelete();
+  }
+});
+
+window.addEventListener('beforeunload', e => {
+  if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// ─── BOOT ────────────────────────────────────────────────────────────────────
+if (isSetupDone()) {
+  document.getElementById('screen-setup').classList.add('hidden');
+  document.getElementById('screen-login').classList.remove('hidden');
+  setTimeout(() => document.getElementById('login-pw').focus(), 50);
+}
+// else: setup screen is shown by default
+</script>
+</body>
+</html>
