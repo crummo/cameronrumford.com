@@ -545,7 +545,7 @@
     "category": "scripted",
     "title": "Rage 2 DLC: Raging Planet",
     "client": "Bethesda Softworks",
-    "thumbnail": "thumbs/Rage2_RagingPlanet.jpeg",
+    "thumbnail": "thumbs/Rage2_RagingPlanet_sml.jpeg",
     "url": "https://youtu.be/p3VUcFdDkK0",
     "award": "",
     "opacity": 0,
@@ -739,8 +739,7 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_CountSquad_sml.jpeg",
     "url": "https://youtu.be/TnHJ2UNHszM",
-    "award": "",
-    "opacity": 0
+    "award": ""
   },
   {
     "id": 75,
