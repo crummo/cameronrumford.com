@@ -1,15 +1,5 @@
 [
   {
-    "id": 1,
-    "category": "unscripted",
-    "title": "I Was There",
-    "client": "Short Documentary",
-    "thumbnail": "thumbs/IWasThere_sml.jpeg",
-    "url": "https://youtu.be/mgthUaDaYIY?rel=0?version=3&autoplay=1&controls=0&&loop=1",
-    "award": "",
-    "type": "short"
-  },
-  {
     "id": 2,
     "category": "unscripted",
     "title": "Data Centered: Farm City Fence",
@@ -18,6 +8,16 @@
     "url": "https://youtu.be/7wDqCjuf7aw?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
     "award": "",
     "scrim": 0.4
+  },
+  {
+    "id": 1,
+    "category": "unscripted",
+    "title": "I Was There",
+    "client": "Short Documentary",
+    "thumbnail": "thumbs/IWasThere_sml.jpeg",
+    "url": "https://youtu.be/mgthUaDaYIY?rel=0?version=3&autoplay=1&controls=0&&loop=1",
+    "award": "",
+    "type": "short"
   },
   {
     "id": 3,
@@ -473,7 +473,7 @@
     "id": 48,
     "category": "scripted",
     "title": "Hot Pockets | You Got What I Eat starring Snoop Dogg and Kate Upton",
-    "client": "NestlÃÂ©",
+    "client": "NestlÃÂÃÂ©",
     "thumbnail": "thumbs/YGWIE_sml.jpeg",
     "url": "https://youtu.be/9iR2glnpS_Y",
     "award": ""
