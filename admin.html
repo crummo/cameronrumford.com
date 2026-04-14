@@ -470,11 +470,22 @@
       </div>
 
       <div class="settings-section about-editor">
-        <div class="settings-section-title">About Page</div>
+        <div class="settings-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          About Page
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;margin:0">
+            <span style="color:var(--fg-dim)">Show on site</span>
+            <input type="checkbox" id="about-show-input" style="accent-color:var(--accent);width:15px;height:15px" checked />
+          </label>
+        </div>
         <p class="about-hint">
-          Both fields accept basic HTML (e.g. <code style="color:var(--accent)">&lt;strong&gt;</code>,
+          Both bio fields accept basic HTML (e.g. <code style="color:var(--accent)">&lt;strong&gt;</code>,
           <code style="color:var(--accent)">&lt;em&gt;</code>, <code style="color:var(--accent)">&lt;a href="…"&gt;</code>).
         </p>
+        <div class="field">
+          <label>Photo <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — URL or relative path)</span></label>
+          <input type="text" id="about-photo-input" placeholder="e.g. images/headshot.jpg or https://…" oninput="updateAboutPhotoPreview()" />
+          <img id="about-photo-preview" alt="About photo preview" style="display:none;margin-top:8px;width:80px;height:80px;object-fit:cover;border-radius:50%;border:1px solid var(--fg-dimmer)" />
+        </div>
         <div class="field">
           <label>Bio — main paragraph</label>
           <textarea id="about-bio-input" placeholder="Main bio paragraph…"></textarea>
@@ -1185,13 +1196,28 @@ function onCatDragEnd() {
 // ─── ABOUT EDITOR ────────────────────────────────────────────────────────────
 function populateAboutEditor() {
   const a = siteConfig.about || {};
-  document.getElementById('about-bio-input').value   = a.bio   || '';
-  document.getElementById('about-bio2-input').value  = a.bio2  || '';
-  document.getElementById('about-email-input').value = a.contactEmail || '';
+  document.getElementById('about-show-input').checked  = a.show !== false;
+  document.getElementById('about-photo-input').value   = a.photo || '';
+  document.getElementById('about-bio-input').value     = a.bio   || '';
+  document.getElementById('about-bio2-input').value    = a.bio2  || '';
+  document.getElementById('about-email-input').value   = a.contactEmail || '';
+  updateAboutPhotoPreview();
+}
+
+function updateAboutPhotoPreview() {
+  const val = document.getElementById('about-photo-input').value.trim();
+  const prev = document.getElementById('about-photo-preview');
+  if (!val) { prev.style.display = 'none'; return; }
+  prev.src = val;
+  prev.style.display = 'block';
+  prev.onerror = () => { prev.style.opacity = '0.3'; };
+  prev.onload  = () => { prev.style.opacity = '1'; };
 }
 
 function saveAboutFields() {
   siteConfig.about = {
+    show:         document.getElementById('about-show-input').checked,
+    photo:        document.getElementById('about-photo-input').value.trim(),
     bio:          document.getElementById('about-bio-input').value,
     bio2:         document.getElementById('about-bio2-input').value,
     contactEmail: document.getElementById('about-email-input').value.trim()

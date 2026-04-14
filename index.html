@@ -479,6 +479,13 @@
       font-size: 9px; letter-spacing: 0.24em;
       text-transform: uppercase; color: var(--fg-dim); margin-bottom: 36px;
     }
+    .about-photo {
+      width: 120px; height: 120px;
+      border-radius: 50%; object-fit: cover;
+      margin-bottom: 32px;
+      border: 1px solid var(--fg-dimmer);
+      display: block;
+    }
     .about-bio {
       font-family: var(--font-serif);
       font-size: 20px; font-weight: 400;
@@ -654,6 +661,7 @@
   <div id="page-about" class="page">
     <div class="about-wrap">
       <p class="about-eyebrow">About</p>
+      <img id="about-photo" class="about-photo" alt="Cameron Rumford" style="display:none" />
       <p class="about-bio"   id="about-bio"></p>
       <p class="about-bio2"  id="about-bio2"></p>
       <p class="about-contact">For work inquiries: <a id="about-email" href=""></a></p>
@@ -778,10 +786,15 @@ async function init() {
 
 /* ── Build nav links from site.json ── */
 function buildNav(categories) {
-  const ul     = document.getElementById('nav-cat-links');
+  const ul      = document.getElementById('nav-cat-links');
   const aboutLi = ul.querySelector('li:last-child'); // the About item
   const drawer  = document.getElementById('drawer');
   const dAbout  = document.getElementById('dnav-about');
+
+  // Show/hide About based on site.json toggle
+  const showAbout = siteConfig.about?.show !== false;
+  aboutLi.style.display = showAbout ? '' : 'none';
+  if (dAbout) dAbout.style.display = showAbout ? '' : 'none';
 
   categories.forEach(cat => {
     // Desktop nav
@@ -819,6 +832,7 @@ function renderAbout(about) {
   const bio2El  = document.getElementById('about-bio2');
   const emailEl = document.getElementById('about-email');
   const emailFt = document.getElementById('about-email-footer');
+  const photoEl = document.getElementById('about-photo');
 
   if (bioEl)   bioEl.innerHTML  = about.bio  || '';
   if (bio2El)  bio2El.innerHTML = about.bio2 || '';
@@ -826,12 +840,17 @@ function renderAbout(about) {
     if (emailEl) { emailEl.href = `mailto:${about.contactEmail}`; emailEl.textContent = about.contactEmail; }
     if (emailFt) { emailFt.href = `mailto:${about.contactEmail}`; emailFt.textContent = about.contactEmail; }
   }
+  if (photoEl && about.photo) {
+    photoEl.src = about.photo;
+    photoEl.style.display = 'block';
+  }
 }
 
 /* ── Show first category page ── */
 function showFirst() {
   const first = siteConfig.categories[0];
-  showPage(first ? first.id : 'about');
+  if (first) { showPage(first.id); return; }
+  if (siteConfig.about?.show !== false) showPage('about');
 }
 
 function buildAll() {
