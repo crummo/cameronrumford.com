@@ -15,6 +15,10 @@
     {
       "id": "social",
       "label": "Social"
+    },
+    {
+      "id": "poop",
+      "label": "Poop"
     }
   ],
   "about": {
