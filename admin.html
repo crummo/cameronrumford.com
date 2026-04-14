@@ -320,23 +320,15 @@
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-    /* ── THUMB PICKER ── */
-    .thumb-picker { display: none; margin-top: 10px; }
-    .thumb-picker.open { display: block; }
-    .thumb-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-      gap: 4px; max-height: 220px; overflow-y: auto;
-      background: var(--bg); border: 1px solid var(--fg-dimmer);
-      border-radius: 3px; padding: 8px; margin-top: 8px;
+    /* ── THUMB PREVIEW ── */
+    #thumb-preview {
+      display: none; width: 100%; aspect-ratio: 16/9;
+      object-fit: cover; border-radius: 3px; margin-top: 8px;
+      border: 1px solid var(--fg-dimmer);
     }
-    .thumb-option {
-      aspect-ratio: 16/9; object-fit: cover;
-      border-radius: 2px; cursor: pointer;
-      opacity: 0.55; transition: opacity 0.2s, outline 0.15s;
-    }
-    .thumb-option:hover { opacity: 0.85; }
-    .thumb-option.selected { opacity: 1; outline: 2px solid var(--accent); outline-offset: 1px; }
+    #thumb-preview.error { display: flex; align-items: center; justify-content: center;
+      background: var(--fg-dimmer); color: var(--fg-mid); font-size: 11px; }
+
 
     #thumb-preview {
       margin-top: 8px; width: 120px; height: 68px;
@@ -371,7 +363,7 @@
     <div class="field-row">
       <div class="field">
         <label>GitHub Owner</label>
-        <input type="text" id="setup-owner" value="cameronrumford" />
+        <input type="text" id="setup-owner" value="crummo" />
       </div>
       <div class="field">
         <label>Branch</label>
@@ -536,12 +528,6 @@
     <div class="field">
       <label>Thumbnail <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(images live in /thumbs/ — just enter the filename)</span></label>
       <input type="text" id="f-thumbnail" placeholder="filename.jpeg" oninput="updateThumbPreview()" />
-      <div class="field-hint">
-        <button class="btn btn-ghost btn-sm" style="margin-top:8px" type="button" onclick="toggleThumbPicker()">Browse existing thumbnails ↓</button>
-      </div>
-      <div class="thumb-picker" id="thumb-picker">
-        <div class="thumb-grid" id="thumb-grid"></div>
-      </div>
       <img id="thumb-preview" alt="thumbnail preview" />
     </div>
 
@@ -945,8 +931,7 @@ function clearModalForm() {
   document.getElementById('f-type').value = '';
   document.getElementById('f-hide-text').checked = false;
   document.getElementById('thumb-preview').style.display = 'none';
-  document.getElementById('thumb-picker').classList.remove('open');
-  document.getElementById('thumb-grid').innerHTML = '';
+  document.getElementById('thumb-preview').style.display = 'none';
 }
 
 function openAdd(cat) {
@@ -1204,40 +1189,15 @@ function saveAboutFields() {
   showToast('About changes staged. Save to GitHub to publish.', 'success');
 }
 
-// ─── THUMB PICKER ────────────────────────────────────────────────────────────
-function toggleThumbPicker() {
-  const picker = document.getElementById('thumb-picker');
-  const grid   = document.getElementById('thumb-grid');
-  picker.classList.toggle('open');
-
-  if (picker.classList.contains('open') && grid.children.length === 0) {
-    if (thumbFiles.length === 0) {
-      grid.innerHTML = '<p style="color:var(--fg-dim);font-size:11px;padding:8px">No thumbnails loaded yet — type a path manually above.</p>';
-      return;
-    }
-    const currentVal = thumbStore(document.getElementById('f-thumbnail').value);
-    thumbFiles.forEach(path => {
-      const filename = path.replace(/^thumbs\//, '');
-      const img = document.createElement('img');
-      img.src = path; img.className = 'thumb-option';
-      img.title = filename;
-      if (currentVal === path) img.classList.add('selected');
-      img.addEventListener('click', () => {
-        document.getElementById('f-thumbnail').value = filename;
-        document.querySelectorAll('.thumb-option').forEach(i => i.classList.remove('selected'));
-        img.classList.add('selected');
-        updateThumbPreview();
-      });
-      grid.appendChild(img);
-    });
-  }
-}
-
+// ─── THUMB PREVIEW ───────────────────────────────────────────────────────────
 function updateThumbPreview() {
   const val     = document.getElementById('f-thumbnail').value.trim();
   const preview = document.getElementById('thumb-preview');
-  preview.style.display = val ? 'block' : 'none';
-  if (val) preview.src = thumbStore(val);
+  if (!val) { preview.style.display = 'none'; return; }
+  preview.style.display = 'block';
+  preview.src = thumbStore(val);
+  preview.onerror = () => { preview.style.opacity = '0.3'; };
+  preview.onload  = () => { preview.style.opacity = '1'; };
 }
 
 // ─── GITHUB SAVE ─────────────────────────────────────────────────────────────
