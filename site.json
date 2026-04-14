@@ -1,8 +1,17 @@
 {
   "categories": [
-    { "id": "unscripted", "label": "Unscripted" },
-    { "id": "scripted",   "label": "Scripted" },
-    { "id": "videogames", "label": "Video Games" }
+    {
+      "id": "unscripted",
+      "label": "Unscripted"
+    },
+    {
+      "id": "scripted",
+      "label": "Scripted"
+    },
+    {
+      "id": "videogames",
+      "label": "Video Games"
+    }
   ],
   "about": {
     "bio": "<strong>Cameron Rumford</strong> is a Los Angeles based editor with over 20 years in post-production, specializing in branded content, documentary, and commercial work for some of the world's leading companies.",
