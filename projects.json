@@ -10,8 +10,6 @@
     "type": "short"
   },
   {
-<<<<<<< Updated upstream
-=======
     "id": 2,
     "category": "unscripted",
     "title": "Data Centered: Farm City Fence",
@@ -22,7 +20,6 @@
     "vignette": 0.4
   },
   {
->>>>>>> Stashed changes
     "id": 3,
     "category": "unscripted",
     "title": "Bill Gates's Heroes in the Field: Dr. Mara Lawniczak",
@@ -31,16 +28,6 @@
     "url": "https://youtu.be/d7YYKAJvNek",
     "award": "",
     "vignette": 0.4
-  },
-  {
-    "id": 2,
-    "category": "unscripted",
-    "title": "Data Centered: Farm City Fence",
-    "client": "Amazon Web Services",
-    "thumbnail": "thumbs/AWS_FarmCityFence01.jpeg",
-    "url": "https://youtu.be/7wDqCjuf7aw?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
-    "award": "",
-    "scrim": 0.4
   },
   {
     "id": 4,
