@@ -1,5 +1,15 @@
 [
   {
+    "id": 2,
+    "category": "unscripted",
+    "title": "Data Centered: Farm City Fence",
+    "client": "Amazon Web Services",
+    "thumbnail": "thumbs/AWS_FarmCityFence01.jpeg",
+    "url": "https://youtu.be/7wDqCjuf7aw?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
+    "award": "",
+    "scrim": 0.4
+  },
+  {
     "id": 1,
     "category": "unscripted",
     "title": "I Was There",
@@ -10,16 +20,6 @@
     "type": "short"
   },
   {
-    "id": 2,
-    "category": "unscripted",
-    "title": "Data Centered: Farm City Fence",
-    "client": "Amazon Web Services",
-    "thumbnail": "thumbs/AWS_FarmCityFence01.jpeg",
-    "url": "https://youtu.be/7wDqCjuf7aw?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
-    "award": "",
-"scrim": 0.4
-  },
-  {
     "id": 3,
     "category": "unscripted",
     "title": "Bill Gates's Heroes in the Field: Dr. Mara Lawniczak",
@@ -27,7 +27,7 @@
     "thumbnail": "thumbs/GV_mara01_sml.jpeg",
     "url": "https://youtu.be/d7YYKAJvNek",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "thumbnail": "thumbs/MS_surfacePersue04.jpeg",
     "url": "https://camrumford.wistia.com/medias/vcg13tujws",
     "award": "",
-"scrim": 0.6
+    "scrim": 0.6
   },
   {
     "id": 5,
@@ -48,7 +48,7 @@
     "url": "https://www.youtube.com/watch?v=2djGA861KP4",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 6,
@@ -59,7 +59,7 @@
     "url": "https://youtu.be/bNpwoq_KIFQ",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 7,
@@ -69,7 +69,7 @@
     "thumbnail": "thumbs/MS_quantum_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 8,
@@ -79,7 +79,7 @@
     "thumbnail": "thumbs/AWS_Xoltotl.jpeg",
     "url": "https://youtu.be/hc7ErWr_gvs?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 9,
@@ -89,7 +89,7 @@
     "thumbnail": "thumbs/MS_WindowsInsider01.jpeg",
     "url": "https://youtu.be/hc7ErWr_gvs?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 10,
@@ -100,7 +100,7 @@
     "url": "https://camrumford.wistia.com/medias/utxvkx7lq0",
     "award": "",
     "type": "short",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 11,
@@ -110,7 +110,7 @@
     "thumbnail": "thumbs/GV_WRAIR_sml.jpeg",
     "url": "https://youtu.be/rQ8IwVpzAic",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 12,
@@ -129,7 +129,7 @@
     "thumbnail": "thumbs/GV_C16Palm.jpeg",
     "url": "https://youtu.be/LF_cV2OElxM",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 14,
@@ -148,7 +148,7 @@
     "thumbnail": "thumbs/AWS_Flikshop_sml.jpeg",
     "url": "https://youtu.be/Jpy2O2zcq-0",
     "award": "Winner of a Golden and Bronze Telly Award, 2023",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 16,
@@ -168,7 +168,7 @@
     "url": "https://www.youtube.com/watch?v=jHSYDCyBv5Q",
     "award": "",
     "type": "short",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 18,
@@ -196,7 +196,7 @@
     "thumbnail": "thumbs/Adobe_Lynn_sml.jpeg",
     "url": "https://youtu.be/zIyTNELCfHc",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 21,
@@ -206,7 +206,7 @@
     "thumbnail": "thumbs/GV_Savor_sml.jpeg",
     "url": "https://youtu.be/OJpAsIDL-3M",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 22,
@@ -234,7 +234,7 @@
     "thumbnail": "thumbs/AWS_BMCC01.jpeg",
     "url": "https://youtu.be/edDEReQKx4s",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 25,
@@ -254,7 +254,7 @@
     "url": "https://www.youtube.com/watch?v=pIpldh3G8B8",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 27,
@@ -264,7 +264,7 @@
     "thumbnail": "thumbs/MS_Telefonica_sml.jpeg",
     "url": "https://youtu.be/DG-kPAaDj3M",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 28,
@@ -274,7 +274,7 @@
     "thumbnail": "thumbs/MS_surfaceAriela04.jpeg",
     "url": "https://youtu.be/u7SLVBgSCW8",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 29,
@@ -284,7 +284,7 @@
     "thumbnail": "thumbs/MS_BentleyHoloLens_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=pHjjqKLFMXM",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 30,
@@ -303,7 +303,7 @@
     "thumbnail": "thumbs/GV_Chula01.jpeg",
     "url": "https://youtu.be/6edjADzjhWA",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 32,
@@ -314,7 +314,7 @@
     "url": "https://youtu.be/HZtio0wZCRs",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 33,
@@ -325,7 +325,7 @@
     "url": "https://www.youtube.com/watch?v=fZBh4tiJfe4",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 34,
@@ -336,7 +336,7 @@
     "url": "https://vimeo.com/205970174",
     "award": "",
     "year": "2015",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 35,
@@ -347,7 +347,7 @@
     "url": "https://vimeo.com/157676316",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 36,
@@ -357,7 +357,7 @@
     "thumbnail": "thumbs/RH_Bas_sml.jpeg",
     "url": "http://vimeo.com/107011852",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 37,
@@ -367,7 +367,7 @@
     "thumbnail": "thumbs/Ajna_sml.jpeg",
     "url": "https://youtu.be/Tnge02XA4GE",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 38,
@@ -378,7 +378,7 @@
     "url": "https://www.youtube.com/watch?time_continue=0&v=IgtHnCJJUMU&feature=emb_logo",
     "award": "",
     "year": "2017",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 39,
@@ -398,7 +398,7 @@
     "url": "https://youtu.be/NYv9PzK8Yu0",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 41,
@@ -408,7 +408,7 @@
     "thumbnail": "thumbs/GV_CarbonCure_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=0pAH-6R5J2A",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 42,
@@ -418,7 +418,7 @@
     "thumbnail": "thumbs/THR_Hader-Carvey_sml.jpeg",
     "url": "https://camrumford.wistia.com/medias/cbo89rijhw",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 43,
@@ -428,7 +428,7 @@
     "thumbnail": "thumbs/GV_Quantumscape_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=5oPP4tXOAVM",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 44,
@@ -438,8 +438,7 @@
     "thumbnail": "thumbs/Gates_BostonMetal01.jpeg",
     "url": "https://youtu.be/-pYNzxorJs0",
     "award": "",
-"scrim": 0.3
-
+    "scrim": 0.3
   },
   {
     "id": 45,
@@ -449,7 +448,7 @@
     "thumbnail": "thumbs/MS_Jasper_sml.jpeg",
     "url": "https://youtu.be/x7o_qtfN3jA",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 46,
@@ -468,13 +467,13 @@
     "thumbnail": "thumbs/xboxEnemyContainment.jpeg",
     "url": "https://youtu.be/cuMQvxtiLro",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 48,
     "category": "scripted",
     "title": "Hot Pockets | You Got What I Eat starring Snoop Dogg and Kate Upton",
-    "client": "Nestlé",
+    "client": "NestlÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©",
     "thumbnail": "thumbs/YGWIE_sml.jpeg",
     "url": "https://youtu.be/9iR2glnpS_Y",
     "award": ""
@@ -487,7 +486,7 @@
     "thumbnail": "thumbs/JurassicWorldAlive01.jpeg",
     "url": "https://www.youtube.com/watch?v=N9zi10NQLqs",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 50,
@@ -498,7 +497,7 @@
     "url": "https://www.youtube.com/watch?v=jl72f4iXJnk",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 51,
@@ -517,7 +516,7 @@
     "thumbnail": "thumbs/MS_Lumia01_sml.jpeg",
     "url": "https://youtu.be/zOdK1nvSa24",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 53,
@@ -528,7 +527,7 @@
     "url": "https://youtu.be/flV-AXmr7u0",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 54,
@@ -538,7 +537,7 @@
     "thumbnail": "thumbs/xboxBigDay01.jpeg",
     "url": "https://youtu.be/SdfNYigTqU0",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 55,
@@ -549,7 +548,7 @@
     "url": "https://youtu.be/p3VUcFdDkK0",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 56,
@@ -559,7 +558,7 @@
     "thumbnail": "thumbs/xbox_thelot.jpeg",
     "url": "https://youtu.be/zkr_xnPBJt0",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 57,
@@ -570,7 +569,7 @@
     "url": "",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 58,
@@ -581,7 +580,7 @@
     "url": "https://youtu.be/CkivqQeTgvA",
     "award": "",
     "year": "2015",
-"scrim": 0.3
+    "scrim": 0.3
   },
   {
     "id": 59,
@@ -591,7 +590,7 @@
     "thumbnail": "thumbs/Mattel_Mega_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=q8Sv2pSM2Cs",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 60,
@@ -601,7 +600,7 @@
     "thumbnail": "thumbs/xboxMakeSomeNoise01.jpeg",
     "url": "https://youtu.be/Gyq7bIU_UkI",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 61,
@@ -611,7 +610,7 @@
     "thumbnail": "thumbs/XBOX_wrestler_thumb_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=ON7tyOX3_gM",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 62,
@@ -621,7 +620,7 @@
     "thumbnail": "thumbs/xboxRookieRaider.jpeg",
     "url": "https://www.youtube.com/watch?v=i3Vkn_hMv4k",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 63,
@@ -632,7 +631,7 @@
     "url": "https://www.youtube.com/watch?v=9zEwUvC5eEY",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 64,
@@ -652,7 +651,7 @@
     "url": "https://youtu.be/p3VUcFdDkK0",
     "award": "",
     "opacity": 0,
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 66,
@@ -662,7 +661,7 @@
     "thumbnail": "thumbs/XBOX_BigFun_sml.jpeg",
     "url": "https://youtu.be/-Wsrm9xB96w",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 67,
@@ -672,7 +671,7 @@
     "thumbnail": "thumbs/JurassicWorldAlive01.jpeg",
     "url": "https://www.youtube.com/watch?v=N9zi10NQLqs",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 68,
@@ -691,7 +690,7 @@
     "thumbnail": "thumbs/XBOX_chicken_sml.jpeg",
     "url": "https://youtu.be/EE2p3U1ONjw",
     "award": "",
-"scrim": 0.3
+    "scrim": 0.3
   },
   {
     "id": 70,
@@ -701,7 +700,7 @@
     "thumbnail": "thumbs/Minecraf_Blockbuster01_sml.jpeg",
     "url": "https://youtu.be/yTML3nmMrEE",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 71,
@@ -711,7 +710,7 @@
     "thumbnail": "thumbs/Rage2_Rejector_sml.jpeg",
     "url": "https://youtu.be/BYnfaPp7kW8",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 72,
@@ -721,7 +720,7 @@
     "thumbnail": "thumbs/XBOX_GamepassForPC_sml.jpeg",
     "url": "https://youtu.be/rO9XrQsjixA",
     "award": "",
-"scrim": 0.5
+    "scrim": 0.5
   },
   {
     "id": 73,
@@ -758,7 +757,7 @@
     "thumbnail": "thumbs/XBOX_thisguy_sml.jpeg",
     "url": "https://youtu.be/tzsUgkd_etk",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 77,
@@ -768,7 +767,7 @@
     "thumbnail": "thumbs/XBOX_Forza15_sml.jpeg",
     "url": "https://youtu.be/KBsbWs_9i4o",
     "award": "",
-"scrim": 0.4
+    "scrim": 0.4
   },
   {
     "id": 78,
@@ -778,7 +777,7 @@
     "thumbnail": "thumbs/XBOX_adventure_sml.jpeg",
     "url": "https://youtu.be/9WJeI6JKbCk",
     "award": "",
-"scrim": 0
+    "scrim": 0
   },
   {
     "id": 79,
