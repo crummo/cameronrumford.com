@@ -1,12 +1,12 @@
 {
   "categories": [
     {
-      "id": "unscripted",
-      "label": "Unscripted"
-    },
-    {
       "id": "scripted",
       "label": "Scripted"
+    },
+    {
+      "id": "unscripted",
+      "label": "Unscripted"
     },
     {
       "id": "videogames",
@@ -15,6 +15,10 @@
     {
       "id": "social",
       "label": "Social"
+    },
+    {
+      "id": "poop",
+      "label": "Poop"
     }
   ],
   "about": {
