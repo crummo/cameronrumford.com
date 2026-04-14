@@ -1229,11 +1229,9 @@ async function putGhFile(filename, content) {
   const b = localStorage.getItem(K_BRANCH);
   const apiUrl = `https://api.github.com/repos/${o}/${r}/contents/${filename}`;
 
-  // Always fetch the freshest SHA right before writing — cache-busted to avoid stale responses
+  // Always fetch the freshest SHA right before writing — timestamp busts any browser cache
   let fileSha = null;
-  const getRes = await fetch(apiUrl + `?ref=${b}&t=${Date.now()}`, {
-    headers: { ...ghHeaders(), 'Cache-Control': 'no-cache' }
-  });
+  const getRes = await fetch(apiUrl + `?ref=${b}&t=${Date.now()}`, { headers: ghHeaders() });
   if (getRes.ok) fileSha = (await getRes.json()).sha;
 
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
