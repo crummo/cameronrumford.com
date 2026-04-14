@@ -882,6 +882,7 @@ function buildDesktopGrid(cat, items) {
         <div class="grid-center${hasClient ? '' : ' solo'}${isShort ? ' short' : ''}">
           ${isShort
             ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>
+               ${p.url ? `<div class="grid-play"></div>` : ''}
                <div class="grid-title" style="opacity:${titleOp}">${x(p.title)}</div>`
             : `${hasClient ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>` : ''}
                ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
