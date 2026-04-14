@@ -11,6 +11,10 @@
     {
       "id": "videogames",
       "label": "Video Games"
+    },
+    {
+      "id": "social",
+      "label": "Social"
     }
   ],
   "about": {
