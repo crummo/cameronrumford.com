@@ -262,12 +262,13 @@
     }
 
     .grid-award {
+      position: absolute; bottom: 10px;
+      left: 0; right: 0; text-align: center;
       font-size: 7px; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--accent);
       font-weight: 400;
-      max-height: 0; overflow: hidden; opacity: 0;
-      transition: max-height 0.3s 0.1s var(--ease),
-                  opacity 0.3s 0.1s var(--ease);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s 0.1s var(--ease);
     }
 
     /* hover — slide client up, title down, away from center */
@@ -280,7 +281,7 @@
       font-size: 14px; opacity: 1 !important;
       transform: translateY(34px);
     }
-    .grid-item:hover .grid-award  { max-height: 28px; opacity: 1; }
+    .grid-item:hover .grid-award  { opacity: 1; }
 
     /* title-only items */
     .grid-center.solo .grid-title { font-size: 10px; opacity: 0.55; }
