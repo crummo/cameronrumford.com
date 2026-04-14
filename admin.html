@@ -320,21 +320,28 @@
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-    /* ── THUMB PREVIEW ── */
-    #thumb-preview {
-      display: none; width: 100%; aspect-ratio: 16/9;
-      object-fit: cover; border-radius: 3px; margin-top: 8px;
-      border: 1px solid var(--fg-dimmer);
-    }
-    #thumb-preview.error { display: flex; align-items: center; justify-content: center;
-      background: var(--fg-dimmer); color: var(--fg-mid); font-size: 11px; }
-
-
+    /* ── THUMB PREVIEW + FILE LIST ── */
     #thumb-preview {
       margin-top: 8px; width: 120px; height: 68px;
       object-fit: cover; border-radius: 2px;
       display: none; border: 1px solid var(--fg-dimmer);
     }
+    .thumb-file-list {
+      display: none; margin-top: 6px;
+      max-height: 180px; overflow-y: auto;
+      background: var(--bg); border: 1px solid var(--fg-dimmer);
+      border-radius: 3px;
+    }
+    .thumb-file-list.open { display: block; }
+    .thumb-file-item {
+      padding: 6px 10px; font-size: 11px; color: var(--fg-mid);
+      cursor: pointer; border-bottom: 1px solid var(--fg-dimmer);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      transition: background 0.15s, color 0.15s;
+    }
+    .thumb-file-item:last-child { border-bottom: none; }
+    .thumb-file-item:hover { background: var(--fg-dimmer); color: var(--fg); }
+    .thumb-file-item.selected { color: var(--accent); }
 
     /* ── TOAST ── */
     .toast {
@@ -528,6 +535,8 @@
     <div class="field">
       <label>Thumbnail <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(images live in /thumbs/ — just enter the filename)</span></label>
       <input type="text" id="f-thumbnail" placeholder="filename.jpeg" oninput="updateThumbPreview()" />
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" type="button" onclick="toggleThumbList()">Browse ↓</button>
+      <div class="thumb-file-list" id="thumb-file-list"></div>
       <img id="thumb-preview" alt="thumbnail preview" />
     </div>
 
@@ -931,7 +940,9 @@ function clearModalForm() {
   document.getElementById('f-type').value = '';
   document.getElementById('f-hide-text').checked = false;
   document.getElementById('thumb-preview').style.display = 'none';
-  document.getElementById('thumb-preview').style.display = 'none';
+  const list = document.getElementById('thumb-file-list');
+  list.classList.remove('open');
+  list.innerHTML = '';
 }
 
 function openAdd(cat) {
@@ -1189,7 +1200,7 @@ function saveAboutFields() {
   showToast('About changes staged. Save to GitHub to publish.', 'success');
 }
 
-// ─── THUMB PREVIEW ───────────────────────────────────────────────────────────
+// ─── THUMB PREVIEW + FILE LIST ───────────────────────────────────────────────
 function updateThumbPreview() {
   const val     = document.getElementById('f-thumbnail').value.trim();
   const preview = document.getElementById('thumb-preview');
@@ -1198,6 +1209,35 @@ function updateThumbPreview() {
   preview.src = thumbStore(val);
   preview.onerror = () => { preview.style.opacity = '0.3'; };
   preview.onload  = () => { preview.style.opacity = '1'; };
+  // keep file list selection in sync
+  document.querySelectorAll('.thumb-file-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.filename === val);
+  });
+}
+
+function toggleThumbList() {
+  const list = document.getElementById('thumb-file-list');
+  const isOpen = list.classList.toggle('open');
+  if (!isOpen || list.children.length > 0) return;
+
+  if (thumbFiles.length === 0) {
+    list.innerHTML = '<div class="thumb-file-item" style="cursor:default;color:var(--fg-dim)">No thumbnails found</div>';
+    return;
+  }
+  const current = document.getElementById('f-thumbnail').value.trim();
+  thumbFiles.forEach(path => {
+    const filename = path.replace(/^thumbs\//, '');
+    const item = document.createElement('div');
+    item.className = 'thumb-file-item' + (filename === current ? ' selected' : '');
+    item.textContent = filename;
+    item.dataset.filename = filename;
+    item.addEventListener('click', () => {
+      document.getElementById('f-thumbnail').value = filename;
+      updateThumbPreview();
+      list.classList.remove('open');
+    });
+    list.appendChild(item);
+  });
 }
 
 // ─── GITHUB SAVE ─────────────────────────────────────────────────────────────
