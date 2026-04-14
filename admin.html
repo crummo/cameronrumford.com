@@ -717,7 +717,9 @@ async function fetchGhJson(filename) {
   const res = await fetch(ghUrl(filename), { headers: ghHeaders() });
   if (!res.ok) throw new Error(`GitHub ${res.status} fetching ${filename}`);
   const data = await res.json();
-  return { sha: data.sha, content: JSON.parse(atob(data.content.replace(/\s/g, ''))) };
+  // Properly decode UTF-8 from base64 (handles em-dashes, curly quotes, etc.)
+  const decoded = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
+  return { sha: data.sha, content: JSON.parse(decoded) };
 }
 
 async function loadAll() {
@@ -1264,14 +1266,9 @@ async function saveToGitHub() {
   setStatus('Saving…', 'saving');
 
   try {
-    // Save both files in parallel
-    const [newProjSha, newSiteSha] = await Promise.all([
-      putGhFile('projects.json', projects),
-      putGhFile('site.json',     siteConfig)
-    ]);
-
-    projectsSha = newProjSha;
-    siteSha     = newSiteSha;
+    // Save sequentially to avoid any timing conflicts
+    projectsSha = await putGhFile('projects.json', projects);
+    siteSha     = await putGhFile('site.json',     siteConfig);
     isDirty     = false;
 
     setStatus('Saved ✓', 'saved');
