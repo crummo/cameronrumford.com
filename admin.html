@@ -505,11 +505,7 @@
     <div class="field-row">
       <div class="field">
         <label>Category</label>
-        <select id="f-category">
-          <option value="unscripted">Unscripted</option>
-          <option value="scripted">Scripted</option>
-          <option value="videogames">Video Games</option>
-        </select>
+        <select id="f-category"></select>
       </div>
       <div class="field">
         <label>Type</label>
@@ -538,8 +534,8 @@
     </div>
 
     <div class="field">
-      <label>Thumbnail</label>
-      <input type="text" id="f-thumbnail" placeholder="thumbs/filename.jpeg" oninput="updateThumbPreview()" />
+      <label>Thumbnail <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(images live in /thumbs/ — just enter the filename)</span></label>
+      <input type="text" id="f-thumbnail" placeholder="filename.jpeg" oninput="updateThumbPreview()" />
       <div class="field-hint">
         <button class="btn btn-ghost btn-sm" style="margin-top:8px" type="button" onclick="toggleThumbPicker()">Browse existing thumbnails ↓</button>
       </div>
@@ -551,12 +547,15 @@
 
     <div class="field-row">
       <div class="field">
-        <label>Scrim opacity <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1 (dark vignette behind text)</span></label>
-        <input type="number" id="f-scrim" min="0" max="1" step="0.05" placeholder="0.3" />
+        <label>Vignette Opacity <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1 (dark radial behind text)</span></label>
+        <input type="number" id="f-vignette" min="0" max="1" step="0.05" placeholder="0.3" />
       </div>
-      <div class="field">
-        <label>Text opacity override <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1, blank = default</span></label>
-        <input type="number" id="f-opacity" min="0" max="1" step="0.05" placeholder="default" />
+      <div class="field" style="display:flex;flex-direction:column;justify-content:flex-end">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:300;margin-bottom:0">
+          <input type="checkbox" id="f-hide-text" style="width:15px;height:15px;accent-color:var(--accent);flex-shrink:0" />
+          Suppress overlay text
+        </label>
+        <div class="field-hint" style="margin-top:6px">Hides the title and client label on this thumbnail</div>
       </div>
     </div>
 
@@ -922,11 +921,29 @@ function switchTab(tabId) {
 }
 
 // ─── ADD / EDIT ──────────────────────────────────────────────────────────────
+function populateCategoryDropdown(selectedId) {
+  const sel = document.getElementById('f-category');
+  sel.innerHTML = siteConfig.categories.map(cat =>
+    `<option value="${esc(cat.id)}"${cat.id === selectedId ? ' selected' : ''}>${esc(cat.label)}</option>`
+  ).join('');
+}
+
+// Strip thumbs/ prefix for display; add it back on save
+function thumbDisplay(path) {
+  return (path || '').replace(/^thumbs\//, '');
+}
+function thumbStore(val) {
+  const v = (val || '').trim();
+  if (!v) return '';
+  return v.startsWith('thumbs/') ? v : 'thumbs/' + v;
+}
+
 function clearModalForm() {
-  ['f-title','f-client','f-url','f-award','f-thumbnail','f-scrim','f-opacity'].forEach(id => {
+  ['f-title','f-client','f-url','f-award','f-thumbnail','f-vignette'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('f-type').value = '';
+  document.getElementById('f-hide-text').checked = false;
   document.getElementById('thumb-preview').style.display = 'none';
   document.getElementById('thumb-picker').classList.remove('open');
   document.getElementById('thumb-grid').innerHTML = '';
@@ -936,7 +953,7 @@ function openAdd(cat) {
   editingIdx = null;
   document.getElementById('modal-title').textContent = 'Add Project';
   clearModalForm();
-  document.getElementById('f-category').value = cat;
+  populateCategoryDropdown(cat);
   document.getElementById('modal-edit').classList.remove('hidden');
   document.getElementById('f-title').focus();
 }
@@ -946,15 +963,15 @@ function openEdit(globalIdx) {
   const p = projects[globalIdx];
   document.getElementById('modal-title').textContent = 'Edit Project';
   clearModalForm();
-  document.getElementById('f-category').value  = p.category  || 'unscripted';
-  document.getElementById('f-type').value       = p.type      || '';
-  document.getElementById('f-title').value      = p.title     || '';
-  document.getElementById('f-client').value     = p.client    || '';
-  document.getElementById('f-url').value        = p.url       || '';
-  document.getElementById('f-award').value      = p.award     || '';
-  document.getElementById('f-thumbnail').value  = p.thumbnail || '';
-  document.getElementById('f-scrim').value      = p.scrim    !== undefined ? p.scrim    : '';
-  document.getElementById('f-opacity').value    = p.opacity  !== undefined ? p.opacity  : '';
+  populateCategoryDropdown(p.category || siteConfig.categories[0]?.id);
+  document.getElementById('f-type').value      = p.type    || '';
+  document.getElementById('f-title').value     = p.title   || '';
+  document.getElementById('f-client').value    = p.client  || '';
+  document.getElementById('f-url').value       = p.url     || '';
+  document.getElementById('f-award').value     = p.award   || '';
+  document.getElementById('f-thumbnail').value = thumbDisplay(p.thumbnail);
+  document.getElementById('f-vignette').value  = p.vignette !== undefined ? p.vignette : '';
+  document.getElementById('f-hide-text').checked = p.opacity === 0;
   updateThumbPreview();
   document.getElementById('modal-edit').classList.remove('hidden');
   document.getElementById('f-title').focus();
@@ -968,23 +985,23 @@ function saveProject() {
   const title = document.getElementById('f-title').value.trim();
   if (!title) { showToast('Title is required.', 'error'); return; }
 
-  const scrimRaw   = document.getElementById('f-scrim').value;
-  const opacityRaw = document.getElementById('f-opacity').value;
-  const type       = document.getElementById('f-type').value;
+  const vignetteRaw = document.getElementById('f-vignette').value;
+  const hideText    = document.getElementById('f-hide-text').checked;
+  const type        = document.getElementById('f-type').value;
 
   const proj = {
     id:        editingIdx !== null ? projects[editingIdx].id : Date.now(),
     category:  document.getElementById('f-category').value,
     title,
     client:    document.getElementById('f-client').value.trim(),
-    thumbnail: document.getElementById('f-thumbnail').value.trim(),
+    thumbnail: thumbStore(document.getElementById('f-thumbnail').value),
     url:       document.getElementById('f-url').value.trim(),
     award:     document.getElementById('f-award').value.trim(),
   };
 
-  if (type)             proj.type    = type;
-  if (scrimRaw !== '')  proj.scrim   = parseFloat(scrimRaw);
-  if (opacityRaw !== '') proj.opacity = parseFloat(opacityRaw);
+  if (type)              proj.type     = type;
+  if (vignetteRaw !== '') proj.vignette = parseFloat(vignetteRaw);
+  if (hideText)          proj.opacity  = 0;
 
   if (editingIdx !== null) {
     projects[editingIdx] = proj;
@@ -1198,14 +1215,15 @@ function toggleThumbPicker() {
       grid.innerHTML = '<p style="color:var(--fg-dim);font-size:11px;padding:8px">No thumbnails loaded yet — type a path manually above.</p>';
       return;
     }
-    const currentVal = document.getElementById('f-thumbnail').value;
+    const currentVal = thumbStore(document.getElementById('f-thumbnail').value);
     thumbFiles.forEach(path => {
+      const filename = path.replace(/^thumbs\//, '');
       const img = document.createElement('img');
       img.src = path; img.className = 'thumb-option';
-      img.title = path.split('/').pop();
+      img.title = filename;
       if (currentVal === path) img.classList.add('selected');
       img.addEventListener('click', () => {
-        document.getElementById('f-thumbnail').value = path;
+        document.getElementById('f-thumbnail').value = filename;
         document.querySelectorAll('.thumb-option').forEach(i => i.classList.remove('selected'));
         img.classList.add('selected');
         updateThumbPreview();
@@ -1219,7 +1237,7 @@ function updateThumbPreview() {
   const val     = document.getElementById('f-thumbnail').value.trim();
   const preview = document.getElementById('thumb-preview');
   preview.style.display = val ? 'block' : 'none';
-  if (val) preview.src = val;
+  if (val) preview.src = thumbStore(val);
 }
 
 // ─── GITHUB SAVE ─────────────────────────────────────────────────────────────

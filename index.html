@@ -849,7 +849,7 @@ function buildDesktopGrid(cat, items) {
     const isShort    = p.type === 'short';
     const clientOp   = p.opacity !== undefined ? p.opacity : 1;
     const titleOp    = p.opacity !== undefined ? p.opacity : 0.8;
-    const scrimVal   = p.scrim !== undefined ? p.scrim : 0.3;
+    const scrimVal   = p.vignette !== undefined ? p.vignette : 0.3;
     const scrimHtml  = scrimVal > 0
       ? `<div class="grid-scrim" style="background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,${scrimVal}) 0%, transparent 100%)"></div>`
       : '';
