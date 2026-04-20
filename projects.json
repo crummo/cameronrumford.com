@@ -256,7 +256,8 @@
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_WhatSquirms_sml.jpeg",
     "url": "https://youtu.be/RT4qbyqnACo",
-    "award": ""
+    "award": "",
+    "opacity": 0
   },
   {
     "id": 73,
