@@ -84,10 +84,9 @@
     "category": "unscripted",
     "title": "Minecraft Community Celebration | Creating Bloom and Farm Life",
     "client": "Mojang",
-    "thumbnail": "thumbs/Minecraft_Pixelheads_sml.jpeg",
+    "thumbnail": "thumbs/Minecraft_Pixelheads_OTS_sml.jpg",
     "url": "https://youtu.be/NYv9PzK8Yu0",
     "award": "",
-    "opacity": 0,
     "vignette": 0
   },
   {
@@ -179,7 +178,6 @@
     "award": "",
     "vignette": 0
   },
-  
   {
     "id": 65,
     "category": "videogames",
