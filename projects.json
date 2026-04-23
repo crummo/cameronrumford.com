@@ -63,7 +63,7 @@
     "id": 17,
     "category": "unscripted",
     "title": "Big Boys: Looking Back It's Just Reflections",
-    "client": "Light In The Attic",
+    "client": "Short Film",
     "thumbnail": "thumbs/BigBoys01_sml.jpeg",
     "url": "https://www.youtube.com/watch?v=jHSYDCyBv5Q",
     "award": "",
@@ -87,7 +87,7 @@
     "thumbnail": "thumbs/Minecraft_Pixelheads_OTS_sml.jpg",
     "url": "https://youtu.be/NYv9PzK8Yu0",
     "award": "",
-    "vignette": 0
+    "vignette": 0.3
   },
   {
     "id": 47,
