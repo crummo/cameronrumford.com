@@ -183,7 +183,7 @@
     "provider": "",
     "id": ""
   },
-  "allowThemeToggle": true,
+  "allowThemeToggle": false,
   "themeMode": "dark",
   "filmGrain": 0.066
 }
