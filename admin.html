@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Cameron Rumford</title>
-  <link rel="icon" type="image/x-icon" href="favicon.png" />
+  <title>Admin</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='46' dominant-baseline='central' text-anchor='middle' font-size='110'>⚙</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('cr_admin_theme') || 'dark');</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -25,7 +26,26 @@
       --font-serif: 'Playfair Display', Georgia, serif;
       --font-sans:  'DM Sans', sans-serif;
       --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --card-unpublished: #100f0d;
     }
+
+    [data-theme="light"] {
+      --bg:        #f0ece6;
+      --bg2:       #e8e3dc;
+      --bg3:       #ddd8d0;
+      --fg:        #1a1714;
+      --fg-mid:    #5a5248;
+      --fg-dim:    #8a8078;
+      --fg-dimmer: #ccc7be;
+      --card-unpublished: #cdc8c0;
+    }
+
+    .theme-toggle {
+      background: none; border: none; cursor: pointer;
+      color: var(--fg-dim); font-size: 14px;
+      padding: 4px 6px; transition: color 0.2s; line-height: 1;
+    }
+    .theme-toggle:hover { color: var(--fg); }
 
     html {
       background: var(--bg);
@@ -35,6 +55,14 @@
       -webkit-font-smoothing: antialiased;
     }
     body { min-height: 100vh; }
+
+    /* film grain preview */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: var(--film-grain-opacity, 0);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
 
     /* ── OVERLAY SCREENS ── */
     .screen {
@@ -108,13 +136,68 @@
     }
     .pw-toggle:hover { color: var(--fg-mid); }
 
+    /* ── DIRTY SAVE BUTTON ── */
+    #save-btn.dirty {
+      animation: savePulse 2s ease-in-out infinite;
+    }
+    @keyframes savePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,169,110,0); }
+      50%       { box-shadow: 0 0 0 5px rgba(201,169,110,0.25); }
+    }
+
+    /* ── CHECKBOXES ── */
+    input[type="checkbox"] {
+      -webkit-appearance: none; appearance: none;
+      display: inline-block;
+      width: 12px !important; height: 12px !important;
+      min-width: 12px; min-height: 12px; max-width: 12px; max-height: 12px;
+      padding: 0 !important;
+      background: transparent;
+      border: 1px solid var(--fg-dim);
+      border-radius: 2px;
+      cursor: pointer;
+      vertical-align: middle;
+      flex-shrink: 0; flex-grow: 0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 5l2.5 2.5 3.5-4' stroke='%23131110' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+      background-size: 9px 9px;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* ── HIDDEN FILE INPUT (inside label) ── */
+    .file-input-hidden {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0; cursor: pointer;
+    }
+
+    /* ── CLEARABLE FIELD ── */
+    .field-clearable { position: relative; display: block; }
+    .field-clearable input, .field-clearable textarea { padding-right: 32px; width: 100%; }
+    .field-clear-btn {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--fg-dim); cursor: pointer;
+      font-size: 15px; line-height: 1; padding: 2px 4px;
+      transition: color 0.2s;
+    }
+    .field-clear-btn:hover { color: var(--fg); }
+
     /* ── BUTTONS ── */
     .btn {
+      -webkit-appearance: none; appearance: none;
       display: inline-flex; align-items: center; justify-content: center;
       gap: 8px; padding: 10px 24px;
       border: 1px solid transparent; border-radius: 3px;
       font-family: var(--font-sans);
-      font-size: 10px; letter-spacing: 0.2em;
+      font-size: 10px; letter-spacing: 0.2em; line-height: 1;
       text-transform: uppercase; font-weight: 400;
       cursor: pointer; transition: all 0.2s var(--ease);
     }
@@ -122,10 +205,13 @@
     .btn-primary:hover { filter: brightness(1.1); }
     .btn-ghost { background: transparent; border-color: var(--fg-dimmer); color: var(--fg-mid); }
     .btn-ghost:hover { border-color: var(--fg-dim); color: var(--fg); }
+    .project-card.unpublished .btn-ghost { border-color: var(--fg-dim); color: var(--fg-mid); }
+    .project-card.unpublished .btn-ghost:hover { border-color: var(--fg); color: var(--fg); }
     .btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
     .btn-danger:hover { background: var(--danger); color: var(--bg); }
     .btn-sm { padding: 6px 14px; font-size: 9px; }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
+    label.btn { display: inline-flex !important; margin-bottom: 0 !important; color: var(--fg-mid) !important; font-size: 9px !important; position: relative; overflow: hidden; }
 
     /* ── NAV ── */
     nav {
@@ -152,15 +238,83 @@
     .nav-status.error  { color: var(--danger); }
     .nav-status.dirty  { color: var(--fg-mid); }
 
+    /* ── Token warning banner ── */
+    .token-warning-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 9px 20px;
+      font-size: 11px; letter-spacing: 0.05em;
+      border-bottom: 1px solid;
+    }
+    .token-warning-banner.error  { background: color-mix(in srgb, var(--danger) 12%, transparent); border-color: color-mix(in srgb, var(--danger) 35%, transparent); color: var(--danger); }
+    .token-warning-banner.warn   { background: color-mix(in srgb, var(--accent) 10%, transparent); border-color: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--accent); }
+    .token-warning-banner button { background: none; border: none; cursor: pointer; font-size: 13px; color: inherit; opacity: 0.6; padding: 0 2px; line-height: 1; }
+    .token-warning-banner button:hover { opacity: 1; }
+
+    /* ── Deploy indicator ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pop  { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+    .deploy-indicator {
+      display: none; align-items: center; gap: 6px;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-right: 8px;
+    }
+    .deploy-indicator.visible { display: flex; }
+    .deploy-icon {
+      width: 14px; height: 14px; flex-shrink: 0;
+      position: relative;
+    }
+    .deploy-icon .ring {
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 1.5px solid transparent;
+      border-top-color: var(--accent);
+      border-right-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      position: absolute; inset: 0;
+    }
+    .deploy-icon .check, .deploy-icon .cross {
+      display: none; position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      font-size: 11px; line-height: 1;
+      animation: pop 0.3s ease forwards;
+    }
+    .deploy-indicator.done   .ring  { display: none; }
+    .deploy-indicator.done   .check { display: flex; color: var(--success); }
+    .deploy-indicator.failed .ring  { display: none; }
+    .deploy-indicator.failed .cross { display: flex; color: var(--danger); }
+    .deploy-label { color: var(--fg-dim); }
+
     /* ── MAIN ── */
     .main { padding: 36px 44px; max-width: 1000px; }
 
     /* ── TABS ── */
     .tabs {
       display: flex;
+      align-items: stretch;
       border-bottom: 1px solid var(--fg-dimmer);
       margin-bottom: 32px;
+      overflow: hidden;
+      position: relative;
     }
+    .cat-tabs-scroll {
+      display: flex;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+    }
+    .cat-tabs-scroll::-webkit-scrollbar { display: none; }
+    .tab-scroll-btn {
+      flex-shrink: 0;
+      background: var(--bg2); border: none;
+      color: var(--fg-dim); cursor: pointer;
+      padding: 0 10px; font-size: 16px;
+      border-right: 1px solid var(--fg-dimmer);
+      transition: color 0.15s, background 0.15s;
+      display: none;
+    }
+    .tab-scroll-btn.right { border-right: none; border-left: 1px solid var(--fg-dimmer); }
+    .tab-scroll-btn:hover { color: var(--fg); background: var(--bg3); }
+    .tab-scroll-btn.visible { display: flex; align-items: center; }
     .tab {
       padding: 12px 28px;
       font-size: 10px; letter-spacing: 0.2em;
@@ -169,10 +323,12 @@
       border: none; border-bottom: 2px solid transparent;
       margin-bottom: -1px;
       background: none; font-family: var(--font-sans);
+      white-space: nowrap; flex-shrink: 0;
       transition: all 0.2s var(--ease);
     }
     .tab:hover { color: var(--fg-mid); }
     .tab.active { color: var(--fg); border-bottom-color: var(--accent); }
+    #tab-site { flex-shrink: 0; border-left: 1px solid var(--fg-dimmer); margin-left: 0; }
 
     /* ── TOOLBAR ── */
     .toolbar {
@@ -183,6 +339,29 @@
       font-size: 11px; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--fg-dim);
     }
+
+    /* ── SETTINGS TABS ── */
+    .settings-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--fg-dimmer);
+      margin-bottom: 28px;
+    }
+    .settings-tab-btn {
+      background: none; border: none; outline: none;
+      border-bottom: 2px solid transparent;
+      color: var(--fg-dim);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 8px 18px;
+      margin-bottom: -1px;
+      transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+    }
+    .settings-tab-btn:hover { color: var(--fg-mid); }
+    .settings-tab-btn.active { color: var(--fg); border-bottom-color: var(--accent); }
+    .settings-tab-pane { display: none; }
+    .settings-tab-pane.active { display: block; }
 
     /* ── SITE SETTINGS ── */
     .settings-section {
@@ -195,9 +374,70 @@
       padding-bottom: 12px;
       border-bottom: 1px solid var(--fg-dimmer);
     }
+    /* ── PROGRESSIVE DISCLOSURE ── */
+    .add-link {
+      background: none; border: none; cursor: pointer;
+      color: var(--fg-dim); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 2px 0; display: inline-flex; align-items: center; gap: 5px;
+      transition: color 0.2s; font-family: var(--font-sans); font-weight: 400;
+    }
+    .add-link:hover { color: var(--accent); }
+    .social-add-row {
+      display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 4px;
+    }
+
+    .client-logo-list {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;
+    }
+    .client-logo-item {
+      position: relative; width: 72px; cursor: grab;
+    }
+    .client-logo-item:active { cursor: grabbing; }
+    .client-logo-item.dragging { opacity: 0.3; }
+    .client-logo-item.drag-over > img { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .client-logo-item { cursor: grab; }
+    .client-logo-item:active { cursor: grabbing; }
+    .client-logo-item img {
+      width: 72px; height: 40px; object-fit: contain;
+      background: var(--bg3); border-radius: 4px; display: block;
+      opacity: 0.7; cursor: pointer; transition: outline 0.15s, opacity 0.15s;
+    }
+    .client-logo-item img:hover { opacity: 1; }
+    .client-logo-item.type-dark img  { filter: invert(1); outline: 2px solid var(--accent); opacity: 1; }
+    .client-logo-item.type-color img { filter: none;      outline: 2px solid var(--success); opacity: 1; }
+    .client-logo-item .client-logo-name {
+      font-size: 9px; color: var(--fg-dim); text-align: center;
+      margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .client-logo-type-badge {
+      font-size: 8px; text-align: center; margin-top: 2px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--fg-dimmer);
+    }
+    .client-logo-item.type-dark  .client-logo-type-badge { color: var(--accent); }
+    .client-logo-item.type-color .client-logo-type-badge { color: var(--success); }
+    .client-logo-remove {
+      position: absolute; top: -5px; right: -5px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--bg3); border: 1px solid var(--fg-dimmer);
+      color: var(--fg-dim); font-size: 10px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      padding: 0;
+    }
+    .client-logo-remove:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .about-subsection-title {
+      font-size: 9px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--fg-dim);
+      margin: 24px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--fg-dimmer);
+    }
+    .about-subsection-title:first-of-type { margin-top: 4px; }
+
     .cat-card {
       display: grid;
-      grid-template-columns: 20px 1fr auto auto;
+      grid-template-columns: 20px 1fr auto auto auto;
       gap: 12px; align-items: center;
       background: var(--bg2);
       border: 1px solid var(--fg-dimmer);
@@ -225,6 +465,9 @@
       font-size: 11px; color: var(--fg-dim);
       margin-bottom: 20px; line-height: 1.6;
     }
+    .social-fields { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .social-field-row { display: flex; align-items: center; gap: 8px; }
+    .social-field-platform { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-dim); width: 72px; flex-shrink: 0; }
 
     /* ── PROJECT LIST ── */
     .project-list { display: flex; flex-direction: column; gap: 6px; }
@@ -243,15 +486,20 @@
     .project-card:hover { border-color: var(--fg-dim); }
     .project-card.dragging { opacity: 0.45; border-style: dashed; }
     .project-card.drag-over { border-color: var(--accent); background: var(--bg3); }
+    .project-card.unpublished { background: var(--card-unpublished); }
+    .project-card.unpublished .project-thumb,
+    .project-card.unpublished .project-thumb-placeholder { opacity: 0.4; }
 
     .drag-handle {
-      display: flex; flex-direction: column; gap: 3px;
-      align-items: center; cursor: grab;
-      color: var(--fg-dim); padding: 4px 0;
+      display: flex; flex-direction: column; gap: 4px;
+      align-items: center; justify-content: center;
+      cursor: grab; color: var(--fg-mid);
+      padding: 4px 0; height: 100%;
     }
+    .drag-handle:hover { color: var(--fg); }
     .drag-handle:active { cursor: grabbing; }
     .drag-handle span {
-      display: block; width: 12px; height: 1.5px;
+      display: block; width: 14px; height: 2px;
       background: currentColor; border-radius: 1px;
     }
 
@@ -259,6 +507,11 @@
       width: 112px; height: 63px;
       object-fit: cover; border-radius: 2px;
       background: var(--bg);
+    }
+    .project-thumb-wrap { display: flex; flex-direction: column; gap: 3px; }
+    .project-thumb-source {
+      font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--fg-dim); text-align: center;
     }
     .project-thumb-placeholder {
       width: 112px; height: 63px;
@@ -313,18 +566,22 @@
       color: var(--fg); margin-bottom: 28px;
     }
     .modal-actions {
+      position: sticky; bottom: -36px;
       display: flex; justify-content: flex-end;
       gap: 10px; margin-top: 28px;
-      padding-top: 20px; border-top: 1px solid var(--fg-dimmer);
+      padding: 20px 0 0;
+      border-top: 1px solid var(--fg-dimmer);
+      background: var(--bg2);
     }
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
     /* ── THUMB PREVIEW + FILE LIST ── */
     #thumb-preview {
-      margin-top: 8px; width: 120px; height: 68px;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover; border-radius: 2px;
-      display: none; border: 1px solid var(--fg-dimmer);
+      display: none;
     }
     .thumb-file-list {
       display: none; margin-top: 6px;
@@ -336,12 +593,98 @@
     .thumb-file-item {
       padding: 6px 10px; font-size: 11px; color: var(--fg-mid);
       cursor: pointer; border-bottom: 1px solid var(--fg-dimmer);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: flex; align-items: center; gap: 6px;
       transition: background 0.15s, color 0.15s;
     }
     .thumb-file-item:last-child { border-bottom: none; }
     .thumb-file-item:hover { background: var(--fg-dimmer); color: var(--fg); }
     .thumb-file-item.selected { color: var(--accent); }
+    .thumb-file-item-name {
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── ABOUT PHOTO ZONE ── */
+    #about-photo-drop-zone {
+      width: 140px; height: 140px;
+      border: 1px dashed var(--fg-dimmer); border-radius: 3px;
+      margin: 8px auto 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative; cursor: pointer;
+      user-select: none; -webkit-user-select: none;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    #about-photo-drop-zone.has-image { border-style: solid; cursor: move; }
+    #about-photo-drop-zone.drag-active { border-color: var(--accent); background: rgba(201,169,110,0.05); }
+    #about-photo-drop-zone.circle { border-radius: 50%; }
+    #about-photo-preview {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; display: none;
+    }
+    #about-photo-drop-zone.has-image .thumb-drop-hint { display: none; }
+    #about-photo-drop-zone.has-image #about-photo-preview { display: block; }
+
+    /* ── THUMB PREVIEW DROP ZONE ── */
+    #thumb-drop-zone {
+      border: 1px dashed var(--fg-dimmer);
+      border-radius: 3px;
+      margin: 6px auto 0;
+      aspect-ratio: 16/9; width: 56%;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative; cursor: pointer;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    #thumb-drop-zone.has-image { border-style: solid; cursor: default; }
+    #thumb-drop-zone.drag-active { border-color: var(--accent); background: rgba(201,169,110,0.05); }
+    .thumb-empty-state {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      pointer-events: none; padding: 20px;
+    }
+    .thumb-empty-icon {
+      font-size: 28px; opacity: 0.18;
+    }
+    .thumb-empty-label {
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+
+    /* ── CLEANUP MODAL ── */
+    .cleanup-list {
+      max-height: 280px; overflow-y: auto;
+      border: 1px solid var(--fg-dimmer); border-radius: 3px;
+    }
+    .cleanup-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-bottom: 1px solid var(--fg-dimmer);
+      font-size: 12px; color: var(--fg-mid); cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cleanup-item:last-child { border-bottom: none; }
+    .cleanup-item:hover { background: var(--fg-dimmer); }
+    .cleanup-item input[type="checkbox"] { accent-color: var(--accent); flex-shrink: 0; }
+    .cleanup-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cleanup-item-used { font-size: 10px; color: var(--fg-dim); flex-shrink: 0; }
+    .cleanup-item.in-use { opacity: 0.55; }
+    .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── THUMB DROP ZONE ── */
+    .thumb-drop-zone {
+      border: 1px dashed var(--fg-dimmer);
+      border-radius: 3px;
+      padding: 10px 12px;
+      margin-top: 6px;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    .thumb-drop-zone.drag-active {
+      border-color: var(--accent);
+      background: rgba(201, 169, 110, 0.05);
+    }
+    .thumb-drop-hint {
+      font-size: 10px; color: var(--fg-dim);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-align: center; padding: 4px 0 10px;
+      user-select: none; pointer-events: none;
+    }
 
     /* ── TOAST ── */
     .toast {
@@ -357,6 +700,98 @@
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.success { border-color: var(--success); color: var(--success); }
     .toast.error   { border-color: var(--danger);  color: var(--danger); }
+
+    /* ── FILE MANAGER ── */
+    .modal-files {
+      max-width: 720px;
+      display: flex; flex-direction: column;
+      padding: 28px 32px 24px;
+      max-height: 88vh;
+      overflow: hidden;
+    }
+    .fm-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--fg-dimmer);
+      margin-bottom: 12px;
+    }
+    .fm-tab-btn {
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--fg-dim); cursor: pointer;
+      font-family: var(--font-sans); font-size: 10px; font-weight: 400;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 7px 18px; margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .fm-tab-btn:hover { color: var(--fg-mid); }
+    .fm-tab-btn.active { color: var(--fg); border-bottom-color: var(--accent); }
+    .fm-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .fm-count { font-size: 10px; color: var(--fg-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+    .fm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+      align-content: start;
+      gap: 8px;
+      max-height: 56vh; min-height: 0; overflow-y: auto;
+      padding: 2px;
+    }
+    .fm-grid.tab-thumbs {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 150px;
+    }
+    .fm-grid.tab-thumbs .fm-tile { height: 150px; min-height: 150px; }
+    .fm-grid.tab-thumbs .fm-preview { height: 90px !important; min-height: 90px; padding: 0 !important; overflow: hidden; display: block !important; }
+    .fm-grid.tab-thumbs .fm-preview img { width: 100% !important; height: 90px !important; object-fit: cover !important; display: block !important; }
+    .fm-tile {
+      background: var(--bg3); border: 1px solid var(--fg-dimmer);
+      border-radius: 3px; display: flex; flex-direction: column;
+      overflow: hidden; transition: border-color 0.15s; position: relative;
+    }
+    .fm-tile:hover { border-color: var(--fg-dim); }
+    .fm-tile.selected { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg3)); }
+    .fm-tile-checkbox {
+      position: absolute; top: 5px; left: 5px; z-index: 2;
+      width: 14px; height: 14px; cursor: pointer; accent-color: var(--accent);
+    }
+    .fm-preview {
+      position: relative; height: 58px; background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; padding: 6px;
+    }
+    .fm-preview img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain; display: block;
+    }
+    .fm-badge {
+      position: absolute; top: 3px; right: 3px;
+      background: var(--success); color: var(--bg);
+      font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 1px 4px; border-radius: 2px; pointer-events: none;
+    }
+    .fm-name {
+      padding: 5px 7px 3px; font-size: 9px; color: var(--fg-mid);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      cursor: default; min-height: 22px;
+    }
+    .fm-actions {
+      display: flex; gap: 3px; padding: 4px 6px 6px;
+    }
+    .fm-actions .btn { flex: 1; padding: 4px 0; font-size: 8px; letter-spacing: 0.1em; }
+    .fm-rename-area { padding: 4px 6px 4px; }
+    .fm-rename-row  { display: flex; align-items: center; gap: 3px; margin-bottom: 4px; }
+    .fm-rename-input {
+      flex: 1; min-width: 0;
+      background: var(--bg); border: 1px solid var(--fg-dim);
+      border-radius: 2px; padding: 3px 5px;
+      color: var(--fg); font-family: var(--font-sans); font-size: 10px; outline: none;
+    }
+    .fm-rename-ext { font-size: 9px; color: var(--fg-dim); flex-shrink: 0; }
+    .fm-save-row { display: flex; gap: 3px; }
+    .fm-save-row .btn { padding: 3px 0; font-size: 8px; flex: 1; }
+    .fm-empty { text-align: center; padding: 40px 20px; color: var(--fg-dim); font-size: 12px; }
   </style>
 </head>
 <body>
@@ -364,7 +799,7 @@
 <!-- ═══════════════ SETUP SCREEN ═══════════════ -->
 <div class="screen" id="screen-setup">
   <div class="card">
-    <div class="card-title">Welcome, Cameron</div>
+    <div class="card-title">Admin Setup</div>
     <div class="card-subtitle">One-time setup</div>
 
     <div class="field-row">
@@ -379,7 +814,7 @@
     </div>
     <div class="field">
       <label>Repository</label>
-      <input type="text" id="setup-repo" value="cameronrumford.com" />
+      <input type="text" id="setup-repo" value="template" />
     </div>
     <div class="field">
       <label>GitHub Personal Access Token</label>
@@ -389,8 +824,9 @@
       </div>
       <div class="field-hint">
         Create at <a href="https://github.com/settings/tokens?type=beta" target="_blank">github.com/settings/tokens</a>.
-        Fine-grained token with <strong>Contents: Read &amp; write</strong> on this repo is all that's needed.
+        Fine-grained token with <strong>Contents: Read &amp; write</strong> (required) and <strong>Actions: Read</strong> (for live deploy status) on this repo.
       </div>
+      <div id="setup-token-error" style="display:none;margin-top:6px;font-size:11px;color:var(--danger)"></div>
     </div>
     <div class="field">
       <label>Admin Password</label>
@@ -415,7 +851,7 @@
 <div class="screen hidden" id="screen-login">
   <div class="card" style="max-width:360px">
     <div class="card-title">Admin</div>
-    <div class="card-subtitle">cameronrumford.com</div>
+    <div class="card-subtitle" id="login-subtitle">Admin Panel</div>
 
     <div class="field">
       <label>Password</label>
@@ -435,19 +871,28 @@
 <!-- ═══════════════ MAIN APP ═══════════════ -->
 <div id="app" style="display:none">
   <nav>
-    <div class="nav-brand">Cameron Rumford <span>/ Admin</span></div>
+    <div class="nav-brand" id="nav-brand-name"><span>/ Admin</span></div>
     <div class="nav-actions">
       <span class="nav-status" id="nav-status"></span>
-      <button class="btn btn-ghost btn-sm" onclick="reloadFromGitHub()">↺ Reload</button>
-      <button class="btn btn-primary btn-sm" id="save-btn" onclick="saveToGitHub()">Save to GitHub</button>
+      <button class="btn btn-ghost btn-sm" id="revert-btn" onclick="reloadFromGitHub()" style="display:none">↺ Revert</button>
+      <button class="btn btn-primary btn-sm" id="save-btn" onclick="saveToGitHub()" style="display:none">Save</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.open(siteConfig.website||'#','_blank')">Live Site ↗</button>
+      <button class="btn btn-ghost btn-sm" onclick="openPreview()">Preview Site ↗</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.open('https://github.com/crummo/template/actions','_blank')" title="GitHub Actions">Actions ↗</button>
       <button class="btn btn-ghost btn-sm" onclick="lock()">Lock</button>
     </div>
   </nav>
 
+  <div id="token-warning" style="display:none"></div>
+
   <div class="main">
     <div class="tabs" id="main-tabs">
-      <!-- project category tabs are injected here -->
-      <button class="tab" id="tab-site" onclick="switchTab('site')" style="margin-left:auto">Site Settings</button>
+      <button class="tab-scroll-btn" id="tab-scroll-left" onclick="scrollTabs(-1)" title="Scroll left">‹</button>
+      <div class="cat-tabs-scroll" id="cat-tabs-scroll">
+        <!-- project category tabs are injected here -->
+      </div>
+      <button class="tab-scroll-btn right" id="tab-scroll-right" onclick="scrollTabs(1)" title="Scroll right">›</button>
+      <button class="tab" id="tab-site" onclick="switchTab('site')">Site Settings</button>
     </div>
 
     <!-- Project category panes are injected here by buildAdminCategoryPanes() -->
@@ -456,50 +901,444 @@
     <!-- ── SITE SETTINGS PANE ── -->
     <div id="pane-site" style="display:none">
 
-      <div class="settings-section">
-        <div class="settings-section-title">Navigation Sections</div>
-        <p class="about-hint">
-          Drag to reorder. The <strong>Label</strong> is what visitors see in the nav.
-          The <strong>ID</strong> (slug) links to existing projects — don't change it if projects already use it.
-        </p>
-        <div class="toolbar" style="margin-bottom:12px">
-          <span></span>
-          <button class="btn btn-ghost btn-sm" onclick="openAddCategory()">+ Add Section</button>
-        </div>
-        <div id="cat-list"></div>
+      <!-- Sub-tabs -->
+      <div class="settings-tabs">
+        <button class="settings-tab-btn active" onclick="switchSettingsTab('general')">General</button>
+        <button class="settings-tab-btn" onclick="switchSettingsTab('sections')">Categories</button>
+        <button class="settings-tab-btn" onclick="switchSettingsTab('about')">About</button>
+        <button class="settings-tab-btn" onclick="switchSettingsTab('404')">404</button>
+        <button class="settings-tab-btn" onclick="switchSettingsTab('contact')">Contact</button>
+        <button class="settings-tab-btn" onclick="switchSettingsTab('splash')">Splash</button>
       </div>
 
-      <div class="settings-section about-editor">
-        <div class="settings-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          About Page
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;margin:0">
-            <span style="color:var(--fg-dim)">Show on site</span>
-            <input type="checkbox" id="about-show-input" style="accent-color:var(--accent);width:15px;height:15px" checked />
-          </label>
+      <!-- ── GENERAL TAB ── -->
+      <div class="settings-tab-pane active" id="stab-general">
+        <div class="settings-section">
+          <div class="settings-section-title">Identity</div>
+          <div class="field">
+            <label>Your Name</label>
+            <div class="field-clearable">
+              <input type="text" id="site-name-input" placeholder="e.g. Alex Morgan" />
+              <button class="field-clear-btn" type="button" onclick="clearField('site-name-input')" title="Clear">×</button>
+            </div>
+            <div class="field-hint">Shown in the nav bar on the public site and admin panel.</div>
+          </div>
+          <div class="field">
+            <label>Title / Role <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown next to your name in the nav)</span></label>
+            <div class="field-clearable">
+              <input type="text" id="site-title-input" placeholder="e.g. Editor, Photographer, Director" />
+              <button class="field-clear-btn" type="button" onclick="clearField('site-title-input')" title="Clear">×</button>
+            </div>
+          </div>
+          <div style="margin-bottom:20px">
+          <button class="add-link" id="sharing-toggle" data-closed="+ SEO &amp; Sharing" data-open="− SEO &amp; Sharing" onclick="toggleDisclosure('sharing')">+ SEO &amp; Sharing</button>
+          <div id="sharing-body" style="display:none;margin-top:12px">
+          <div class="field">
+            <label>Favicon <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional)</span></label>
+            <div class="field-clearable">
+              <input type="text" id="site-favicon-input" placeholder="favicon.png or https://…" oninput="updateFaviconPreview();markDirty()" />
+              <button class="field-clear-btn" type="button" onclick="clearField('site-favicon-input');updateFaviconPreview()" title="Clear">×</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+              <div id="favicon-drop-zone" class="thumb-drop-zone" style="flex:1;margin-top:0">
+                <div class="thumb-drop-hint">↓ Drop .ico / .png / .svg here to upload to repo root</div>
+                <label class="btn btn-ghost btn-sm" style="cursor:pointer">Browse local files…<input type="file" id="favicon-file-input" accept="image/*,.ico,.svg" class="file-input-hidden" onchange="handleFileInput(this,'favicon')" /></label>
+              </div>
+              <div id="favicon-preview-wrap" style="display:none;flex-direction:column;gap:6px;flex-shrink:0">
+              <div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-dim)">Tab preview</div>
+              <div style="display:flex;gap:8px;align-items:flex-end">
+                <!-- Light mode tab -->
+                <div style="background:#e8e8e8;border-radius:6px 6px 0 0;padding:5px 10px 4px;display:flex;align-items:center;gap:5px;font-size:11px;color:#444;border:1px solid #ccc;border-bottom:2px solid #e8e8e8;width:140px;box-sizing:border-box">
+                  <img id="favicon-preview" alt="" style="width:16px;height:16px;object-fit:contain;flex-shrink:0" />
+                  <span id="favicon-preview-label" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Preview</span>
+                </div>
+                <!-- Dark mode tab -->
+                <div style="background:#2a2a2a;border-radius:6px 6px 0 0;padding:5px 10px 4px;display:flex;align-items:center;gap:5px;font-size:11px;color:#ccc;border:1px solid #444;border-bottom:2px solid #2a2a2a;width:140px;box-sizing:border-box">
+                  <img id="favicon-preview-dark" alt="" style="width:16px;height:16px;object-fit:contain;flex-shrink:0;background:white;border-radius:2px" />
+                  <span id="favicon-preview-label-dark" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Preview</span>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="field-hint">Leave blank to use the built-in default. Recommended: 32×32 px PNG/ICO or any size SVG · under 100 KB.</div>
+            <div class="field-hint" style="margin-top:3px">Browsers cache favicons aggressively — after uploading a new one, you may need to hard-refresh (⌘⇧R on Mac, Ctrl+Shift+R on Windows) to see the update in the tab.</div>
+          </div>
+          <div class="field">
+            <label>Social Preview Image <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown when sharing your link)</span></label>
+            <div class="field-clearable">
+              <input type="text" id="site-og-input" placeholder="filename.jpg or https://…" oninput="updateOgPreview();markDirty()" />
+              <button class="field-clear-btn" type="button" onclick="clearField('site-og-input');updateOgPreview()" title="Clear">×</button>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+              <label class="btn btn-ghost btn-sm" style="cursor:pointer">Browse local files…<input type="file" id="og-file-input" accept="image/*" class="file-input-hidden" onchange="handleFileInput(this,'og')" /></label>
+              <button class="btn btn-ghost btn-sm" type="button" onclick="toggleOgList()">Browse uploaded ↓</button>
+            </div>
+            <div class="thumb-file-list" id="og-file-list"></div>
+            <img id="og-preview" alt="social preview" style="margin-top:8px;display:none;max-width:100%;height:auto;border-radius:2px;border:1px solid var(--fg-dimmer)" />
+            <div class="field-hint">Recommended: 1200×630px JPEG · saved to <code style="color:var(--accent)">/images/</code> · set your site URL below for correct preview links</div>
+          </div>
+          <div class="field">
+            <label>Site URL <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — used for social preview links)</span></label>
+            <div class="field-clearable">
+              <input type="url" id="site-website-input" placeholder="https://yoursite.com" oninput="markDirty()" />
+              <button class="field-clear-btn" type="button" onclick="clearField('site-website-input')" title="Clear">×</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Meta Description <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown in search results and social previews)</span></label>
+            <textarea id="site-meta-desc" rows="3" maxlength="160" placeholder="Brief description of your work — 120–160 characters recommended" oninput="markDirty();updateMetaDescCounter()"></textarea>
+            <div style="display:flex;justify-content:flex-end;margin-top:3px">
+              <span id="site-meta-desc-counter" style="font-size:9px;color:var(--fg-dim)">0 / 160</span>
+            </div>
+          </div>
+          </div><!-- /sharing-body -->
+          </div><!-- /sharing disclosure -->
+          <div class="field">
+            <label>Accent Color</label>
+            <div style="display:flex;align-items:center;gap:10px">
+              <input type="color" id="site-accent-color" value="#c9a96e" oninput="previewAccentColor(this.value)" onchange="markDirty()" style="width:44px;height:36px;padding:2px;border:1px solid var(--fg-dimmer);border-radius:3px;background:var(--bg);cursor:pointer" />
+              <input type="text" id="site-accent-hex" placeholder="#c9a96e" style="width:100px;flex:none" oninput="syncAccentFromHex(this.value)" />
+              <button class="btn btn-ghost btn-sm" onclick="resetAccentColor()" type="button">Reset</button>
+            </div>
+            <div class="field-hint" style="margin-top:4px">Used for highlights, active nav links, and client labels across the site</div>
+          </div>
+          <div class="field">
+            <label>Analytics</label>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <select id="site-analytics-provider" onchange="updateAnalyticsFields();markDirty()" style="flex:none;width:160px">
+                <option value="">None</option>
+                <option value="ga4">Google Analytics 4</option>
+                <option value="plausible">Plausible</option>
+              </select>
+            </div>
+            <div id="analytics-id-field" style="display:none">
+              <input type="text" id="site-analytics-id" placeholder="" oninput="markDirty()" />
+              <div class="field-hint" id="analytics-id-hint" style="margin-top:4px"></div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label>Site theme</label>
+            <select id="site-theme-mode" onchange="markDirty();applyAdminTheme(this.value)" style="margin-top:6px;width:100%">
+              <option value="auto">Auto — follow visitor's OS</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg-mid)">
+              <input type="checkbox" id="site-allow-theme-toggle" onchange="markDirty()" />
+              Allow visitors to override
+            </label>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label>Film Grain <span id="site-film-grain-pct" style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0;font-weight:400"></span></label>
+            <input type="range" id="site-film-grain" min="0" max="100" step="1" value="28"
+              style="width:100%;accent-color:var(--accent)"
+              oninput="document.getElementById('site-film-grain-pct').textContent='— '+this.value+'%';document.documentElement.style.setProperty('--film-grain-opacity', this.value/500);markDirty()" />
+            <div class="field-hint" style="margin-top:4px">Subtle texture overlay on the public site. 0 = off.</div>
+          </div>
         </div>
-        <p class="about-hint">
-          Both bio fields accept basic HTML (e.g. <code style="color:var(--accent)">&lt;strong&gt;</code>,
-          <code style="color:var(--accent)">&lt;em&gt;</code>, <code style="color:var(--accent)">&lt;a href="…"&gt;</code>).
-        </p>
-        <div class="field">
-          <label>Photo <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — URL or relative path)</span></label>
-          <input type="text" id="about-photo-input" placeholder="e.g. images/headshot.jpg or https://…" oninput="updateAboutPhotoPreview()" />
-          <img id="about-photo-preview" alt="About photo preview" style="display:none;margin-top:8px;width:80px;height:80px;object-fit:cover;border-radius:50%;border:1px solid var(--fg-dimmer)" />
+
+        <div class="settings-section">
+          <div class="settings-section-title" style="display:flex;align-items:center;justify-content:space-between">
+            File Management
+            <button class="btn btn-ghost btn-sm" onclick="openFileManager()">📁 Manage Files</button>
+          </div>
+          <p class="about-hint">Browse, rename, and delete files in your <code style="color:var(--accent)">/images/logos/</code>, <code style="color:var(--accent)">/thumbs/</code>, and <code style="color:var(--accent)">/images/</code> folders. In-use files are flagged; renaming auto-updates references.</p>
         </div>
-        <div class="field">
-          <label>Bio — main paragraph</label>
-          <textarea id="about-bio-input" placeholder="Main bio paragraph…"></textarea>
+
+      </div>
+
+      <!-- ── SECTIONS TAB ── -->
+      <div class="settings-tab-pane" id="stab-sections">
+        <div class="settings-section">
+          <div class="settings-section-title">Categories</div>
+          <p class="about-hint">
+            Drag to reorder. The <strong>Label</strong> is what visitors see in the nav.
+            The <strong>ID</strong> (slug) identifies existing projects — don't change it if projects already use it.
+          </p>
+          <div class="toolbar" style="margin-bottom:12px">
+            <span></span>
+            <button class="btn btn-ghost btn-sm" onclick="openAddCategory()">+ Add Category</button>
+          </div>
+          <div id="cat-list"></div>
+          <p class="field-hint" style="margin-top:12px">Changes here take effect after saving.</p>
         </div>
-        <div class="field">
-          <label>Bio — secondary paragraph</label>
-          <textarea id="about-bio2-input" placeholder="Secondary paragraph…"></textarea>
+      </div>
+
+      <!-- ── ABOUT TAB ── -->
+      <div class="settings-tab-pane" id="stab-about">
+        <div class="settings-section about-editor">
+          <div class="settings-section-title" style="display:flex;align-items:center;justify-content:space-between">
+            About Page
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;margin:0">
+              <input type="checkbox" id="about-show-input" onchange="markDirty()" />
+              <span style="color:var(--fg-dim)">Show About page</span>
+            </label>
+          </div>
+
+          <!-- Photo -->
+          <div class="about-subsection-title">Photo</div>
+          <div class="field">
+            <label>Photo <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — URL or relative path)</span></label>
+            <div class="field-clearable">
+              <input type="text" id="about-photo-input" placeholder="e.g. images/headshot.jpg or https://…" oninput="updateAboutPhotoPreview();markDirty()" />
+              <button class="field-clear-btn" type="button" onclick="clearField('about-photo-input')" title="Clear">×</button>
+            </div>
+            <div id="about-photo-drop-zone">
+              <img id="about-photo-preview" alt="Photo preview" />
+              <div class="thumb-drop-hint" style="font-size:9px;text-align:center;padding:12px;line-height:1.6;color:var(--fg-dim)">↓ Drop photo<br>or browse below</div>
+            </div>
+            <div id="about-photo-style-field" style="display:none;margin-top:10px">
+              <button class="add-link" id="fine-tune-toggle" data-closed="+ Fine-tune" data-open="− Fine-tune" onclick="toggleDisclosure('fine-tune')">+ Fine-tune</button>
+              <div id="fine-tune-body" style="display:none;margin-top:8px">
+                <div style="display:flex;gap:8px;margin-bottom:6px">
+                  <select id="about-photo-shape" onchange="updateAboutPhotoUI();markDirty()" style="flex:1">
+                    <option value="natural">Original</option>
+                    <option value="circle">Circle</option>
+                    <option value="square">Square</option>
+                  </select>
+                  <select id="about-photo-placement" onchange="updateAboutPhotoUI();markDirty()" style="flex:1">
+                    <option value="above">Above</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                  </select>
+                </div>
+                <div class="field-hint" id="about-photo-hint" style="margin-bottom:6px">Circle crop, positioned above the bio</div>
+                <div id="about-photo-fullwidth-field" style="display:none;margin-bottom:8px">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;margin:0">
+                    <input type="checkbox" id="about-photo-fullwidth" onchange="markDirty()" />
+                    Full width
+                  </label>
+                </div>
+                <div id="about-photo-drag-hint" style="display:none;font-size:9px;text-align:center;color:var(--fg-dim);margin-bottom:4px">Drag to reposition</div>
+                <div id="about-photo-zoom-controls" style="display:none;align-items:center;justify-content:center;gap:8px;margin-top:4px">
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="adjustPhotoZoom(-0.1)" style="width:28px;padding:0;text-align:center">−</button>
+                  <span id="about-photo-zoom-display" style="font-size:11px;color:var(--fg-mid);min-width:34px;text-align:center">1.0×</span>
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="adjustPhotoZoom(0.1)" style="width:28px;padding:0;text-align:center">+</button>
+                  <span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-dim)">Zoom</span>
+                </div>
+                <div id="about-photo-scale-controls" style="display:none;align-items:center;justify-content:center;gap:8px;margin-top:4px">
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="adjustPhotoScale(-0.1)" style="width:28px;padding:0;text-align:center">−</button>
+                  <span id="about-photo-scale-display" style="font-size:11px;color:var(--fg-mid);min-width:34px;text-align:center">1.0×</span>
+                  <button type="button" class="btn btn-ghost btn-sm" onclick="adjustPhotoScale(0.1)" style="width:28px;padding:0;text-align:center">+</button>
+                  <span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-dim)">Scale</span>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="about-photo-x" value="50" />
+            <input type="hidden" id="about-photo-y" value="50" />
+            <input type="hidden" id="about-photo-zoom" value="1" />
+            <input type="hidden" id="about-photo-scale" value="1" />
+            <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px">
+              <label class="btn btn-ghost btn-sm" style="cursor:pointer">Browse local files…<input type="file" id="about-photo-file-input" accept="image/*" class="file-input-hidden" onchange="handleFileInput(this,'photo')" /></label>
+              <button class="btn btn-ghost btn-sm" type="button" onclick="toggleAboutPhotoList()">Browse uploaded ↓</button>
+            </div>
+            <div class="field-hint" style="margin-top:4px;text-align:center">Optimal: 400 × 400 px · JPG, PNG, or WebP · under 2 MB</div>
+            <div class="thumb-file-list" id="about-photo-file-list"></div>
+          </div>
+          <div class="field">
+            <label>Photo Alt Text <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — defaults to your name)</span></label>
+            <input type="text" id="about-photo-alt" placeholder="e.g. Cameron Rumford, film editor" oninput="markDirty()" />
+            <div class="field-hint" style="margin-top:4px">Describes your photo for screen readers and search engines</div>
+          </div>
+
+          <!-- Bio -->
+          <div class="about-subsection-title">Bio</div>
+          <div class="field">
+            <label>Main paragraph</label>
+            <textarea id="about-bio-input" placeholder="Main bio paragraph…" oninput="markDirty()"></textarea>
+            <div class="field-hint" style="margin-top:4px">Accepts basic HTML: <code style="color:var(--accent)">&lt;strong&gt;</code>, <code style="color:var(--accent)">&lt;em&gt;</code>, <code style="color:var(--accent)">&lt;a href="…"&gt;</code></div>
+          </div>
+          <div style="margin-bottom:16px">
+            <button class="add-link" id="bio2-toggle" data-closed="+ Add second paragraph" data-open="− Second paragraph" onclick="toggleDisclosure('bio2')">+ Add second paragraph</button>
+            <div id="bio2-body" style="display:none;margin-top:8px">
+              <div class="field" style="margin-bottom:0">
+                <label>Secondary paragraph</label>
+                <textarea id="about-bio2-input" placeholder="Secondary paragraph…" oninput="markDirty()"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-subsection-title">Clients &amp; Collaborators</div>
+          <p style="font-size:10px;color:var(--fg-dim);margin-bottom:10px;line-height:1.5">For best results across light and dark modes, use logos designed for dark backgrounds (white or light-colored). Click any logo to cycle its type: <strong style="color:var(--fg-mid)">White</strong> → <strong style="color:var(--accent)">Dark</strong> → <strong style="color:var(--success)">Color</strong>.</p>
+          <div id="client-logo-list" class="client-logo-list"></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px">
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+              + Upload logo
+              <input type="file" accept="image/*,.svg" class="file-input-hidden" onchange="uploadClientLogo(this)" />
+            </label>
+            <span style="font-size:10px;color:var(--fg-dim)">or</span>
+            <div style="display:flex;gap:6px;align-items:center;flex:1;min-width:200px">
+              <input type="text" id="client-logo-url" placeholder="https://example.com/logo.svg" style="flex:1;font-size:11px" />
+              <button class="btn btn-ghost btn-sm" onclick="addClientByUrl()">+ Add URL</button>
+            </div>
+          </div>
+          <div class="field-hint" style="margin-top:6px">Upload a PNG/SVG, or paste any direct image URL.</div>
+
+          <!-- Contact & Social -->
+          <div class="about-subsection-title" style="margin-top:32px">Contact &amp; Social</div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" id="about-email-input" placeholder="you@example.com" oninput="markDirty()" />
+          </div>
+          <div class="field">
+            <label>CV / Resume <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — URL or relative path)</span></label>
+            <div class="field-clearable">
+              <input type="text" id="about-resume-input" placeholder="files/resume.pdf or https://…" oninput="markDirty()" />
+              <button class="field-clear-btn" type="button" onclick="clearField('about-resume-input')" title="Clear">×</button>
+            </div>
+            <div class="field-hint" style="margin-top:4px">Shows a "Download CV" button on the About page</div>
+          </div>
+          <div class="field" style="margin-top:4px">
+            <label>Social links</label>
+            <div class="social-fields">
+              <!-- Each platform: add-link trigger + revealed field row -->
+              <div id="social-imdb-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">IMDb</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-imdb" placeholder="https://www.imdb.com/name/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('imdb')" title="Clear">×</button>
+                </div>
+              </div>
+              <div id="social-vimeo-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">Vimeo</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-vimeo" placeholder="https://vimeo.com/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('vimeo')" title="Clear">×</button>
+                </div>
+              </div>
+              <div id="social-instagram-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">Instagram</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-instagram" placeholder="https://instagram.com/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('instagram')" title="Clear">×</button>
+                </div>
+              </div>
+              <div id="social-linkedin-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">LinkedIn</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-linkedin" placeholder="https://linkedin.com/in/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('linkedin')" title="Clear">×</button>
+                </div>
+              </div>
+              <div id="social-youtube-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">YouTube</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-youtube" placeholder="https://youtube.com/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('youtube')" title="Clear">×</button>
+                </div>
+              </div>
+              <div id="social-twitter-row" style="display:none" class="social-field-row">
+                <span class="social-field-platform">X / Twitter</span>
+                <div class="field-clearable" style="flex:1">
+                  <input type="url" id="social-twitter" placeholder="https://x.com/…" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearSocial('twitter')" title="Clear">×</button>
+                </div>
+              </div>
+            </div>
+            <!-- Add triggers -->
+            <div class="social-add-row" style="margin-top:8px">
+              <button class="add-link" id="social-imdb-toggle"      onclick="toggleSocial('imdb')">+ IMDb</button>
+              <button class="add-link" id="social-vimeo-toggle"     onclick="toggleSocial('vimeo')">+ Vimeo</button>
+              <button class="add-link" id="social-instagram-toggle" onclick="toggleSocial('instagram')">+ Instagram</button>
+              <button class="add-link" id="social-linkedin-toggle"  onclick="toggleSocial('linkedin')">+ LinkedIn</button>
+              <button class="add-link" id="social-youtube-toggle"   onclick="toggleSocial('youtube')">+ YouTube</button>
+              <button class="add-link" id="social-twitter-toggle"   onclick="toggleSocial('twitter')">+ X / Twitter</button>
+            </div>
+          </div>
         </div>
-        <div class="field">
-          <label>Contact email</label>
-          <input type="email" id="about-email-input" placeholder="you@example.com" />
+      </div>
+
+      <!-- ── 404 TAB ── -->
+      <div class="settings-tab-pane" id="stab-404">
+        <div class="settings-section">
+          <div class="settings-section-title">404 Page</div>
+          <div class="field">
+            <label>Heading</label>
+            <input type="text" id="nf-heading" placeholder="This cut didn't make the final edit." />
+          </div>
+          <div class="field">
+            <label>Subtext</label>
+            <textarea id="nf-sub" rows="2" placeholder="The page you're looking for has been moved, renamed, or was left on the cutting room floor." style="resize:vertical"></textarea>
+          </div>
+          <div class="field">
+            <label>Back-link label</label>
+            <input type="text" id="nf-back" placeholder="Back to the reel" />
+          </div>
         </div>
-        <div style="display:flex;justify-content:flex-end;margin-top:8px">
-          <button class="btn btn-primary btn-sm" onclick="saveAboutFields()">Apply About Changes</button>
+      </div>
+
+      <!-- ── CONTACT TAB ── -->
+      <div class="settings-tab-pane" id="stab-contact">
+        <div class="settings-section">
+          <div class="settings-section-title">Contact</div>
+          <div class="field">
+            <label>Mode</label>
+            <select id="contact-mode-select" onchange="updateContactMode();markDirty()" style="margin-top:4px;width:200px">
+              <option value="off">Off</option>
+              <option value="card-only">Contact Card</option>
+              <option value="form">Contact Form</option>
+              <option value="email-nav">Email in Nav</option>
+            </select>
+            <div class="field-hint" style="margin-top:6px" id="contact-mode-hint"></div>
+          </div>
+          <div id="contact-fields" style="display:none">
+            <div class="field" id="contact-show-card-field">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                <input type="checkbox" id="contact-show-card" onchange="markDirty()" />
+                Show contact card above form
+              </label>
+              <div class="field-hint" style="margin-top:4px">Displays your name and email at the top of the contact page</div>
+            </div>
+            <div id="contact-endpoint-field">
+              <div class="field">
+                <label>Formspree Endpoint</label>
+                <div class="field-clearable">
+                  <input type="url" id="contact-endpoint" placeholder="https://formspree.io/f/xxxxxxxx" oninput="markDirty()" />
+                  <button class="field-clear-btn" type="button" onclick="clearField('contact-endpoint')" title="Clear">×</button>
+                </div>
+                <div class="field-hint" style="margin-top:4px">
+                  Create a free form at <a href="https://formspree.io" target="_blank" rel="noopener">formspree.io</a> and paste the endpoint URL here · submissions go straight to your email
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SPLASH TAB ── -->
+      <div class="settings-tab-pane" id="stab-splash">
+        <div class="settings-section">
+          <div class="settings-section-title" style="display:flex;align-items:center;justify-content:space-between">
+            Splash Screen
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;margin:0">
+              <span style="color:var(--fg-dim)">Enable</span>
+              <input type="checkbox" id="splash-enabled" onchange="updateSplashFieldsVisibility();markDirty()" />
+            </label>
+          </div>
+          <div id="splash-fields" style="display:none">
+            <div class="field">
+              <label>Video <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(URL or relative path)</span></label>
+              <div class="field-clearable">
+                <input type="text" id="splash-video" placeholder="videos/reel.mp4 or https://…" oninput="markDirty()" />
+                <button class="field-clear-btn" type="button" onclick="clearField('splash-video')" title="Clear">×</button>
+              </div>
+              <div class="field-hint" style="margin-top:4px">Direct video file (MP4 or WebM) · auto-plays muted and loops · any direct URL works, including CDN links<br>If hosting on GitHub: H.264 MP4, 1080p or lower, under 50 MB — use HandBrake or <code style="color:var(--accent)">ffmpeg</code> to compress</div>
+            </div>
+            <div class="field">
+              <label>Auto-advance after</label>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input type="number" id="splash-duration" min="2" max="30" value="6" style="width:70px" oninput="markDirty()" />
+                <span style="color:var(--fg-dim);font-size:12px">seconds</span>
+              </div>
+            </div>
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;font-weight:300;color:var(--fg-mid)">
+                <input type="checkbox" id="splash-skip-returning" checked onchange="markDirty()" />
+                Skip for returning visitors
+              </label>
+              <div class="field-hint" style="margin-top:4px">If checked, the splash only plays once per browser session</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -518,53 +1357,112 @@
         <select id="f-category"></select>
       </div>
       <div class="field">
-        <label>Type</label>
-        <select id="f-type">
-          <option value="">Standard</option>
-          <option value="short">Short Film</option>
+        <label>Overlay Text</label>
+        <select id="f-overlay" onchange="updateOverlayHint()">
+          <option value="">Default</option>
+          <option value="editorial">Editorial</option>
+          <option value="centered">Centered</option>
+          <option value="reveal">Reveal</option>
+          <option value="none">None</option>
         </select>
+        <div class="field-hint" id="overlay-hint" style="margin-top:4px">Standard overlay with play icon</div>
       </div>
     </div>
 
     <div class="field">
       <label>Title</label>
-      <input type="text" id="f-title" placeholder="Project title" />
+      <div class="field-clearable">
+        <input type="text" id="f-title" placeholder="Project title" />
+        <button class="field-clear-btn" type="button" onclick="clearField('f-title')" title="Clear">×</button>
+      </div>
     </div>
     <div class="field">
       <label>Client <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — shown in gold above title)</span></label>
-      <input type="text" id="f-client" placeholder="e.g. Amazon Web Services" />
+      <div class="field-clearable">
+        <input type="text" id="f-client" placeholder="e.g. Amazon Web Services" />
+        <button class="field-clear-btn" type="button" onclick="clearField('f-client')" title="Clear">×</button>
+      </div>
     </div>
     <div class="field">
       <label>Video URL <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — YouTube, Vimeo, etc.)</span></label>
-      <input type="url" id="f-url" placeholder="https://youtu.be/…" />
+      <div class="field-clearable">
+        <input type="url" id="f-url" placeholder="https://youtu.be/…" />
+        <button class="field-clear-btn" type="button" onclick="clearField('f-url')" title="Clear">×</button>
+      </div>
     </div>
-    <div class="field">
-      <label>Award <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional)</span></label>
-      <input type="text" id="f-award" placeholder="e.g. Telly Award 2023" />
+    <div style="margin-bottom:16px">
+      <button class="add-link" id="award-toggle" data-closed="+ Add award" data-open="− Award" onclick="toggleDisclosure('award')">+ Add award</button>
+      <div id="award-body" style="display:none;margin-top:8px">
+        <div class="field" style="margin-bottom:0">
+          <label>Award <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown in lightbox and on grid)</span></label>
+          <div class="field-clearable">
+            <input type="text" id="f-award" placeholder="e.g. Telly Award 2023" />
+            <button class="field-clear-btn" type="button" onclick="clearField('f-award')" title="Clear">×</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <button class="add-link" id="description-toggle" data-closed="+ Add description" data-open="− Description" onclick="toggleDisclosure('description')">+ Add description</button>
+      <div id="description-body" style="display:none;margin-top:8px">
+        <div class="field" style="margin-bottom:0">
+          <label>Description <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown in lightbox)</span></label>
+          <textarea id="f-description" rows="3" maxlength="500" placeholder="Brief description, credits, or context…" oninput="updateDescCounter()"></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:3px">
+            <span id="f-description-counter" style="font-size:9px;color:var(--fg-dim)">0 / 500</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="field">
-      <label>Thumbnail <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(images live in /thumbs/ — just enter the filename)</span></label>
-      <input type="text" id="f-thumbnail" placeholder="filename.jpeg" oninput="updateThumbPreview()" />
-      <button class="btn btn-ghost btn-sm" style="margin-top:6px" type="button" onclick="toggleThumbList()">Browse ↓</button>
+      <label>Thumbnail <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(images live in /thumbs/)</span></label>
+      <div class="field-clearable">
+        <input type="text" id="f-thumbnail" placeholder="filename.jpeg" oninput="updateThumbPreview()" />
+        <button class="field-clear-btn" type="button" onclick="clearField('f-thumbnail');updateThumbPreview()" title="Clear">×</button>
+      </div>
+      <div id="thumb-drop-zone">
+        <img id="thumb-preview" alt="thumbnail preview" />
+        <div class="thumb-empty-state" id="thumb-empty-state">
+          <div class="thumb-empty-icon">⬜</div>
+          <div class="thumb-empty-label">Drop image here to upload</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px">
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer">Browse local files…<input type="file" id="thumb-file-input" accept="image/*" class="file-input-hidden" onchange="handleFileInput(this,'thumb')" /></label>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="toggleThumbList()">Browse uploaded ↓</button>
+      </div>
+      <div class="field-hint" style="margin-top:4px">↑ or drop an image onto the preview above</div>
+      <div class="field-hint" style="margin-top:6px">Optimal: 800 × 450 px (16:9) or 800 × 600 px (4:3) · JPEG · under 300 KB</div>
       <div class="thumb-file-list" id="thumb-file-list"></div>
-      <img id="thumb-preview" alt="thumbnail preview" />
+    </div>
+    <div class="field">
+      <label>Alt Text <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(optional — defaults to project title)</span></label>
+      <input type="text" id="f-alt" placeholder="e.g. Amazon Web Services brand film" />
+      <div class="field-hint" style="margin-top:4px">Describes the thumbnail for screen readers and search engines</div>
     </div>
 
-    <div class="field-row">
-      <div class="field">
-        <label>Vignette Opacity <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">0–1 (dark radial behind text)</span></label>
-        <input type="number" id="f-vignette" min="0" max="1" step="0.05" placeholder="0.3" />
-      </div>
-      <div class="field" style="display:flex;flex-direction:column;justify-content:flex-end">
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:300;margin-bottom:0">
-          <input type="checkbox" id="f-hide-text" style="width:15px;height:15px;accent-color:var(--accent);flex-shrink:0" />
-          Suppress overlay text
-        </label>
-        <div class="field-hint" style="margin-top:6px">Hides the title and client label on this thumbnail</div>
+    <div class="field" style="margin-top:4px">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:300;margin-bottom:0">
+        <input type="checkbox" id="f-published" checked />
+        Published
+      </label>
+      <div class="field-hint" style="margin-top:6px">Uncheck to hide this project without deleting it.</div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <button class="add-link" id="appearance-toggle" data-closed="+ Appearance" data-open="− Appearance" onclick="toggleDisclosure('appearance')">+ Appearance</button>
+      <div id="appearance-body" style="display:none;margin-top:8px">
+        <div class="field" style="margin-bottom:0">
+          <label>Vignette Opacity <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(0–100%) — darkens the background behind text</span></label>
+          <input type="number" id="f-vignette" min="0" max="100" step="5" placeholder="30" />
+        </div>
       </div>
     </div>
 
+    <div id="edit-delete-zone" style="display:none;border-top:1px solid var(--fg-dimmer);margin-top:16px;padding-top:12px">
+      <button class="btn btn-danger btn-sm" onclick="openDelete(editingIdx)">Delete project…</button>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" onclick="saveProject()">Save Project</button>
@@ -572,10 +1470,73 @@
   </div>
 </div>
 
+<!-- ═══════════════ FILE MANAGER MODAL ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-files">
+  <div class="modal modal-files">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="modal-title" style="margin-bottom:0">Files</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeFileManager()">✕ Close</button>
+    </div>
+    <div class="fm-tabs" id="fm-tabs">
+      <button class="fm-tab-btn active" onclick="switchFMTab('logos')">Logos</button>
+      <button class="fm-tab-btn" onclick="switchFMTab('thumbs')">Thumbs</button>
+      <button class="fm-tab-btn" onclick="switchFMTab('images')">Images</button>
+    </div>
+    <div class="fm-toolbar">
+      <span class="fm-count" id="fm-count"></span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="fm-delete-selected" class="btn btn-danger btn-sm" onclick="fmDeleteSelected()" style="display:none;font-size:9px;padding:4px 10px">Delete Selected</button>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:10px;color:var(--fg-dim);letter-spacing:0.1em;text-transform:uppercase">
+          <input type="checkbox" id="fm-unused-only" onchange="renderFMGrid()" />
+          Unused only
+        </label>
+      </div>
+    </div>
+    <div id="fm-loading" class="fm-empty">Loading…</div>
+    <div id="fm-grid" class="fm-grid" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ CLEANUP MODAL ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-cleanup">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">Manage Uploaded Files</div>
+    <p id="cleanup-summary" style="font-size:12px;color:var(--fg-mid);margin-bottom:16px;line-height:1.6"></p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--fg-mid);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:300">
+        <input type="checkbox" id="cleanup-hide-inuse" onchange="toggleHideInUse()" />
+        Hide in-use files
+      </label>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="setAllCleanup(true)">All</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="setAllCleanup(false)">None</button>
+      </div>
+    </div>
+    <div id="cleanup-list" class="cleanup-list"></div>
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeCleanup()">Cancel</button>
+      <button class="btn btn-danger" id="cleanup-run-btn" onclick="runCleanup()">Delete Selected</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ UNSAVED CHANGES MODAL ═══════════════ -->
+<div class="modal-backdrop hidden" id="modal-dirty">
+  <div class="modal" style="max-width:360px;text-align:center">
+    <div class="modal-title">Unsaved Changes</div>
+    <p style="font-size:13px;color:var(--fg-mid);margin-bottom:24px;line-height:1.6">You have unsaved changes. Save before leaving?</p>
+    <div class="modal-actions" style="justify-content:center;gap:8px">
+      <button class="btn btn-ghost" onclick="dirtyStay()">Stay</button>
+      <button class="btn btn-ghost" onclick="dirtyDiscard()">Discard</button>
+      <button class="btn btn-primary" onclick="dirtySave()">Save &amp; Continue</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ CATEGORY MODAL ═══════════════ -->
 <div class="modal-backdrop hidden" id="modal-cat">
   <div class="modal" style="max-width:420px">
-    <div class="modal-title" id="modal-cat-title">Add Section</div>
+    <div class="modal-title" id="modal-cat-title">Add Category</div>
     <div class="field">
       <label>Label <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown in nav)</span></label>
       <input type="text" id="cat-label" placeholder="e.g. Social" />
@@ -585,9 +1546,12 @@
       <input type="text" id="cat-id" placeholder="e.g. social" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')" />
       <div class="field-hint">Set once. Changing after adding projects will orphan them.</div>
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeCatModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveCategoryModal()">Save Section</button>
+    <div class="modal-actions" style="justify-content:space-between">
+      <button class="btn btn-danger btn-sm" id="cat-delete-btn" onclick="deleteCategoryFromModal()" style="display:none">Delete section</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="closeCatModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCategoryModal()">Save</button>
+      </div>
     </div>
   </div>
 </div>
@@ -608,12 +1572,35 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// --- Place this in the <script> section of admin.html ---
+function togglePw(id) {
+  const input = document.getElementById(id);
+  const btn = input.nextElementSibling;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '○'; // Changes the dot to a circle when visible
+  } else {
+    input.type = 'password';
+    btn.textContent = '●'; // Changes back to a dot when hidden
+  }
+}
+const DEFAULT_FAVICON = "data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23c9a96e' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpolygon points='16,2 28,9 16,16 4,9'/%3E%3Cpolygon points='28,9 28,23 16,30 16,16'/%3E%3Cpolygon points='4,9 16,16 16,30 4,23'/%3E%3C/svg%3E";
+
+// ─── VERSION ─────────────────────────────────────────────────────────────────
+const ADMIN_VERSION = '0.6.5';
+
 // ─── STORAGE KEYS ───────────────────────────────────────────────────────────
 const K_HASH   = 'cr_pw_hash';
 const K_TOKEN  = 'cr_gh_token';
 const K_OWNER  = 'cr_gh_owner';
 const K_REPO   = 'cr_gh_repo';
-const K_BRANCH = 'cr_gh_branch';
+const K_BRANCH     = 'cr_gh_branch';
+const K_HIDE_INUSE = 'cr_hide_inuse';
+const K_TAB        = 'cr_active_tab';
+const K_STAB       = 'cr_active_stab';
+const K_SESSION    = 'cr_session';   // sessionStorage — clears on tab close
+const IDLE_MS      = 30 * 60 * 1000; // 30 minutes
+let idleTimer      = null;
 
 // ─── STATE ──────────────────────────────────────────────────────────────────
 let projects       = [];
@@ -648,10 +1635,31 @@ async function doSetup() {
   const pw     = document.getElementById('setup-pw').value;
   const pw2    = document.getElementById('setup-pw2').value;
 
-  if (!owner || !repo || !branch) { showToast('Fill in all repo fields.', 'error'); return; }
+  if (!owner || !repo || !branch) { showToast('Please fill in all GitHub repository fields.', 'error'); return; }
   if (!token)  { showToast('GitHub token is required.', 'error'); return; }
   if (!pw)     { showToast('Password cannot be empty.', 'error'); return; }
   if (pw !== pw2) { showToast('Passwords do not match.', 'error'); return; }
+
+  const errEl = document.getElementById('setup-token-error');
+  errEl.style.display = 'none'; errEl.textContent = '';
+  document.getElementById('setup-token').disabled = true;
+  document.querySelector('#screen-setup .btn-primary').textContent = 'Checking token…';
+
+  const perms = await checkTokenPermissions(token, owner, repo);
+
+  document.getElementById('setup-token').disabled = false;
+  document.querySelector('#screen-setup .btn-primary').textContent = 'Complete Setup';
+
+  if (!perms.contents) {
+    errEl.innerHTML = '⚠ Token cannot read this repository. Check the owner/repo fields and that Contents: Read &amp; write is enabled.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!perms.push) {
+    errEl.innerHTML = '⚠ Token has read-only access. Enable <strong>Contents: Read &amp; write</strong> to allow saving.';
+    errEl.style.display = 'block';
+    return;
+  }
 
   const hash = await sha256(pw);
   localStorage.setItem(K_HASH,   hash);
@@ -668,6 +1676,7 @@ async function doLogin() {
   const pw   = document.getElementById('login-pw').value;
   const hash = await sha256(pw);
   if (hash === localStorage.getItem(K_HASH)) {
+    sessionStorage.setItem(K_SESSION, '1');
     showApp();
   } else {
     showToast('Incorrect password.', 'error');
@@ -677,10 +1686,29 @@ async function doLogin() {
 }
 
 function lock() {
+  guardDirty(doLock);
+}
+
+function doLock() {
+  sessionStorage.removeItem(K_SESSION);
+  stopIdleTimer();
   document.getElementById('app').style.display = 'none';
   document.getElementById('screen-login').classList.remove('hidden');
   document.getElementById('login-pw').value = '';
   document.getElementById('login-pw').focus();
+}
+
+function startIdleTimer() {
+  stopIdleTimer();
+  idleTimer = setTimeout(() => doLock(), IDLE_MS);
+}
+
+function stopIdleTimer() {
+  if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+}
+
+function resetIdleTimer() {
+  startIdleTimer();
 }
 
 function resetSetup() {
@@ -695,12 +1723,64 @@ function togglePw(id) {
 }
 
 // ─── APP INIT ────────────────────────────────────────────────────────────────
-async function showApp() {
+async function showApp(restoreTab = false) {
   document.getElementById('screen-setup').classList.add('hidden');
   document.getElementById('screen-login').classList.add('hidden');
   document.getElementById('app').style.display = 'block';
-  await loadAll();
+  startIdleTimer();
+  await loadAll(restoreTab);
   loadThumbFiles(); // non-blocking
+  initThumbDropZone();
+  // Background token permission check
+  const token = localStorage.getItem(K_TOKEN);
+  const owner = localStorage.getItem(K_OWNER);
+  const repo  = localStorage.getItem(K_REPO);
+  if (token && owner && repo) {
+    checkTokenPermissions(token, owner, repo).then(showTokenWarning);
+  }
+}
+
+// Reset idle timer on any user activity
+['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(evt =>
+  document.addEventListener(evt, () => { if (idleTimer) resetIdleTimer(); }, { passive: true })
+);
+
+async function checkTokenPermissions(token, owner, repo) {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  const result = { contents: false, push: false, actions: false };
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
+    if (res.ok) {
+      const data = await res.json();
+      result.contents = true;
+      result.push = data.permissions?.push === true;
+    }
+  } catch(e) {}
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=1`, { headers });
+    result.actions = res.ok;
+  } catch(e) {}
+  return result;
+}
+
+function showTokenWarning(perms) {
+  hasActionsRead = !!perms.actions;
+  const el = document.getElementById('token-warning');
+  if (!el) return;
+  if (perms.contents && perms.push && perms.actions) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  const msgs = [];
+  if (!perms.contents || !perms.push) msgs.push({ level: 'error', text: 'Token is missing <strong>Contents: Read &amp; write</strong> — saving is disabled.' });
+  if (!perms.actions)                 msgs.push({ level: 'warn',  text: 'Token is missing <strong>Actions: Read</strong> — deploy status uses a timer estimate. <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:inherit;text-decoration:underline">Update token ↗</a>' });
+  el.style.display = 'block';
+  el.innerHTML = msgs.map(m => `
+    <div class="token-warning-banner ${m.level}">
+      <span>${m.text}</span>
+      <button onclick="this.closest('.token-warning-banner').remove()" title="Dismiss">✕</button>
+    </div>`).join('');
 }
 
 function ghHeaders() {
@@ -727,7 +1807,7 @@ async function fetchGhJson(filename) {
   return { sha: data.sha, content: JSON.parse(decoded) };
 }
 
-async function loadAll() {
+async function loadAll(restoreTab = false) {
   setStatus('Loading…', '');
   try {
     const [siteData, projData] = await Promise.all([
@@ -739,8 +1819,8 @@ async function loadAll() {
     projectsSha = projData.sha;
     projects    = projData.content;
 
-    buildAdminUI();
-    setStatus('', '');
+    buildAdminUI(restoreTab);
+    clearDirty();
   } catch(e) {
     setStatus('Load failed', 'error');
     showToast('Failed to load — check your token and repo settings.', 'error');
@@ -748,11 +1828,46 @@ async function loadAll() {
   }
 }
 
+// ─── UNSAVED CHANGES GUARD ───────────────────────────────────────────────────
+let _dirtyCallback = null;
+
+function guardDirty(proceed) {
+  if (!isDirty) { proceed(); return; }
+  _dirtyCallback = proceed;
+  document.getElementById('modal-dirty').classList.remove('hidden');
+}
+
+function dirtyStay() {
+  document.getElementById('modal-dirty').classList.add('hidden');
+  _dirtyCallback = null;
+}
+
+function dirtyDiscard() {
+  document.getElementById('modal-dirty').classList.add('hidden');
+  clearDirty();
+  const cb = _dirtyCallback; _dirtyCallback = null;
+  if (cb) cb();
+}
+
+async function dirtySave() {
+  document.getElementById('modal-dirty').classList.add('hidden');
+  const cb = _dirtyCallback; _dirtyCallback = null;
+  await saveToGitHub();
+  if (!isDirty && cb) cb(); // only proceed if save succeeded
+}
+
 async function reloadFromGitHub() {
-  if (isDirty && !confirm('You have unsaved changes. Reload anyway?')) return;
-  isDirty = false;
+  if (isDirty && !confirm('Discard unsaved changes and revert?')) return;
+  // Remember where we are
+  const savedTab = currentTab;
+  const activePane = document.querySelector('#pane-site .settings-tab-pane.active');
+  const savedSettingsTab = activePane ? activePane.id.replace('stab-', '') : 'general';
+  clearDirty();
   await loadAll();
-  showToast('Reloaded from GitHub.', 'success');
+  // Restore position
+  if (savedTab) switchTab(savedTab);
+  switchSettingsTab(savedSettingsTab);
+  showToast('Reverted to last saved.', 'success');
 }
 
 async function loadThumbFiles() {
@@ -760,37 +1875,55 @@ async function loadThumbFiles() {
     const o = localStorage.getItem(K_OWNER);
     const r = localStorage.getItem(K_REPO);
     const b = localStorage.getItem(K_BRANCH);
-    const res = await fetch(
-      `https://api.github.com/repos/${o}/${r}/contents/thumbs?ref=${b}`,
-      { headers: ghHeaders() }
-    );
-    if (!res.ok) return;
-    const files = await res.json();
-    thumbFiles = files
-      .filter(f => /\.(jpe?g|png|gif|webp)$/i.test(f.name))
-      .map(f => 'thumbs/' + f.name);
+    const base = `https://api.github.com/repos/${o}/${r}/contents`;
+    const hdrs = ghHeaders();
+    const [thumbsRes, imagesRes] = await Promise.all([
+      fetch(`${base}/thumbs?ref=${b}`, { headers: hdrs }),
+      fetch(`${base}/images?ref=${b}`, { headers: hdrs })
+    ]);
+    const thumbsList = thumbsRes.ok ? (await thumbsRes.json()) : [];
+    const imagesList = imagesRes.ok ? (await imagesRes.json()) : [];
+    const isImg = f => /\.(jpe?g|png|gif|webp)$/i.test(f.name);
+    thumbFiles = [
+      ...thumbsList.filter(isImg).map(f => 'thumbs/' + f.name),
+      ...imagesList.filter(isImg).map(f => 'images/' + f.name)
+    ];
   } catch(e) { /* non-critical */ }
 }
 
 // ─── BUILD ADMIN UI FROM SITE CONFIG ─────────────────────────────────────────
-function buildAdminUI() {
+function buildAdminUI(restoreTab = false) {
   buildAdminTabs();
   buildAdminCategoryPanes();
   renderAll();
   renderCategoryList();
   populateAboutEditor();
+  populateGeneralSettings();
+  populate404Editor();
+  populateSplashEditor();
+  populateContactEditor();
+  updateNavBrand();
+  // Keep login subtitle in sync with loaded website
+  const website = siteConfig.about?.website;
+  if (website) localStorage.setItem('cr_site_website', website);
 
-  // Switch to first category tab, or site if none
-  const first = siteConfig.categories[0];
-  switchTab(first ? first.id : 'site');
+  if (restoreTab) {
+    // Browser reload — restore last active tab
+    const saved = localStorage.getItem(K_TAB);
+    const valid = [...siteConfig.categories.map(c => c.id), 'site'];
+    const tab   = saved && valid.includes(saved) ? saved : (siteConfig.categories[0]?.id || 'site');
+    const stab  = localStorage.getItem(K_STAB) || 'general';
+    switchTab(tab);
+    if (tab === 'site') switchSettingsTab(stab);
+  } else {
+    // Fresh login — first category
+    switchTab(siteConfig.categories[0]?.id || 'site');
+  }
 }
 
 function buildAdminTabs() {
-  const tabsEl  = document.getElementById('main-tabs');
-  const siteTab = document.getElementById('tab-site');
-
-  // Remove old category tabs
-  tabsEl.querySelectorAll('.tab[data-cat]').forEach(t => t.remove());
+  const scrollEl = document.getElementById('cat-tabs-scroll');
+  scrollEl.innerHTML = '';
 
   siteConfig.categories.forEach(cat => {
     const btn = document.createElement('button');
@@ -799,8 +1932,26 @@ function buildAdminTabs() {
     btn.dataset.cat = cat.id;
     btn.textContent = cat.label;
     btn.onclick = () => switchTab(cat.id);
-    tabsEl.insertBefore(btn, siteTab);
+    scrollEl.appendChild(btn);
   });
+
+  updateTabScrollBtns();
+  scrollEl.addEventListener('scroll', updateTabScrollBtns, { passive: true });
+}
+
+function scrollTabs(dir) {
+  const el = document.getElementById('cat-tabs-scroll');
+  el.scrollBy({ left: dir * 200, behavior: 'smooth' });
+}
+
+function updateTabScrollBtns() {
+  const el    = document.getElementById('cat-tabs-scroll');
+  const left  = document.getElementById('tab-scroll-left');
+  const right = document.getElementById('tab-scroll-right');
+  if (!el || !left || !right) return;
+  const hasOverflow = el.scrollWidth > el.clientWidth;
+  left.classList.toggle('visible',  hasOverflow && el.scrollLeft > 2);
+  right.classList.toggle('visible', hasOverflow && el.scrollLeft < el.scrollWidth - el.clientWidth - 2);
 }
 
 function buildAdminCategoryPanes() {
@@ -814,7 +1965,10 @@ function buildAdminCategoryPanes() {
     pane.innerHTML = `
       <div class="toolbar">
         <span class="toolbar-label" id="count-${cat.id}"></span>
-        <button class="btn btn-ghost btn-sm" onclick="openAdd('${cat.id}')">+ Add Project</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="openAdd('${cat.id}')">+ Add Project</button>
+          <button class="btn btn-ghost btn-sm" onclick="previewCategory('${cat.id}')">Preview ↗</button>
+        </div>
       </div>
       <div class="project-list" id="list-${cat.id}"></div>
     `;
@@ -843,7 +1997,7 @@ function renderCategory(cat) {
   items.forEach(p => {
     const globalIdx = projects.indexOf(p);
     const card = document.createElement('div');
-    card.className = 'project-card';
+    card.className = 'project-card' + (p.published === false ? ' unpublished' : '');
     card.draggable = true;
     card.dataset.idx = globalIdx;
 
@@ -851,22 +2005,28 @@ function renderCategory(cat) {
       <div class="drag-handle" title="Drag to reorder">
         <span></span><span></span><span></span>
       </div>
-      ${p.thumbnail
-        ? `<img class="project-thumb" src="${esc(p.thumbnail)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'project-thumb-placeholder\\'>no image</div>'">`
-        : `<div class="project-thumb-placeholder">no image</div>`
-      }
+      <div class="project-thumb-wrap">
+        ${p.thumbnail
+          ? `<img class="project-thumb" src="${esc(p.thumbnail)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'project-thumb-placeholder\\'>no image</div>'">`
+          : `<img class="project-thumb" data-auto-poster data-idx="${globalIdx}" style="display:none" alt="" loading="lazy">
+             <div class="project-thumb-placeholder" data-placeholder data-idx="${globalIdx}">no image</div>`
+        }
+        <div class="project-thumb-source" style="display:none" data-source data-idx="${globalIdx}"></div>
+      </div>
       <div class="project-info">
         ${p.client ? `<div class="project-client">${esc(p.client)}</div>` : ''}
         <div class="project-title">${esc(p.title || '(untitled)')}</div>
         <div class="project-meta">
           ${p.url ? '▶ video' : '▣ image only'}
           ${p.award ? ' · ✦ ' + esc(p.award) : ''}
-          ${p.type === 'short' ? ' · short film' : ''}
+          ${p.published === false ? ' · <span style="color:var(--danger);font-size:9px;letter-spacing:0.1em;text-transform:uppercase">unpublished</span>' : ''}
         </div>
       </div>
       <div class="project-actions">
+        <button class="btn btn-ghost btn-sm" onclick="toggleProjectPublished(${globalIdx})">${p.published === false ? 'Publish' : 'Unpublish'}</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyShareLink(${globalIdx})" title="${p.shareKey ? 'Copy share link' : 'Generate share link'}">Share ↗</button>
+        ${p.shareKey ? `<button class="btn btn-ghost btn-sm" style="color:var(--danger);opacity:0.7" onclick="revokeShareLink(${globalIdx})" title="Revoke share link">Revoke</button>` : ''}
         <button class="btn btn-ghost btn-sm" onclick="openEdit(${globalIdx})">Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="openDelete(${globalIdx})">Remove</button>
       </div>
     `;
 
@@ -877,6 +2037,27 @@ function renderCategory(cat) {
     card.addEventListener('dragend',   onDragEnd);
 
     list.appendChild(card);
+
+    // Resolve auto-poster if no custom thumbnail
+    if (!p.thumbnail) {
+      const poster = getAdminPoster(p);
+      if (poster) {
+        const imgEl   = card.querySelector('[data-auto-poster]');
+        const phEl    = card.querySelector('[data-placeholder]');
+        const srcEl   = card.querySelector('[data-source]');
+        if (poster.url) {
+          imgEl.src = poster.url;
+          imgEl.style.display = '';
+          if (phEl) phEl.remove();
+          if (srcEl) { srcEl.textContent = 'Auto · ' + poster.source; srcEl.style.display = ''; }
+        } else if (poster.vimeoUrl) {
+          if (srcEl) { srcEl.textContent = 'Auto · Vimeo'; }
+          fetchVimeoAdminPoster(poster.vimeoUrl, imgEl, srcEl).then(() => {
+            if (imgEl.src) { if (phEl) phEl.remove(); }
+          });
+        }
+      }
+    }
   });
 }
 
@@ -915,7 +2096,7 @@ function onDragEnd() {
 }
 
 // ─── TABS ────────────────────────────────────────────────────────────────────
-function switchTab(tabId) {
+function switchTabDirect(tabId) {
   const allTabIds = [...siteConfig.categories.map(c => c.id), 'site'];
   allTabIds.forEach(id => {
     const tab  = document.getElementById('tab-'  + id);
@@ -924,6 +2105,16 @@ function switchTab(tabId) {
     if (pane) pane.style.display = id === tabId ? '' : 'none';
   });
   currentTab = tabId;
+  localStorage.setItem(K_TAB, tabId);
+  // Scroll active tab into view in the scroll container
+  const activeTab = document.getElementById('tab-' + tabId);
+  if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  requestAnimationFrame(updateTabScrollBtns);
+}
+
+function switchTab(tabId) {
+  if (isDirty) { guardDirty(() => switchTabDirect(tabId)); return; }
+  switchTabDirect(tabId);
 }
 
 // ─── ADD / EDIT ──────────────────────────────────────────────────────────────
@@ -941,16 +2132,52 @@ function thumbDisplay(path) {
 function thumbStore(val) {
   const v = (val || '').trim();
   if (!v) return '';
-  return v.startsWith('thumbs/') ? v : 'thumbs/' + v;
+  // Preserve explicit folder prefix; plain filenames go into thumbs/
+  if (v.startsWith('thumbs/') || v.startsWith('images/')) return v;
+  return 'thumbs/' + v;
+}
+
+function updateOverlayHint() {
+  const hints = {
+    '':          'Standard overlay with play icon',
+    'editorial': 'Slightly heavier weight on the lower text',
+    'centered':  'Single line, centered, no play icon',
+    'reveal':    'Overlay hidden at rest, appears on hover',
+    'none':      'Overlay hidden',
+  };
+  const val = document.getElementById('f-overlay').value;
+  document.getElementById('overlay-hint').textContent = hints[val] ?? '';
+}
+
+function updateDescCounter() {
+  const el = document.getElementById('f-description');
+  const counter = document.getElementById('f-description-counter');
+  if (!el || !counter) return;
+  const len = el.value.length;
+  counter.textContent = `${len} / 500`;
+  counter.style.color = len > 450 ? 'var(--accent)' : 'var(--fg-dim)';
+}
+function updateMetaDescCounter() {
+  const el = document.getElementById('site-meta-desc');
+  const counter = document.getElementById('site-meta-desc-counter');
+  if (!el || !counter) return;
+  const len = el.value.length;
+  counter.textContent = `${len} / 160`;
+  counter.style.color = len > 140 ? 'var(--accent)' : 'var(--fg-dim)';
 }
 
 function clearModalForm() {
-  ['f-title','f-client','f-url','f-award','f-thumbnail','f-vignette'].forEach(id => {
+  ['f-title','f-client','f-url','f-award','f-description','f-thumbnail','f-vignette','f-alt'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('f-type').value = '';
-  document.getElementById('f-hide-text').checked = false;
+  ['award','description','appearance'].forEach(closeDisclosure);
+  document.getElementById('f-overlay').value = '';
+  updateOverlayHint();
+  document.getElementById('f-published').checked = true;
   document.getElementById('thumb-preview').style.display = 'none';
+  const emptyState = document.getElementById('thumb-empty-state');
+  if (emptyState) emptyState.style.display = '';
+  document.getElementById('thumb-drop-zone').classList.remove('has-image');
   const list = document.getElementById('thumb-file-list');
   list.classList.remove('open');
   list.innerHTML = '';
@@ -959,6 +2186,7 @@ function clearModalForm() {
 function openAdd(cat) {
   editingIdx = null;
   document.getElementById('modal-title').textContent = 'Add Project';
+  document.getElementById('edit-delete-zone').style.display = 'none';
   clearModalForm();
   populateCategoryDropdown(cat);
   document.getElementById('modal-edit').classList.remove('hidden');
@@ -971,30 +2199,44 @@ function openEdit(globalIdx) {
   document.getElementById('modal-title').textContent = 'Edit Project';
   clearModalForm();
   populateCategoryDropdown(p.category || siteConfig.categories[0]?.id);
-  document.getElementById('f-type').value      = p.type    || '';
+  const overlayVal = p.overlay || (p.type === 'short' ? 'editorial' : (p.opacity === 0 ? 'reveal' : ''));
+  document.getElementById('f-overlay').value   = overlayVal;
   document.getElementById('f-title').value     = p.title   || '';
   document.getElementById('f-client').value    = p.client  || '';
   document.getElementById('f-url').value       = p.url     || '';
-  document.getElementById('f-award').value     = p.award   || '';
+  document.getElementById('f-award').value       = p.award       || '';
+  document.getElementById('f-description').value = p.description || '';
+  updateDescCounter();
   document.getElementById('f-thumbnail').value = thumbDisplay(p.thumbnail);
-  document.getElementById('f-vignette').value  = p.vignette !== undefined ? p.vignette : '';
-  document.getElementById('f-hide-text').checked = p.opacity === 0;
+  document.getElementById('f-alt').value        = p.alt || '';
+  document.getElementById('f-vignette').value  = p.vignette !== undefined ? Math.round(p.vignette * 100) : '';
+  if (p.award)                   openDisclosure('award');
+  if (p.description)             openDisclosure('description');
+  if (p.vignette !== undefined)  openDisclosure('appearance');
+  document.getElementById('f-published').checked = p.published !== false;
+  updateOverlayHint();
   updateThumbPreview();
+  document.getElementById('edit-delete-zone').style.display = '';
   document.getElementById('modal-edit').classList.remove('hidden');
   document.getElementById('f-title').focus();
+}
+
+function toggleProjectPublished(idx) {
+  projects[idx].published = projects[idx].published === false;
+  renderAll();
+  markDirty();
 }
 
 function closeModal() {
   document.getElementById('modal-edit').classList.add('hidden');
 }
 
-function saveProject() {
+async function saveProject() {
   const title = document.getElementById('f-title').value.trim();
   if (!title) { showToast('Title is required.', 'error'); return; }
 
   const vignetteRaw = document.getElementById('f-vignette').value;
-  const hideText    = document.getElementById('f-hide-text').checked;
-  const type        = document.getElementById('f-type').value;
+  const overlay     = document.getElementById('f-overlay').value;
 
   const proj = {
     id:        editingIdx !== null ? projects[editingIdx].id : Date.now(),
@@ -1003,16 +2245,19 @@ function saveProject() {
     client:    document.getElementById('f-client').value.trim(),
     thumbnail: thumbStore(document.getElementById('f-thumbnail').value),
     url:       document.getElementById('f-url').value.trim(),
-    award:     document.getElementById('f-award').value.trim(),
+    award:       document.getElementById('f-award').value.trim(),
+    description: document.getElementById('f-description').value.trim(),
+    alt:         document.getElementById('f-alt').value.trim() || undefined,
+    published: document.getElementById('f-published').checked,
   };
 
-  if (type)              proj.type     = type;
-  if (vignetteRaw !== '') proj.vignette = parseFloat(vignetteRaw);
-  if (hideText)          proj.opacity  = 0;
+  if (overlay)            proj.overlay  = overlay;
+  if (vignetteRaw !== '') proj.vignette = parseFloat(vignetteRaw) / 100;
 
   if (editingIdx !== null) {
+    // Preserve shareKey — it's not in the form, so copy it forward if present
+    if (projects[editingIdx].shareKey) proj.shareKey = projects[editingIdx].shareKey;
     projects[editingIdx] = proj;
-    showToast('Project updated.', 'success');
   } else {
     // Insert after the last item of that category, or at the end
     const catItems  = projects.filter(p => p.category === proj.category);
@@ -1022,15 +2267,12 @@ function saveProject() {
     } else {
       projects.push(proj);
     }
-    showToast('Project added.', 'success');
   }
 
-  markDirty();
   renderAll();
   closeModal();
-
-  // switch to the tab where the project lives
   switchTab(proj.category);
+  await saveToGitHub();
 }
 
 // ─── DELETE ──────────────────────────────────────────────────────────────────
@@ -1044,12 +2286,12 @@ function openDelete(globalIdx) {
 function closeDelete() {
   document.getElementById('modal-delete').classList.add('hidden');
 }
-function confirmDelete() {
+async function confirmDelete() {
   projects.splice(deletingIdx, 1);
-  markDirty();
   renderAll();
   closeDelete();
-  showToast('Project removed. Save to GitHub to make it live.', 'success');
+closeModal();;
+  await saveToGitHub();
 }
 
 // ─── CATEGORY MANAGEMENT ─────────────────────────────────────────────────────
@@ -1068,10 +2310,15 @@ function renderCategoryList() {
       </div>
       <div class="cat-info">
         <div class="cat-label-text">${esc(cat.label)}</div>
-        <div class="cat-id-text">id: ${esc(cat.id)}</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="openEditCategory(${i})">Rename</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})">Remove</button>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0" title="Toggle published state">
+        <input type="checkbox" ${cat.published !== false ? 'checked' : ''}
+          onchange="toggleCatPublished(${i}, this.checked)"
+          style="accent-color:var(--accent);width:13px;height:13px;cursor:pointer" />
+        <span style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-dim)">Published</span>
+      </label>
+      <button class="btn btn-ghost btn-sm" onclick="openEditCategory(${i})">Edit</button>
+      <button class="btn btn-ghost btn-sm" onclick="previewCategory('${cat.id}')">Preview ↗</button>
     `;
 
     card.addEventListener('dragstart', onCatDragStart);
@@ -1086,13 +2333,13 @@ function renderCategoryList() {
 
 function openAddCategory() {
   editingCatIdx = null;
-  document.getElementById('modal-cat-title').textContent = 'Add Section';
+  document.getElementById('modal-cat-title').textContent = 'Add Category';
   document.getElementById('cat-label').value = '';
   document.getElementById('cat-id').value = '';
   document.getElementById('cat-id-field').style.display = '';
+  document.getElementById('cat-delete-btn').style.display = 'none';
   document.getElementById('modal-cat').classList.remove('hidden');
   document.getElementById('cat-label').focus();
-  // auto-fill slug from label
   document.getElementById('cat-label').oninput = () => {
     if (editingCatIdx === null) {
       document.getElementById('cat-id').value =
@@ -1105,13 +2352,33 @@ function openAddCategory() {
 function openEditCategory(idx) {
   editingCatIdx = idx;
   const cat = siteConfig.categories[idx];
-  document.getElementById('modal-cat-title').textContent = 'Rename Section';
+  document.getElementById('modal-cat-title').textContent = 'Edit Category';
   document.getElementById('cat-label').value = cat.label;
   document.getElementById('cat-id').value = cat.id;
-  document.getElementById('cat-id-field').style.display = '';
+  document.getElementById('cat-id-field').style.display = 'none'; // ID is set on create only
+  document.getElementById('cat-delete-btn').style.display = '';
   document.getElementById('cat-label').oninput = null;
   document.getElementById('modal-cat').classList.remove('hidden');
   document.getElementById('cat-label').focus();
+}
+
+function deleteCategoryFromModal() {
+  if (editingCatIdx === null) return;
+  const cat   = siteConfig.categories[editingCatIdx];
+  const count = projects.filter(p => p.category === cat.id).length;
+  const warn  = count > 0 ? ` ${count} project(s) will still exist but won't appear on site.` : '';
+  if (!confirm(`Delete "${cat.label}"?${warn}`)) return;
+  closeCatModal();
+  siteConfig.categories.splice(editingCatIdx, 1);
+  markDirty();
+  buildAdminTabs();
+  buildAdminCategoryPanes();
+  renderAll();
+  renderCategoryList();
+  // Stay on site settings / categories list
+  switchTabDirect('site');
+  switchSettingsTab('sections');
+  showToast('Section deleted. Save to apply.', 'success');
 }
 
 function closeCatModal() {
@@ -1121,9 +2388,9 @@ function closeCatModal() {
 function saveCategoryModal() {
   const label = document.getElementById('cat-label').value.trim();
   const id    = document.getElementById('cat-id').value.trim();
-  if (!label) { showToast('Label is required.', 'error'); return; }
-  if (!id)    { showToast('ID/slug is required.', 'error'); return; }
-  if (!/^[a-z0-9-]+$/.test(id)) { showToast('ID must be lowercase letters, numbers, hyphens only.', 'error'); return; }
+  if (!label) { showToast('Section label is required.', 'error'); return; }
+  if (!id)    { showToast('Section ID is required.', 'error'); return; }
+  if (!/^[a-z0-9-]+$/.test(id)) { showToast('ID must contain only lowercase letters, numbers, and hyphens.', 'error'); return; }
 
   if (editingCatIdx !== null) {
     siteConfig.categories[editingCatIdx].label = label;
@@ -1132,34 +2399,28 @@ function saveCategoryModal() {
     if (siteConfig.categories.some(c => c.id === id)) {
       showToast('A section with that ID already exists.', 'error'); return;
     }
-    siteConfig.categories.push({ id, label });
+    siteConfig.categories.push({ id, label, published: false });
   }
 
+  const targetTab = editingCatIdx !== null ? id : id; // always go to the affected category
   closeCatModal();
   markDirty();
   buildAdminTabs();
   buildAdminCategoryPanes();
   renderAll();
   renderCategoryList();
-  showToast(editingCatIdx !== null ? 'Section renamed.' : 'Section added.', 'success');
+  switchTabDirect(targetTab);
+  showToast(editingCatIdx !== null ? 'Section renamed.' : 'Section added — unpublished. Add projects and publish when ready.', 'success');
 }
 
-function deleteCategory(idx) {
-  const cat = siteConfig.categories[idx];
-  const count = projects.filter(p => p.category === cat.id).length;
-  const warn  = count > 0 ? ` It has ${count} project(s) — those will still exist in projects.json but won't appear on site.` : '';
-  if (!confirm(`Remove the "${cat.label}" section?${warn}`)) return;
-
-  siteConfig.categories.splice(idx, 1);
-  markDirty();
-  buildAdminTabs();
-  buildAdminCategoryPanes();
-  renderAll();
-  renderCategoryList();
-
-  const first = siteConfig.categories[0];
-  switchTab(first ? first.id : 'site');
-  showToast('Section removed. Save to GitHub to make it live.', 'success');
+function previewCategory(catId) {
+  flushSettingsForms();
+  try {
+    sessionStorage.setItem('cr_preview', JSON.stringify({ siteConfig, projects, hideUnpublished: true }));
+    window.open('index.html?preview=1#' + catId, '_blank');
+  } catch(e) {
+    showToast('Preview failed — sessionStorage unavailable.', 'error');
+  }
 }
 
 // Category drag-to-reorder
@@ -1196,75 +2457,1130 @@ function onCatDragEnd() {
 // ─── ABOUT EDITOR ────────────────────────────────────────────────────────────
 function populateAboutEditor() {
   const a = siteConfig.about || {};
-  document.getElementById('about-show-input').checked  = a.show !== false;
-  document.getElementById('about-photo-input').value   = a.photo || '';
-  document.getElementById('about-bio-input').value     = a.bio   || '';
-  document.getElementById('about-bio2-input').value    = a.bio2  || '';
-  document.getElementById('about-email-input').value   = a.contactEmail || '';
-  updateAboutPhotoPreview();
+  document.getElementById('about-show-input').checked       = a.show !== false; // checked = visible (default on)
+  document.getElementById('about-photo-input').value        = a.photo || '';
+  document.getElementById('about-photo-shape').value     = a.photoShape     || 'natural';
+  document.getElementById('about-photo-placement').value = a.photoPlacement || 'above';
+  // backward compat: parse old "X% Y%" string if new fields missing
+  const legacyPos = a.photoPosition || '';
+  const defX = a.photoX !== undefined ? a.photoX : (legacyPos ? parseFloat(legacyPos) : 50);
+  const defY = a.photoY !== undefined ? a.photoY : (legacyPos ? parseFloat(legacyPos.split(' ')[1] || '50') : 50);
+  document.getElementById('about-photo-x').value    = isNaN(defX) ? 50 : defX;
+  document.getElementById('about-photo-y').value    = isNaN(defY) ? 50 : defY;
+  document.getElementById('about-photo-zoom').value = a.photoZoom || 1;
+  document.getElementById('about-photo-zoom-display').textContent = (a.photoZoom || 1).toFixed(1) + '×';
+  document.getElementById('about-photo-scale').value = a.photoScale || 1;
+  document.getElementById('about-photo-scale-display').textContent = (a.photoScale || 1).toFixed(1) + '×';
+  document.getElementById('about-photo-alt').value          = a.photoAlt || '';
+  document.getElementById('about-photo-fullwidth').checked  = !!a.photoFullWidth;
+  document.getElementById('about-bio-input').value          = a.bio   || '';
+  document.getElementById('about-bio2-input').value         = a.bio2  || '';
+  document.getElementById('about-email-input').value        = a.contactEmail || '';
+  document.getElementById('about-resume-input').value       = a.resume || '';
+  const s = a.social || {};
+  document.getElementById('social-imdb').value      = s.imdb      || '';
+  document.getElementById('social-vimeo').value     = s.vimeo     || '';
+  document.getElementById('social-instagram').value = s.instagram || '';
+  document.getElementById('social-linkedin').value  = s.linkedin  || '';
+  document.getElementById('social-youtube').value   = s.youtube   || '';
+  document.getElementById('social-twitter').value   = s.twitter   || '';
+  // bio2 disclosure
+  if (a.bio2) openDisclosure('bio2'); else closeDisclosure('bio2');
+  // social disclosure — show row if value exists, show add-link if not
+  ['imdb','vimeo','instagram','linkedin','youtube','twitter'].forEach(p => {
+    const val = s[p] || '';
+    const row = document.getElementById('social-' + p + '-row');
+    const btn = document.getElementById('social-' + p + '-toggle');
+    if (row) row.style.display = val ? 'flex' : 'none';
+    if (btn) btn.style.display = val ? 'none' : '';
+  });
+  // Auto-open fine-tune if any non-default values are saved
+  if (a.photo && (a.photoShape !== 'natural' || a.photoPlacement !== 'above' || (a.photoZoom && a.photoZoom !== 1) || (a.photoScale && a.photoScale !== 1) || a.photoX !== undefined || a.photoY !== undefined)) {
+    openDisclosure('fine-tune');
+  } else {
+    closeDisclosure('fine-tune');
+  }
+  renderClientList();
+  updateAboutPhotoPreview(true); // silent — populating, not user-initiated
+  updateAboutPhotoUI();
 }
 
-function updateAboutPhotoPreview() {
-  const val = document.getElementById('about-photo-input').value.trim();
+function updateAboutPhotoPreview(silent = false) {
+  const val  = document.getElementById('about-photo-input').value.trim();
+  const zone = document.getElementById('about-photo-drop-zone');
   const prev = document.getElementById('about-photo-preview');
-  if (!val) { prev.style.display = 'none'; return; }
-  prev.src = val;
-  prev.style.display = 'block';
-  prev.onerror = () => { prev.style.opacity = '0.3'; };
-  prev.onload  = () => { prev.style.opacity = '1'; };
+
+  if (zone) zone.classList.toggle('has-image', !!val);
+  if (prev) {
+    prev.style.opacity = '1';
+    prev.onerror = () => { prev.style.opacity = '0.3'; };
+    prev.onload  = () => { prev.style.opacity = '1'; applyPhotoDragTransform(); };
+    if (val && prev.getAttribute('src') === val) prev.src = '';
+    prev.src = val || '';
+  }
+
+  // Reset style selects when photo is cleared
+  if (!val) {
+    const shapeEl = document.getElementById('about-photo-shape');
+    const placementEl = document.getElementById('about-photo-placement');
+    if (shapeEl) shapeEl.value = 'natural';
+    if (placementEl) placementEl.value = 'above';
+  }
+
+  const show = !!val;
+  document.getElementById('about-photo-style-field').style.display = show ? '' : 'none';
+  updateAboutPhotoUI();
+  if (!silent) markDirty();
 }
 
-function saveAboutFields() {
-  siteConfig.about = {
-    show:         document.getElementById('about-show-input').checked,
-    photo:        document.getElementById('about-photo-input').value.trim(),
-    bio:          document.getElementById('about-bio-input').value,
-    bio2:         document.getElementById('about-bio2-input').value,
-    contactEmail: document.getElementById('about-email-input').value.trim()
-  };
+function updateAboutPhotoUI() {
+  const shape     = document.getElementById('about-photo-shape')?.value     || 'natural';
+  const placement = document.getElementById('about-photo-placement')?.value || 'above';
+  const hintEl    = document.getElementById('about-photo-hint');
+
+  const zone     = document.getElementById('about-photo-drop-zone');
+  const dragHint = document.getElementById('about-photo-drag-hint');
+  const hasPhoto = zone && zone.classList.contains('has-image');
+
+  if (zone) {
+    zone.classList.toggle('circle', shape === 'circle');
+    if (hasPhoto) zone.style.cursor = 'move';
+  }
+
+  // All controls visible when photo loaded
+  const zoomCtrl  = document.getElementById('about-photo-zoom-controls');
+  const scaleCtrl = document.getElementById('about-photo-scale-controls');
+  if (dragHint)  dragHint.style.display  = hasPhoto ? '' : 'none';
+  if (zoomCtrl)  zoomCtrl.style.display  = hasPhoto ? 'flex' : 'none';
+  if (scaleCtrl) scaleCtrl.style.display = hasPhoto ? 'flex' : 'none';
+
+  applyPhotoDragTransform();
+
+  const shapeLabel = { natural: 'Original aspect ratio', circle: 'Circle', square: 'Square' }[shape];
+  const placementLabel = { above: 'above', left: 'left of', right: 'right of' }[placement];
+  if (hintEl) hintEl.textContent = `${shapeLabel}, ${placementLabel} the bio`;
+
+  const fullWidthField = document.getElementById('about-photo-fullwidth-field');
+  if (fullWidthField) fullWidthField.style.display = (shape === 'natural' && placement === 'above') ? '' : 'none';
+}
+
+function applyPhotoDragTransform() {
+  const img  = document.getElementById('about-photo-preview');
+  const zone = document.getElementById('about-photo-drop-zone');
+  if (!img) return;
+  const shape = document.getElementById('about-photo-shape')?.value || 'natural';
+  const px    = parseFloat(document.getElementById('about-photo-x')?.value)    || 50;
+  const py    = parseFloat(document.getElementById('about-photo-y')?.value)    || 50;
+  const zoom  = parseFloat(document.getElementById('about-photo-zoom')?.value) || 1;
+  const scale = parseFloat(document.getElementById('about-photo-scale')?.value) || 1;
+
+  if (shape === 'natural') {
+    // Zone sized to photo's natural aspect ratio, scaled
+    if (zone && img.naturalWidth && img.naturalHeight) {
+      const nw = img.naturalWidth, nh = img.naturalHeight;
+      const maxW = 380 * scale, maxH = 280 * scale;
+      const fit  = Math.min(maxW / nw, maxH / nh, 1);
+      zone.style.width  = Math.round(nw * fit) + 'px';
+      zone.style.height = Math.round(nh * fit) + 'px';
+    }
+    img.style.objectFit = 'contain';
+  } else {
+    // Zone sized to 140 * scale (square)
+    const sz = Math.round(140 * scale) + 'px';
+    if (zone) { zone.style.width = sz; zone.style.height = sz; }
+    img.style.objectFit = 'cover';
+  }
+
+  // Zoom + pan — uniform across all shapes
+  img.style.objectPosition  = `${px}% ${py}%`;
+  img.style.transformOrigin = `${px}% ${py}%`;
+  img.style.transform       = zoom > 1 ? `scale(${zoom})` : '';
+}
+
+function adjustPhotoZoom(delta) {
+  const inp = document.getElementById('about-photo-zoom');
+  const disp = document.getElementById('about-photo-zoom-display');
+  if (!inp) return;
+  const next = Math.max(1, Math.min(3, +((parseFloat(inp.value) || 1) + delta).toFixed(1)));
+  inp.value = next;
+  if (disp) disp.textContent = next.toFixed(1) + '×';
+  applyPhotoDragTransform();
   markDirty();
-  showToast('About changes staged. Save to GitHub to publish.', 'success');
+}
+
+function adjustPhotoScale(delta) {
+  const inp = document.getElementById('about-photo-scale');
+  const disp = document.getElementById('about-photo-scale-display');
+  if (!inp) return;
+  const next = Math.max(0.3, Math.min(2, +((parseFloat(inp.value) || 1) + delta).toFixed(1)));
+  inp.value = next;
+  if (disp) disp.textContent = next.toFixed(1) + '×';
+  applyPhotoDragTransform();
+  markDirty();
+}
+
+// ── Drag-to-reposition ─────────────────────────────────────────────────────
+(function initPhotoDrag() {
+  let dragging = false, sx = 0, sy = 0;
+
+  function commit(px, py) {
+    const xi = document.getElementById('about-photo-x');
+    const yi = document.getElementById('about-photo-y');
+    if (xi) xi.value = px.toFixed(1);
+    if (yi) yi.value = py.toFixed(1);
+    applyPhotoDragTransform();
+    markDirty();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrap = document.getElementById('about-photo-drop-zone');
+    if (!wrap) return;
+
+    wrap.addEventListener('mousedown', e => {
+      if (!wrap.classList.contains('has-image')) return;
+      dragging = true; sx = e.clientX; sy = e.clientY;
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const zoom = parseFloat(document.getElementById('about-photo-zoom')?.value) || 1;
+      const sens = 0.5 / zoom; // % per pixel — finer at higher zoom
+      let px = parseFloat(document.getElementById('about-photo-x')?.value) ?? 50;
+      let py = parseFloat(document.getElementById('about-photo-y')?.value) ?? 50;
+      px = Math.max(0, Math.min(100, px - (e.clientX - sx) * sens));
+      py = Math.max(0, Math.min(100, py - (e.clientY - sy) * sens));
+      sx = e.clientX; sy = e.clientY;
+      commit(px, py);
+    });
+    document.addEventListener('mouseup', () => { dragging = false; });
+  });
+})();
+
+async function saveAboutFields() {
+  siteConfig.about = {
+    show:          document.getElementById('about-show-input').checked,
+    photo:         document.getElementById('about-photo-input').value.trim(),
+    photoAlt:       document.getElementById('about-photo-alt').value.trim() || undefined,
+    photoFullWidth: document.getElementById('about-photo-fullwidth').checked || undefined,
+    photoShape:    document.getElementById('about-photo-shape').value,
+    photoPlacement:document.getElementById('about-photo-placement').value,
+    photoX:        parseFloat(document.getElementById('about-photo-x').value) || 50,
+    photoY:        parseFloat(document.getElementById('about-photo-y').value) || 50,
+    photoZoom:     parseFloat(document.getElementById('about-photo-zoom').value) || 1,
+    photoScale:    parseFloat(document.getElementById('about-photo-scale').value) || 1,
+    bio:           document.getElementById('about-bio-input').value,
+    bio2:         document.getElementById('about-bio2-input').value,
+    contactEmail: document.getElementById('about-email-input').value.trim(),
+    resume:       document.getElementById('about-resume-input').value.trim(),
+    social: {
+      imdb:      document.getElementById('social-imdb').value.trim(),
+      vimeo:     document.getElementById('social-vimeo').value.trim(),
+      instagram: document.getElementById('social-instagram').value.trim(),
+      linkedin:  document.getElementById('social-linkedin').value.trim(),
+      youtube:   document.getElementById('social-youtube').value.trim(),
+      twitter:   document.getElementById('social-twitter').value.trim(),
+    },
+    clients: siteConfig.about?.clients || [],
+  };
+  const subEl = document.getElementById('login-subtitle');
+  if (subEl) subEl.textContent = siteConfig.website || localStorage.getItem(K_REPO) || 'Admin Panel';
+  await saveToGitHub();
+}
+
+// ─── THUMBNAIL CLEANUP ───────────────────────────────────────────────────────
+let cleanupFiles = []; // [{path, sha, usedBy:[]}]
+
+async function openCleanup() {
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  if (!o || !r || !b) { showToast('GitHub config missing.', 'error'); return; }
+
+  const modal   = document.getElementById('modal-cleanup');
+  const summary = document.getElementById('cleanup-summary');
+  const list    = document.getElementById('cleanup-list');
+  summary.textContent = 'Scanning /thumbs/ and /images/ on GitHub…';
+  list.innerHTML = '';
+  document.getElementById('cleanup-run-btn').disabled = true;
+  document.getElementById('cleanup-hide-inuse').checked = !!localStorage.getItem(K_HIDE_INUSE);
+  modal.classList.remove('hidden');
+
+  try {
+    const headers = ghHeaders();
+    const ts = Date.now();
+    const [thumbsRes, imagesRes] = await Promise.all([
+      fetch(`https://api.github.com/repos/${o}/${r}/contents/thumbs?ref=${b}&t=${ts}`,  { headers }),
+      fetch(`https://api.github.com/repos/${o}/${r}/contents/images?ref=${b}&t=${ts}`,  { headers })
+    ]);
+
+    const thumbsList  = thumbsRes.ok  ? await thumbsRes.json()  : [];
+    const imagesList  = imagesRes.ok  ? await imagesRes.json()  : [];
+
+    // Build in-use references
+    const usedThumbs = new Set(
+      projects.map(p => (p.thumbnail || '').replace(/^thumbs\//, '')).filter(Boolean)
+    );
+    const photoName = (siteConfig.about?.photo || '').split('/').pop();
+    const ogName    = (siteConfig.ogImage      || '').split('/').pop();
+    const usedImages = new Set([photoName, ogName].filter(Boolean));
+
+    cleanupFiles = [
+      ...(Array.isArray(thumbsList) ? thumbsList : [])
+        .filter(f => f.type === 'file')
+        .map(f => {
+          const usedBy = projects
+            .filter(p => (p.thumbnail || '').replace(/^thumbs\//, '') === f.name)
+            .map(p => p.title || 'Untitled');
+          return { path: f.path, sha: f.sha, name: f.name, folder: 'thumbs', inUse: usedBy.length > 0, usedBy };
+        }),
+      ...(Array.isArray(imagesList) ? imagesList : [])
+        .filter(f => f.type === 'file')
+        .map(f => {
+          const usedBy = [
+            photoName === f.name ? 'About photo'    : null,
+            ogName    === f.name ? 'Social preview' : null,
+          ].filter(Boolean);
+          return { path: f.path, sha: f.sha, name: f.name, folder: 'images', inUse: usedBy.length > 0, usedBy };
+        }),
+    ];
+
+    if (cleanupFiles.length === 0) {
+      summary.textContent = 'No files found in /thumbs/ or /images/.';
+      return;
+    }
+
+    const nUnused = cleanupFiles.filter(f => !f.inUse).length;
+    const nInUse  = cleanupFiles.filter(f =>  f.inUse).length;
+    summary.textContent = `${nUnused} unused file${nUnused !== 1 ? 's' : ''}, ${nInUse} in use. In-use files are unchecked — you can select them to force-delete.`;
+    renderCleanupList();
+    updateCleanupBtn();
+  } catch(e) {
+    summary.textContent = 'Error: ' + e.message;
+  }
+}
+
+function renderCleanupList() {
+  const list = document.getElementById('cleanup-list');
+  const hideInUse = document.getElementById('cleanup-hide-inuse')?.checked;
+  list.innerHTML = '';
+  cleanupFiles.forEach((f, cleanupIdx) => {
+    if (hideInUse && f.inUse) return;
+    const item = document.createElement('label');
+    item.className = 'cleanup-item' + (f.inUse ? ' in-use' : '');
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = !f.inUse;
+    cb.dataset.idx = cleanupIdx;
+    cb.addEventListener('change', updateCleanupBtn);
+
+    const name = document.createElement('span');
+    name.className = 'cleanup-item-name';
+    name.textContent = f.folder + '/' + f.name;
+
+    item.appendChild(cb);
+    item.appendChild(name);
+
+    if (f.inUse) {
+      const badge = document.createElement('span');
+      badge.className = 'cleanup-item-used';
+      badge.textContent = '⚠ ' + f.usedBy.join(', ');
+      item.appendChild(badge);
+    }
+
+    list.appendChild(item);
+  });
+}
+
+function setAllCleanup(checked) {
+  document.querySelectorAll('#cleanup-list input[type="checkbox"]').forEach(cb => cb.checked = checked);
+  updateCleanupBtn();
+}
+
+function updateCleanupBtn() {
+  const any = [...document.querySelectorAll('#cleanup-list input[type="checkbox"]')].some(cb => cb.checked);
+  document.getElementById('cleanup-run-btn').disabled = !any;
+}
+
+async function runCleanup() {
+  const selected = [...document.querySelectorAll('#cleanup-list input[type="checkbox"]')]
+    .filter(cb => cb.checked)
+    .map(cb => cleanupFiles[parseInt(cb.dataset.idx)])
+    .filter(Boolean);
+
+  if (!selected.length) return;
+
+  const inUseSelected = selected.filter(f => f.inUse);
+  if (inUseSelected.length) {
+    const names = inUseSelected.map(f => f.name).join(', ');
+    const ok = confirm(`${inUseSelected.length} selected file${inUseSelected.length > 1 ? 's are' : ' is'} currently in use (${names}). Deleting will break references on your site. Continue?`);
+    if (!ok) return;
+  }
+
+  const btn = document.getElementById('cleanup-run-btn');
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  let deleted = 0, failed = 0;
+
+  for (const f of selected) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${o}/${r}/contents/${f.path}`, {
+        method: 'DELETE', headers: ghHeaders(),
+        body: JSON.stringify({ message: `Delete file ${f.name}`, sha: f.sha, branch: b })
+      });
+      if (res.ok) {
+        deleted++;
+        // Remove from thumbFiles cache
+        const idx = thumbFiles.indexOf(f.path);
+        if (idx !== -1) thumbFiles.splice(idx, 1);
+      } else { failed++; }
+    } catch(e) { failed++; }
+  }
+
+  closeCleanup();
+  const msg = failed
+    ? `Deleted ${deleted} file${deleted !== 1 ? 's' : ''}. ${failed} failed.`
+    : `Deleted ${deleted} file${deleted !== 1 ? 's' : ''}.`;
+  showToast(msg, failed ? 'error' : 'success');
+}
+
+function toggleHideInUse() {
+  localStorage.setItem(K_HIDE_INUSE, document.getElementById('cleanup-hide-inuse').checked ? '1' : '');
+  renderCleanupList();
+  updateCleanupBtn();
+}
+
+function closeCleanup() {
+  document.getElementById('modal-cleanup').classList.add('hidden');
+  cleanupFiles = [];
+}
+
+// ─── FILE MANAGER ────────────────────────────────────────────────────────────
+let fmCurrentTab = 'logos';
+let fmFiles = { logos: [], thumbs: [], images: [] };
+let fmLoaded = { logos: false, thumbs: false, images: false };
+let fmSelected = new Set();
+
+function fmGetUsedPaths() {
+  const used = new Set();
+  projects.forEach(p => { if (p.thumbnail) used.add(p.thumbnail); });
+  if (siteConfig.about?.photo) used.add(siteConfig.about.photo);
+  if (siteConfig.ogImage)      used.add(siteConfig.ogImage);
+  if (siteConfig.favicon)      used.add(siteConfig.favicon);
+  (siteConfig.about?.clients || []).forEach(c => { if (c.logo) used.add(c.logo); });
+  return used;
+}
+
+async function openFileManager() {
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  if (!o || !r) { showToast('GitHub config missing.', 'error'); return; }
+  fmFiles    = { logos: [], thumbs: [], images: [] };
+  fmLoaded   = { logos: false, thumbs: false, images: false };
+  fmSelected = new Set();
+  fmCurrentTab = 'logos';
+  updateFMDeleteBtn();
+  document.getElementById('fm-unused-only').checked = false;
+  document.getElementById('modal-files').classList.remove('hidden');
+  updateFMTabs();
+  await loadFMTab('logos');
+}
+
+function closeFileManager() {
+  const el = document.getElementById('modal-files');
+  if (el) el.classList.add('hidden');
+}
+
+async function loadFMTab(tab) {
+  if (fmLoaded[tab]) { renderFMGrid(); return; }
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  document.getElementById('fm-loading').style.display = '';
+  document.getElementById('fm-grid').style.display = 'none';
+  document.getElementById('fm-count').textContent = '';
+  const folderMap = { logos: 'images/logos', thumbs: 'thumbs', images: 'images' };
+  const usedPaths = fmGetUsedPaths();
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${o}/${r}/contents/${folderMap[tab]}?ref=${b}&t=${Date.now()}`,
+      { headers: ghHeaders() }
+    );
+    let files = res.ok ? await res.json() : [];
+    if (!Array.isArray(files)) files = [];
+    fmFiles[tab] = files
+      .filter(f => f.type === 'file')
+      .map(f => ({ name: f.name, path: f.path, sha: f.sha, inUse: usedPaths.has(f.path) }));
+    fmLoaded[tab] = true;
+  } catch(e) {
+    fmFiles[tab] = [];
+    fmLoaded[tab] = true;
+  }
+  renderFMGrid();
+}
+
+function switchFMTab(tab) {
+  fmCurrentTab = tab;
+  fmSelected.clear();
+  updateFMDeleteBtn();
+  updateFMTabs();
+  if (!fmLoaded[tab]) { loadFMTab(tab); } else { renderFMGrid(); }
+}
+
+function updateFMTabs() {
+  document.querySelectorAll('.fm-tab-btn').forEach(btn => {
+    const match = btn.getAttribute('onclick').match(/'(\w+)'/);
+    btn.classList.toggle('active', match && match[1] === fmCurrentTab);
+  });
+}
+
+function renderFMGrid() {
+  const files = fmFiles[fmCurrentTab] || [];
+  const unusedOnly = document.getElementById('fm-unused-only')?.checked;
+  const filtered = unusedOnly ? files.filter(f => !f.inUse) : files;
+  document.getElementById('fm-count').textContent =
+    `${filtered.length} of ${files.length} file${files.length !== 1 ? 's' : ''}`;
+  document.getElementById('fm-loading').style.display = 'none';
+  const grid = document.getElementById('fm-grid');
+  grid.style.display = '';
+  grid.className = 'fm-grid' + (fmCurrentTab === 'thumbs' ? ' tab-thumbs' : '');
+  grid.innerHTML = '';
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="fm-empty">${unusedOnly ? 'No unused files.' : 'No files found.'}</div>`;
+    return;
+  }
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  filtered.forEach(f => {
+    const tile = document.createElement('div');
+    tile.className = 'fm-tile';
+    tile.dataset.path = f.path;
+    const ext = f.name.split('.').pop().toLowerCase();
+    const rawUrl = `https://raw.githubusercontent.com/${o}/${r}/${b}/${f.path}`;
+    let previewInner = '';
+    const isThumb = fmCurrentTab === 'thumbs';
+    if (['svg','png','jpg','jpeg','gif','webp'].includes(ext)) {
+      const logoType = fmCurrentTab === 'logos'
+        ? ((siteConfig.about?.clients || []).find(c => c.logo && c.logo.split('/').pop() === f.name)?.type || '')
+        : '';
+      const invert = logoType === 'dark' ? ';filter:invert(1)' : '';
+      const imgStyle = fmCurrentTab === 'logos'
+        ? `max-width:90%;max-height:46px;object-fit:contain${invert}`
+        : isThumb
+          ? 'width:100%;height:90px;object-fit:cover;display:block;flex-shrink:0'
+          : 'max-width:100%;max-height:46px;object-fit:cover;border-radius:1px';
+      previewInner = `<img src="${rawUrl}" alt="" style="${imgStyle}" onerror="this.style.display='none'" />`;
+    } else {
+      previewInner = `<span style="font-size:9px;color:var(--fg-dim)">${ext.toUpperCase()}</span>`;
+    }
+    const badge = f.inUse ? '<span class="fm-badge">in use</span>' : '';
+    const safePath = f.path.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const previewStyle = isThumb ? ' style="height:90px;padding:0;overflow:hidden;display:block"' : '';
+    const isSelected = fmSelected.has(f.path);
+    if (isSelected) tile.classList.add('selected');
+    tile.innerHTML = `
+      <input type="checkbox" class="fm-tile-checkbox" ${isSelected ? 'checked' : ''} onchange="fmToggleSelect('${safePath}', this.checked)" />
+      <div class="fm-preview"${previewStyle} onclick="fmToggleSelect('${safePath}')" style="cursor:pointer">${previewInner}${badge}</div>
+      <div class="fm-name" title="${esc(f.name)}" onclick="fmToggleSelect('${safePath}')" style="cursor:pointer">${esc(f.name)}</div>
+      <div class="fm-actions">
+        <button class="btn btn-ghost btn-sm" onclick="startFMRename('${safePath}')">Rename</button>
+      </div>`;
+    grid.appendChild(tile);
+  });
+}
+
+function fmToggleSelect(path, checked) {
+  const isNowSelected = checked !== undefined ? checked : !fmSelected.has(path);
+  if (isNowSelected) { fmSelected.add(path); } else { fmSelected.delete(path); }
+  const tile = [...document.querySelectorAll('.fm-tile')].find(t => t.dataset.path === path);
+  if (tile) {
+    tile.classList.toggle('selected', isNowSelected);
+    const cb = tile.querySelector('.fm-tile-checkbox');
+    if (cb) cb.checked = isNowSelected;
+  }
+  updateFMDeleteBtn();
+}
+
+function updateFMDeleteBtn() {
+  const btn = document.getElementById('fm-delete-selected');
+  if (!btn) return;
+  const n = fmSelected.size;
+  btn.style.display = n > 0 ? '' : 'none';
+  btn.textContent = n > 1 ? `Delete Selected (${n})` : 'Delete Selected';
+}
+
+async function fmDeleteSelected() {
+  const paths = [...fmSelected];
+  if (!paths.length) return;
+  const files = paths.map(p => fmFiles[fmCurrentTab].find(f => f.path === p)).filter(Boolean);
+  const inUse = files.filter(f => f.inUse);
+  const names = files.map(f => f.name).join(', ');
+  let msg = `Delete ${paths.length} file${paths.length > 1 ? 's' : ''}?\n\n${names}`;
+  if (inUse.length) msg += `\n\n⚠️ ${inUse.length} file${inUse.length > 1 ? 's are' : ' is'} currently in use.`;
+  if (!confirm(msg)) return;
+
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  let failed = 0;
+  for (const f of files) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${o}/${r}/contents/${f.path}`, {
+        method: 'DELETE',
+        headers: ghHeaders(),
+        body: JSON.stringify({ message: `Delete ${f.name}`, sha: f.sha, branch: b })
+      });
+      if (!res.ok) { failed++; continue; }
+      fmFiles[fmCurrentTab] = fmFiles[fmCurrentTab].filter(x => x.path !== f.path);
+      const ti = thumbFiles.indexOf(f.path);
+      if (ti !== -1) thumbFiles.splice(ti, 1);
+    } catch(e) { failed++; }
+  }
+  fmSelected.clear();
+  updateFMDeleteBtn();
+  renderFMGrid();
+  if (failed) showToast(`${paths.length - failed} deleted, ${failed} failed`, 'error');
+  else showToast(`${paths.length} file${paths.length > 1 ? 's' : ''} deleted`, 'success');
+}
+
+function startFMRename(path) {
+  const f = fmFiles[fmCurrentTab].find(x => x.path === path);
+  if (!f) return;
+  const tile = [...document.querySelectorAll('.fm-tile')].find(t => t.dataset.path === path);
+  if (!tile) return;
+  const dotIdx = f.name.lastIndexOf('.');
+  const base = dotIdx > 0 ? f.name.slice(0, dotIdx) : f.name;
+  const ext  = dotIdx > 0 ? f.name.slice(dotIdx) : '';
+  const safePath = path.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  const actionsEl = tile.querySelector('.fm-actions');
+  if (!actionsEl) return;
+  actionsEl.outerHTML = `<div class="fm-rename-area" data-rename-path="${esc(path)}">
+    <div class="fm-rename-row">
+      <input class="fm-rename-input" data-rename-input="${esc(path)}" value="${esc(base)}" />
+      <span class="fm-rename-ext">${esc(ext)}</span>
+    </div>
+    <div class="fm-save-row">
+      <button class="btn btn-ghost btn-sm" onclick="renderFMGrid()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="fmDoRename('${safePath}')">Save</button>
+    </div>
+  </div>`;
+  const input = tile.querySelector('[data-rename-input]');
+  if (input) { input.focus(); input.select(); }
+}
+
+async function fmDoRename(path) {
+  const f = fmFiles[fmCurrentTab].find(x => x.path === path);
+  if (!f) return;
+  const tile = [...document.querySelectorAll('.fm-tile')].find(t => t.dataset.path === path);
+  const input = tile?.querySelector('[data-rename-input]');
+  if (!input) return;
+  const dotIdx = f.name.lastIndexOf('.');
+  const ext = dotIdx > 0 ? f.name.slice(dotIdx) : '';
+  const newBase = input.value.trim().replace(/[^a-zA-Z0-9._\-]/g, '-');
+  if (!newBase) return;
+  const newName = newBase + ext;
+  if (newName === f.name) { renderFMGrid(); return; }
+  const folder = path.substring(0, path.lastIndexOf('/'));
+  const newPath = folder + '/' + newName;
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  // GET content + SHA
+  let sha, content;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${o}/${r}/contents/${path}?ref=${b}`, { headers: ghHeaders() });
+    if (!res.ok) throw new Error('Fetch failed');
+    const data = await res.json();
+    sha = data.sha; content = data.content.replace(/\n/g,'');
+  } catch(e) { showToast('Rename failed: ' + e.message, 'error'); return; }
+  // PUT new file
+  try {
+    const putRes = await fetch(`https://api.github.com/repos/${o}/${r}/contents/${newPath}`, {
+      method: 'PUT', headers: ghHeaders(),
+      body: JSON.stringify({ message: `Rename ${f.name} → ${newName}`, content, branch: b })
+    });
+    if (!putRes.ok) throw new Error('Create failed');
+  } catch(e) { showToast('Rename failed: ' + e.message, 'error'); return; }
+  // DELETE old
+  try {
+    await fetch(`https://api.github.com/repos/${o}/${r}/contents/${path}`, {
+      method: 'DELETE', headers: ghHeaders(),
+      body: JSON.stringify({ message: `Remove ${f.name} after rename`, sha, branch: b })
+    });
+  } catch(e) { /* non-fatal */ }
+  // Update in-memory references
+  fmUpdateRefs(path, newPath);
+  // Refresh
+  fmLoaded[fmCurrentTab] = false;
+  await loadFMTab(fmCurrentTab);
+  showToast(`Renamed to ${newName}`, 'success');
+}
+
+function fmUpdateRefs(oldPath, newPath) {
+  let changed = false;
+  projects.forEach(p => { if (p.thumbnail === oldPath) { p.thumbnail = newPath; changed = true; } });
+  if (siteConfig.about?.photo === oldPath) { siteConfig.about.photo = newPath; changed = true; }
+  if (siteConfig.ogImage === oldPath)       { siteConfig.ogImage = newPath; changed = true; }
+  if (siteConfig.favicon === oldPath)       { siteConfig.favicon = newPath; changed = true; }
+  (siteConfig.about?.clients || []).forEach(c => {
+    if (c.logo === oldPath) { c.logo = newPath; changed = true; }
+  });
+  if (changed) { markDirty(); showToast('References updated — save to apply.', 'success'); }
+}
+
+async function confirmFMDelete(path) {
+  const f = fmFiles[fmCurrentTab].find(x => x.path === path);
+  if (!f) return;
+  const msg = f.inUse ? `"${f.name}" is currently in use. Delete anyway?` : `Delete "${f.name}"?`;
+  if (!confirm(msg)) return;
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  try {
+    const res = await fetch(`https://api.github.com/repos/${o}/${r}/contents/${f.path}`, {
+      method: 'DELETE', headers: ghHeaders(),
+      body: JSON.stringify({ message: `Delete ${f.name}`, sha: f.sha, branch: b })
+    });
+    if (!res.ok) throw new Error('Delete failed');
+    fmFiles[fmCurrentTab] = fmFiles[fmCurrentTab].filter(x => x.path !== path);
+    const ti = thumbFiles.indexOf(path);
+    if (ti !== -1) thumbFiles.splice(ti, 1);
+    renderFMGrid();
+    showToast(`Deleted ${f.name}`, 'success');
+  } catch(e) {
+    showToast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ─── 404 EDITOR ──────────────────────────────────────────────────────────────
+function populate404Editor() {
+  const n = siteConfig.notFound || {};
+  document.getElementById('nf-heading').value = n.heading || '';
+  document.getElementById('nf-sub').value     = n.sub     || '';
+  document.getElementById('nf-back').value    = n.back    || '';
+}
+
+async function save404Fields() {
+  siteConfig.notFound = {
+    heading: document.getElementById('nf-heading').value.trim(),
+    sub:     document.getElementById('nf-sub').value.trim(),
+    back:    document.getElementById('nf-back').value.trim()
+  };
+  await saveToGitHub();
+}
+
+function populateSplashEditor() {
+  const sp = siteConfig.splash || {};
+  document.getElementById('splash-enabled').checked        = !!sp.enabled;
+  document.getElementById('splash-video').value            = sp.video    || '';
+  document.getElementById('splash-duration').value         = sp.duration || 6;
+  document.getElementById('splash-skip-returning').checked = sp.skipReturning !== false;
+  updateSplashFieldsVisibility();
+}
+
+function updateSplashFieldsVisibility() {
+  const enabled = document.getElementById('splash-enabled')?.checked;
+  const fields  = document.getElementById('splash-fields');
+  if (fields) fields.style.display = enabled ? '' : 'none';
+}
+
+async function saveSplashFields() {
+  siteConfig.splash = {
+    enabled:       document.getElementById('splash-enabled').checked,
+    video:         document.getElementById('splash-video').value.trim(),
+    duration:      parseInt(document.getElementById('splash-duration').value) || 6,
+    skipReturning: document.getElementById('splash-skip-returning').checked,
+  };
+  await saveToGitHub();
+}
+
+// ─── PROGRESSIVE DISCLOSURE ──────────────────────────────────────────────────
+function toggleDisclosure(name) {
+  const body = document.getElementById(name + '-body');
+  const btn  = document.getElementById(name + '-toggle');
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : '';
+  if (btn) btn.textContent = isOpen ? (btn.dataset.closed || `+ ${name}`) : (btn.dataset.open || `− ${name}`);
+}
+function openDisclosure(name) {
+  const body = document.getElementById(name + '-body');
+  const btn  = document.getElementById(name + '-toggle');
+  if (!body || body.style.display !== 'none') return;
+  body.style.display = '';
+  if (btn) btn.textContent = btn.dataset.open || `− ${name}`;
+}
+function closeDisclosure(name) {
+  const body = document.getElementById(name + '-body');
+  const btn  = document.getElementById(name + '-toggle');
+  if (!body) return;
+  body.style.display = 'none';
+  if (btn) btn.textContent = btn.dataset.closed || `+ ${name}`;
+}
+
+function toggleSocial(platform) {
+  const row = document.getElementById('social-' + platform + '-row');
+  const btn = document.getElementById('social-' + platform + '-toggle');
+  if (!row) return;
+  row.style.display = 'flex';
+  if (btn) btn.style.display = 'none';
+  document.getElementById('social-' + platform)?.focus();
+}
+function clearSocial(platform) {
+  document.getElementById('social-' + platform).value = '';
+  document.getElementById('social-' + platform + '-row').style.display = 'none';
+  document.getElementById('social-' + platform + '-toggle').style.display = '';
+  markDirty();
+}
+
+// ─── PROJECT SHARE LINKS ──────────────────────────────────────────────────────
+function buildShareUrl(p) {
+  // Derive base from admin's own URL — always correct regardless of site.json config
+  const base = location.href.replace(/admin\.html.*$/, '').replace(/\/$/, '');
+  return `${base}/?share=${p.id}&key=${p.shareKey}`;
+}
+
+async function copyShareLink(idx) {
+  const p = projects[idx];
+  if (!p) return;
+  const needsKey = !p.shareKey;
+  if (needsKey) {
+    p.shareKey = crypto.randomUUID();
+    // Save so the link works immediately
+    try {
+      await saveToGitHub();
+    } catch(e) {
+      delete p.shareKey;
+      showToast('Save failed — share link not created.', 'error');
+      return;
+    }
+  }
+  const url = buildShareUrl(p);
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast(`Copied: ${url} — may take up to 10 minutes to activate.`, 'success');
+  } catch {
+    prompt('Copy this share link:', url);
+  }
+  if (needsKey) renderCategory(p.category); // refresh card to show revoke button
+}
+
+async function revokeShareLink(idx) {
+  const p = projects[idx];
+  if (!p || !p.shareKey) return;
+  if (!confirm('Revoke share link? Anyone with the old link will lose access.')) return;
+  delete p.shareKey;
+  try {
+    await saveToGitHub();
+    showToast('Share link revoked.', 'success');
+  } catch(e) {
+    showToast('Save failed.', 'error');
+    return;
+  }
+  renderCategory(p.category);
+}
+
+// ─── CLIENT LOGOS ─────────────────────────────────────────────────────────────
+function renderClientList() {
+  const clients = (siteConfig.about && siteConfig.about.clients) || [];
+  const list = document.getElementById('client-logo-list');
+  if (!list) return;
+  const typeLabels = { white: 'White', dark: 'Dark', color: 'Color' };
+  list.innerHTML = clients.map((c, i) => {
+    const type = c.type || 'white';
+    return `
+    <div class="client-logo-item type-${type}" data-idx="${i}" draggable="true">
+      <img src="${c.logo}" alt="${c.name}" title="Drag to reorder · Click to cycle: white → dark → color"
+        draggable="false" onclick="cycleClientType(${i})" onerror="this.style.opacity='0.2'" />
+      <div class="client-logo-name">${c.name}</div>
+      <div class="client-logo-type-badge">${typeLabels[type]}</div>
+      <button class="client-logo-remove" onclick="removeClient(${i})" title="Remove" draggable="false">×</button>
+    </div>`;
+  }).join('');
+  setupClientLogoDrag();
+}
+
+let _dragClientIdx = null;
+
+function setupClientLogoDrag() {
+  const items = document.querySelectorAll('#client-logo-list .client-logo-item');
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      _dragClientIdx = parseInt(item.dataset.idx);
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      document.querySelectorAll('#client-logo-list .client-logo-item').forEach(el => el.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('#client-logo-list .client-logo-item').forEach(el => el.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      const toIdx = parseInt(item.dataset.idx);
+      if (_dragClientIdx === null || _dragClientIdx === toIdx) return;
+      const clients = siteConfig.about?.clients;
+      if (!clients) return;
+      const [moved] = clients.splice(_dragClientIdx, 1);
+      clients.splice(toIdx, 0, moved);
+      _dragClientIdx = null;
+      renderClientList();
+      markDirty();
+    });
+  });
+}
+
+function removeClient(idx) {
+  if (!siteConfig.about) return;
+  siteConfig.about.clients = (siteConfig.about.clients || []).filter((_, i) => i !== idx);
+  renderClientList();
+  markDirty();
+}
+
+function cycleClientType(idx) {
+  const clients = siteConfig.about?.clients;
+  if (!clients) return;
+  const c = clients[idx];
+  const cycle = { white: 'dark', dark: 'color', color: 'white' };
+  const next = cycle[c.type || 'white'];
+  // clean up legacy fields
+  delete c.filter;
+  delete c.color;
+  if (next === 'white') delete c.type;
+  else c.type = next;
+  renderClientList();
+  markDirty();
+}
+
+async function uploadClientLogo(input) {
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  const filePath = 'images/' + file.name;
+  const blobUrl  = URL.createObjectURL(file);
+  const ok = await uploadToGitHub(file, filePath);
+  URL.revokeObjectURL(blobUrl);
+  if (!ok) return;
+  // Prompt for name
+  const name = (prompt('Label for this logo (used as alt text / tooltip):', file.name.replace(/\.[^.]+$/, '')) || '').trim();
+  if (!siteConfig.about) siteConfig.about = {};
+  if (!siteConfig.about.clients) siteConfig.about.clients = [];
+  siteConfig.about.clients.push({ name: name || file.name, logo: filePath });
+  renderClientList();
+  markDirty();
+  showToast('"' + file.name + '" added!', 'success');
+}
+
+function addClientByUrl() {
+  const input = document.getElementById('client-logo-url');
+  const url = (input?.value || '').trim();
+  if (!url) return;
+  const name = (prompt('Label for this logo (used as alt text / tooltip):', '') || '').trim();
+  if (!siteConfig.about) siteConfig.about = {};
+  if (!siteConfig.about.clients) siteConfig.about.clients = [];
+  siteConfig.about.clients.push({ name: name || url, logo: url });
+  input.value = '';
+  renderClientList();
+  markDirty();
+}
+
+// ─── CONTACT ─────────────────────────────────────────────────────────────────
+function populateContactEditor() {
+  const c = siteConfig.contact || {};
+  const mode = c.mode || (c.enabled ? 'form' : 'off');
+  const sel = document.getElementById('contact-mode-select');
+  if (sel) sel.value = mode;
+  document.getElementById('contact-endpoint').value = c.endpoint || '';
+  document.getElementById('contact-show-card').checked = !!c.showCard;
+  updateContactMode();
+}
+
+function updateContactMode() {
+  const mode = document.getElementById('contact-mode-select')?.value || 'off';
+  const fields     = document.getElementById('contact-fields');
+  const cardField  = document.getElementById('contact-show-card-field');
+  const endpField  = document.getElementById('contact-endpoint-field');
+  const hint       = document.getElementById('contact-mode-hint');
+  // Show/hide sub-fields based on mode
+  if (fields)    fields.style.display    = (mode === 'form' || mode === 'card-only') ? '' : 'none';
+  if (cardField) cardField.style.display = mode === 'form' ? '' : 'none'; // card-only always shows card — no toggle needed
+  if (endpField) endpField.style.display = mode === 'form' ? '' : 'none';
+  const hints = {
+    'email-nav':  'Your email address appears as a link in the nav bar. Uses the email set in About.',
+    'form':       'A contact page with a form appears in the nav.',
+    'card-only':  'A contact page with your name and email appears in the nav — no form.',
+    'off':        '',
+  };
+  if (hint) hint.textContent = hints[mode] || '';
+  // sync to siteConfig live so preview works
+  if (!siteConfig.contact) siteConfig.contact = {};
+  siteConfig.contact.mode    = mode === 'off' ? undefined : mode;
+  siteConfig.contact.enabled = mode === 'form';
+  siteConfig.contact.endpoint = document.getElementById('contact-endpoint')?.value.trim() || siteConfig.contact.endpoint;
+}
+
+async function saveContactFields() {
+  const mode = document.getElementById('contact-mode-select')?.value || 'off';
+  siteConfig.contact = {
+    enabled:  mode === 'form',
+    mode:     mode === 'off' ? undefined : mode,
+    showCard: mode === 'form' ? (document.getElementById('contact-show-card')?.checked || false) : false,
+    endpoint: document.getElementById('contact-endpoint')?.value.trim() || '',
+  };
+  await saveToGitHub();
+}
+
+// ─── ACCENT COLOR + ANALYTICS ────────────────────────────────────────────────
+const DEFAULT_ACCENT = '#c9a96e';
+
+function previewAccentColor(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  const hexEl = document.getElementById('site-accent-hex');
+  if (hexEl) hexEl.value = color;
+}
+
+function syncAccentFromHex(val) {
+  const color = val.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(color)) {
+    document.documentElement.style.setProperty('--accent', color);
+    const picker = document.getElementById('site-accent-color');
+    if (picker) picker.value = color;
+    markDirty();
+  }
+}
+
+function resetAccentColor() {
+  document.getElementById('site-accent-color').value = DEFAULT_ACCENT;
+  document.getElementById('site-accent-hex').value   = DEFAULT_ACCENT;
+  previewAccentColor(DEFAULT_ACCENT);
+  markDirty();
+}
+
+function updateAnalyticsFields() {
+  const provider = document.getElementById('site-analytics-provider')?.value;
+  const field    = document.getElementById('analytics-id-field');
+  const input    = document.getElementById('site-analytics-id');
+  const hint     = document.getElementById('analytics-id-hint');
+  if (!field) return;
+  field.style.display = provider ? '' : 'none';
+  if (provider === 'ga4') {
+    if (input) input.placeholder = 'G-XXXXXXXXXX';
+    if (hint)  hint.textContent  = 'Your GA4 Measurement ID — found in Google Analytics → Admin → Data Streams';
+  } else if (provider === 'plausible') {
+    if (input) input.placeholder = 'yourdomain.com';
+    if (hint)  hint.textContent  = 'Your site domain as registered in Plausible (without https://)';
+  }
+}
+
+// ─── ADMIN THEME ─────────────────────────────────────────────────────────────
+function initAdminTheme() {
+  // Before config loads, fall back to OS preference
+  applyAdminTheme('auto');
+}
+
+function applyAdminTheme(theme) {
+  const resolved = theme === 'auto'
+    ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    : theme;
+  document.documentElement.setAttribute('data-theme', resolved);
+  localStorage.setItem('cr_admin_theme', resolved);
 }
 
 // ─── THUMB PREVIEW + FILE LIST ───────────────────────────────────────────────
 function updateThumbPreview() {
-  const val     = document.getElementById('f-thumbnail').value.trim();
-  const preview = document.getElementById('thumb-preview');
-  if (!val) { preview.style.display = 'none'; return; }
+  const val       = document.getElementById('f-thumbnail').value.trim();
+  const preview   = document.getElementById('thumb-preview');
+  const empty     = document.getElementById('thumb-empty-state');
+  const dropZone  = document.getElementById('thumb-drop-zone');
+  if (!val) {
+    preview.style.display = 'none';
+    if (empty) empty.style.display = '';
+    if (dropZone) dropZone.classList.remove('has-image');
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (dropZone) dropZone.classList.add('has-image');
   preview.style.display = 'block';
-  preview.src = thumbStore(val);
   preview.onerror = () => { preview.style.opacity = '0.3'; };
   preview.onload  = () => { preview.style.opacity = '1'; };
+  const newSrc = thumbStore(val);
+  if (preview.getAttribute('src') === newSrc) preview.src = '';
+  preview.src = newSrc;
   // keep file list selection in sync
   document.querySelectorAll('.thumb-file-item').forEach(el => {
     el.classList.toggle('selected', el.dataset.filename === val);
   });
 }
 
+function buildThumbListItem(path, listEl, currentVal) {
+  // path is like 'thumbs/foo.jpg' or 'images/bar.jpg'
+  const storedVal = path; // thumbStore preserves both prefixes
+  const item = document.createElement('div');
+  item.className = 'thumb-file-item' + (storedVal === currentVal ? ' selected' : '');
+  item.dataset.filename = storedVal;
+
+  const name = document.createElement('span');
+  name.className = 'thumb-file-item-name';
+  name.textContent = path.replace(/^(thumbs|images)\//, '');
+  item.appendChild(name);
+
+  // Folder badge
+  const folder = path.startsWith('images/') ? 'images' : 'thumbs';
+  const badge = document.createElement('span');
+  badge.style.cssText = 'font-size:8px;letter-spacing:0.08em;color:var(--fg-dim);flex-shrink:0;padding-left:6px';
+  badge.textContent = folder;
+  item.appendChild(badge);
+
+  item.addEventListener('click', () => {
+    document.getElementById('f-thumbnail').value = storedVal;
+    updateThumbPreview();
+    markDirty();
+    listEl.classList.remove('open');
+  });
+
+  listEl.appendChild(item);
+}
+
 function toggleThumbList() {
   const list = document.getElementById('thumb-file-list');
   const isOpen = list.classList.toggle('open');
-  if (!isOpen || list.children.length > 0) return;
-
+  if (!isOpen) return;
+  list.innerHTML = '';
   if (thumbFiles.length === 0) {
-    list.innerHTML = '<div class="thumb-file-item" style="cursor:default;color:var(--fg-dim)">No thumbnails found</div>';
+    list.innerHTML = '<div class="thumb-file-item" style="cursor:default;color:var(--fg-dim)">No uploaded files found</div>';
     return;
   }
   const current = document.getElementById('f-thumbnail').value.trim();
-  thumbFiles.forEach(path => {
-    const filename = path.replace(/^thumbs\//, '');
-    const item = document.createElement('div');
-    item.className = 'thumb-file-item' + (filename === current ? ' selected' : '');
-    item.textContent = filename;
-    item.dataset.filename = filename;
-    item.addEventListener('click', () => {
-      document.getElementById('f-thumbnail').value = filename;
-      updateThumbPreview();
-      list.classList.remove('open');
-    });
-    list.appendChild(item);
-  });
+  const thumbsGroup = thumbFiles.filter(p => p.startsWith('thumbs/'));
+  const imagesGroup = thumbFiles.filter(p => p.startsWith('images/'));
+  if (thumbsGroup.length && imagesGroup.length) {
+    // Show section headers when both folders have files
+    const makeHeader = (label, first) => {
+      const h = document.createElement('div');
+      h.style.cssText = `font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-dim);padding:6px 10px 3px;cursor:default${first ? '' : ';border-top:1px solid var(--fg-dimmer);margin-top:2px'}`;
+      h.textContent = label;
+      return h;
+    };
+    list.appendChild(makeHeader('/thumbs', true));
+    thumbsGroup.forEach(p => buildThumbListItem(p, list, current));
+    list.appendChild(makeHeader('/images', false));
+    imagesGroup.forEach(p => buildThumbListItem(p, list, current));
+  } else {
+    thumbFiles.forEach(path => buildThumbListItem(path, list, current));
+  }
 }
+
 
 // ─── GITHUB SAVE ─────────────────────────────────────────────────────────────
 async function putGhFile(filename, content) {
@@ -1299,23 +3615,125 @@ async function putGhFile(filename, content) {
   }
 
   const result = await putRes.json();
-  return result.content.sha;
+  return { fileSha: result.content.sha, commitSha: result.commit.sha };
+}
+
+function flushSettingsForms() {
+  // General tab
+  siteConfig.ownerName  = document.getElementById('site-name-input').value.trim();
+  siteConfig.ownerTitle = document.getElementById('site-title-input').value.trim();
+  siteConfig.favicon         = document.getElementById('site-favicon-input').value.trim();
+  siteConfig.metaDescription = document.getElementById('site-meta-desc').value.trim() || undefined;
+  const ogRaw = document.getElementById('site-og-input').value.trim();
+  siteConfig.ogImage = ogRaw && !ogRaw.startsWith('http') && !ogRaw.startsWith('images/') && !ogRaw.startsWith('thumbs/') ? 'images/' + ogRaw : ogRaw;
+
+  // About tab
+  siteConfig.about = {
+    show:           document.getElementById('about-show-input').checked,
+    photo:          document.getElementById('about-photo-input').value.trim(),
+    photoAlt:        document.getElementById('about-photo-alt').value.trim() || undefined,
+    photoFullWidth:  document.getElementById('about-photo-fullwidth')?.checked || undefined,
+    photoShape:      document.getElementById('about-photo-shape')?.value || siteConfig.about?.photoShape || 'circle',
+    photoPlacement: document.getElementById('about-photo-placement')?.value || siteConfig.about?.photoPlacement || 'above',
+    photoX:         parseFloat(document.getElementById('about-photo-x')?.value) || 50,
+    photoY:         parseFloat(document.getElementById('about-photo-y')?.value) || 50,
+    photoZoom:      parseFloat(document.getElementById('about-photo-zoom')?.value) || 1,
+    photoScale:     parseFloat(document.getElementById('about-photo-scale')?.value) || 1,
+    bio:            document.getElementById('about-bio-input').value,
+    bio2:           document.getElementById('about-bio2-input').value,
+    contactEmail:   document.getElementById('about-email-input').value.trim(),
+    resume:         document.getElementById('about-resume-input')?.value.trim() || '',
+    social: {
+      imdb:      document.getElementById('social-imdb')?.value.trim() || '',
+      vimeo:     document.getElementById('social-vimeo')?.value.trim() || '',
+      instagram: document.getElementById('social-instagram')?.value.trim() || '',
+      linkedin:  document.getElementById('social-linkedin')?.value.trim() || '',
+      youtube:   document.getElementById('social-youtube')?.value.trim() || '',
+      twitter:   document.getElementById('social-twitter')?.value.trim() || '',
+    },
+    clients: siteConfig.about?.clients || [],
+  };
+
+  // 404 tab
+  siteConfig.notFound = {
+    heading: document.getElementById('nf-heading').value.trim(),
+    sub:     document.getElementById('nf-sub').value.trim(),
+    back:    document.getElementById('nf-back').value.trim(),
+  };
+
+  // Contact tab
+  const _cmode = document.getElementById('contact-mode-select')?.value || 'off';
+  siteConfig.contact = {
+    enabled:  _cmode === 'form',
+    mode:     _cmode === 'off' ? undefined : _cmode,
+    showCard: _cmode === 'form' ? (document.getElementById('contact-show-card')?.checked || false) : false,
+    endpoint: document.getElementById('contact-endpoint')?.value.trim() || '',
+  };
+
+  // Splash tab
+  siteConfig.splash = {
+    enabled:       document.getElementById('splash-enabled')?.checked || false,
+    video:         document.getElementById('splash-video')?.value.trim() || '',
+    duration:      parseInt(document.getElementById('splash-duration')?.value) || 6,
+    skipReturning: document.getElementById('splash-skip-returning')?.checked !== false,
+  };
+
+  // General — accent color + analytics + theme
+  siteConfig.accentColor    = document.getElementById('site-accent-color')?.value || DEFAULT_ACCENT;
+  siteConfig.analytics      = {
+    provider: document.getElementById('site-analytics-provider')?.value || '',
+    id:       document.getElementById('site-analytics-id')?.value.trim() || '',
+  };
+  siteConfig.themeMode      = document.getElementById('site-theme-mode')?.value || 'auto';
+  siteConfig.allowThemeToggle = document.getElementById('site-allow-theme-toggle')?.checked || false;
+  siteConfig.filmGrain      = parseFloat(document.getElementById('site-film-grain')?.value || 14) / 500;
+
+  updateNavBrand();
+}
+
+function openPreview() {
+  flushSettingsForms();
+  try {
+    sessionStorage.setItem('cr_preview', JSON.stringify({ siteConfig, projects }));
+    let url;
+    if (currentTab && currentTab !== 'site') {
+      // On a category tab
+      url = 'index.html?preview=1#' + currentTab;
+    } else {
+      // On site settings — check which sub-tab is active
+      const activePane = document.querySelector('#pane-site .settings-tab-pane.active');
+      const section = activePane ? activePane.id.replace('stab-', '') : 'general';
+      if (section === 'about')   url = 'index.html?preview=1#about';
+      else if (section === '404') url = '404.html?preview=1';
+      else if (section === 'contact') url = 'index.html?preview=1#contact';
+      else if (section === 'splash')  url = 'index.html?preview=1&splash=1';
+      else url = 'index.html?preview=1';
+    }
+    window.open(url, '_blank');
+  } catch(e) {
+    showToast('Preview failed — sessionStorage unavailable.', 'error');
+  }
 }
 
 async function saveToGitHub() {
+  flushSettingsForms();
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   setStatus('Saving…', 'saving');
+  // showToast('Saving — changes may take up to 30 seconds to be reflected on your site…', '', 0);
 
   try {
     // Save sequentially to avoid any timing conflicts
-    projectsSha = await putGhFile('projects.json', projects);
-    siteSha     = await putGhFile('site.json',     siteConfig);
-    isDirty     = false;
-
+    const projResult = await putGhFile('projects.json', projects);
+    projectsSha = projResult.fileSha;
+    const siteResult = await putGhFile('site.json', siteConfig);
+    siteSha = siteResult.fileSha;
+    clearDirty();
     setStatus('Saved ✓', 'saved');
-    showToast('Saved! GitHub Pages will update in ~30 seconds.', 'success');
-    setTimeout(() => setStatus('', ''), 5000);
+    // showToast('Saved!', 'success');
+    setTimeout(() => setStatus('', ''), 4000);
+    deployHide();
+    pollDeployStatus();
   } catch(e) {
     setStatus('Save failed', 'error');
     showToast('Save failed: ' + e.message, 'error');
@@ -1325,25 +3743,149 @@ async function saveToGitHub() {
   }
 }
 
+// ─── DEPLOY STATUS ───────────────────────────────────────────────────────────
+let deployPollTimer = null;
+let hasActionsRead  = false; // set after token permission check
+
+function deployShow(state, label, tooltip) {
+  const el = document.getElementById('nav-status');
+  if (!el) return;
+  el.title = tooltip || '';
+  el.className = 'nav-status deploy-indicator visible' + (state ? ' ' + state : '');
+  el.innerHTML = `
+    <div class="deploy-icon">
+      <div class="ring"></div>
+      <div class="check">✓</div>
+      <div class="cross">✗</div>
+    </div>
+    <span class="deploy-label">${label || ''}</span>`;
+}
+
+function deployHide() {
+  if (deployPollTimer) { clearTimeout(deployPollTimer); deployPollTimer = null; }
+  setStatus('', '');
+}
+
+function pollDeployStatus() {
+  if (deployPollTimer) { clearTimeout(deployPollTimer); deployPollTimer = null; }
+  if (hasActionsRead) {
+    pollDeployViaActions();
+  } else {
+    pollDeployViaTimer();
+  }
+}
+
+async function pollDeployViaActions() {
+  const o       = localStorage.getItem(K_OWNER);
+  const r       = localStorage.getItem(K_REPO);
+  const b       = localStorage.getItem(K_BRANCH);
+  const savedAt = Date.now();
+  const TIMEOUT = 5 * 60 * 1000; // 5 min ceiling
+  const INTERVAL = 4000;
+
+  deployShow('', 'Deploying…', 'Waiting for GitHub Actions…');
+
+  const poll = async () => {
+    if (Date.now() - savedAt > TIMEOUT) {
+      deployShow('done', 'Live?', 'Timed out — check GitHub Actions');
+      setTimeout(deployHide, 10000);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${o}/${r}/actions/runs?per_page=5&branch=${b}&event=push`,
+        { headers: ghHeaders() }
+      );
+      if (!res.ok) { pollDeployViaTimer(savedAt); return; } // fall back on error
+      const data = await res.json();
+      const run = (data.workflow_runs || [])
+        .find(rn => new Date(rn.created_at).getTime() > savedAt - 15000);
+
+      if (!run) {
+        deployShow('', 'Deploying…', 'Waiting for run to start…');
+        deployPollTimer = setTimeout(poll, INTERVAL);
+        return;
+      }
+
+      if (run.status === 'completed') {
+        if (run.conclusion === 'success') {
+          deployShow('done', 'Live', 'Deployment complete');
+          setTimeout(deployHide, 8000);
+        } else {
+          deployShow('failed', 'Failed', `${run.conclusion} — check Actions`);
+          setTimeout(deployHide, 12000);
+        }
+        return;
+      }
+
+      const elapsed = Math.round((Date.now() - new Date(run.created_at).getTime()) / 1000);
+      const label   = run.status === 'queued' ? 'Queued…' : `Deploying… ${elapsed}s`;
+      deployShow('', label, `Run ${run.status}`);
+      deployPollTimer = setTimeout(poll, INTERVAL);
+    } catch(e) {
+      pollDeployViaTimer(savedAt); // fall back on network error
+    }
+  };
+
+  deployPollTimer = setTimeout(poll, 5000); // wait 5s for GitHub to create the run
+}
+
+function pollDeployViaTimer(startedAt = Date.now()) {
+  const DEPLOY_MS = 75 * 1000;
+  const TICK_MS   = 500;
+
+  const tick = () => {
+    const elapsed  = Date.now() - startedAt;
+    const progress = Math.min(elapsed / DEPLOY_MS, 1);
+    if (progress >= 1) {
+      deployShow('done', 'Live', 'GitHub Pages deployment should be complete');
+      setTimeout(deployHide, 8000);
+      return;
+    }
+    const pct  = Math.round(progress * 100);
+    const secs = Math.round((DEPLOY_MS - elapsed) / 1000);
+    deployShow('', `Deploying ${pct}%`, `~${secs}s remaining`);
+    deployPollTimer = setTimeout(tick, TICK_MS);
+  };
+
+  tick();
+}
+
 // ─── UTILS ───────────────────────────────────────────────────────────────────
+function clearDirty() {
+  isDirty = false;
+  const saveBtn   = document.getElementById('save-btn');
+  const revertBtn = document.getElementById('revert-btn');
+  if (saveBtn)   { saveBtn.style.display = 'none'; saveBtn.classList.remove('dirty'); }
+  if (revertBtn) revertBtn.style.display = 'none';
+  setStatus('', '');
+}
+
 function markDirty() {
   isDirty = true;
   setStatus('Unsaved changes', 'dirty');
+  const btn = document.getElementById('save-btn');
+  if (btn) { btn.style.display = ''; btn.classList.add('dirty'); }
+  const revertBtn = document.getElementById('revert-btn');
+  if (revertBtn) revertBtn.style.display = '';
 }
 
 function setStatus(msg, cls) {
   const el = document.getElementById('nav-status');
+  el.innerHTML = '';
   el.textContent = msg;
+  el.title = '';
   el.className = 'nav-status' + (cls ? ' ' + cls : '');
 }
 
-function showToast(msg, type) {
+function showToast(msg, type, duration) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast' + (type ? ' ' + type : '');
   t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3800);
+  const ms = duration !== undefined ? duration : 5000;
+  if (ms > 0) t._timer = setTimeout(() => t.classList.remove('show'), ms);
 }
 
 function esc(s) {
@@ -1352,11 +3894,490 @@ function esc(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ─── AUTO POSTER (admin list) ─────────────────────────────────────────────────
+const adminPosterCache = {};
+
+function getAdminPoster(p) {
+  if (p.thumbnail || !p.url) return null;
+  const yt = p.url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (yt) return { url: `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg`, source: 'YouTube' };
+  const vm = p.url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return { url: adminPosterCache[p.url] || null, source: 'Vimeo', vimeoUrl: p.url };
+  return null;
+}
+
+async function fetchVimeoAdminPoster(vimeoUrl, imgEl, labelEl) {
+  if (adminPosterCache[vimeoUrl]) {
+    imgEl.src = adminPosterCache[vimeoUrl]; return;
+  }
+  try {
+    const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`);
+    if (res.ok) {
+      const d = await res.json();
+      if (d.thumbnail_url) {
+        adminPosterCache[vimeoUrl] = d.thumbnail_url;
+        imgEl.src = d.thumbnail_url;
+        imgEl.style.display = '';
+        if (labelEl) labelEl.style.display = '';
+      }
+    }
+  } catch(e) {}
+}
+
+// ─── GENERAL SETTINGS ────────────────────────────────────────────────────────
+function populateGeneralSettings() {
+  const navBrand = document.getElementById('nav-brand-name');
+  if (navBrand && siteConfig.ownerName) navBrand.innerHTML = siteConfig.ownerName + ' <span>/ Admin</span>';
+  document.getElementById('site-name-input').value     = siteConfig.ownerName || '';
+  document.getElementById('site-title-input').value   = siteConfig.ownerTitle || '';
+  document.getElementById('site-favicon-input').value = siteConfig.favicon    || '';
+  document.getElementById('site-og-input').value      = siteConfig.ogImage    || '';
+  document.getElementById('site-website-input').value = siteConfig.website || (siteConfig.about && siteConfig.about.website) || '';
+  document.getElementById('site-meta-desc').value     = siteConfig.metaDescription || '';
+  updateMetaDescCounter();
+  // Accent color
+  const accent = siteConfig.accentColor || DEFAULT_ACCENT;
+  document.getElementById('site-accent-color').value = accent;
+  document.getElementById('site-accent-hex').value   = accent;
+  document.documentElement.style.setProperty('--accent', accent);
+  // Analytics
+  const an = siteConfig.analytics || {};
+  document.getElementById('site-analytics-provider').value = an.provider || '';
+  document.getElementById('site-analytics-id').value       = an.id       || '';
+  const themeMode = siteConfig.themeMode || 'auto';
+  document.getElementById('site-theme-mode').value = themeMode;
+  document.getElementById('site-allow-theme-toggle').checked = !!siteConfig.allowThemeToggle;
+  applyAdminTheme(themeMode);
+  // Version
+  const versionEl = document.getElementById('admin-version-display');
+  if (versionEl) versionEl.textContent = ADMIN_VERSION;
+  // Film grain (stored as 0–1 float; slider uses 0–100 integer)
+  const grainPct = Math.round((siteConfig.filmGrain ?? 0.028) * 500);
+  const grainEl  = document.getElementById('site-film-grain');
+  const grainLbl = document.getElementById('site-film-grain-pct');
+  if (grainEl) { grainEl.value = grainPct; }
+  if (grainLbl) grainLbl.textContent = '— ' + grainPct + '%';
+  document.documentElement.style.setProperty('--film-grain-opacity', siteConfig.filmGrain ?? 0.028);
+  updateAnalyticsFields();
+  updateFaviconPreview();
+  updateOgPreview();
+  // sharing disclosure
+  if (siteConfig.favicon || siteConfig.ogImage || siteConfig.website || siteConfig.metaDescription) openDisclosure('sharing');
+  else closeDisclosure('sharing');
+}
+
+async function saveGeneralSettings() {
+  siteConfig.ownerName  = document.getElementById('site-name-input').value.trim();
+  siteConfig.ownerTitle = document.getElementById('site-title-input').value.trim();
+  siteConfig.favicon    = document.getElementById('site-favicon-input').value.trim();
+  siteConfig.website         = document.getElementById('site-website-input').value.trim();
+  siteConfig.metaDescription = document.getElementById('site-meta-desc').value.trim() || undefined;
+  const ogRaw = document.getElementById('site-og-input').value.trim();
+  siteConfig.ogImage = ogRaw && !ogRaw.startsWith('http') && !ogRaw.startsWith('images/') && !ogRaw.startsWith('thumbs/') ? 'images/' + ogRaw : ogRaw;
+  siteConfig.accentColor = document.getElementById('site-accent-color')?.value || DEFAULT_ACCENT;
+  siteConfig.analytics = {
+    provider: document.getElementById('site-analytics-provider')?.value || '',
+    id:       document.getElementById('site-analytics-id')?.value.trim() || '',
+  };
+  siteConfig.themeMode = document.getElementById('site-theme-mode').value;
+  siteConfig.allowThemeToggle = document.getElementById('site-allow-theme-toggle').checked;
+  siteConfig.filmGrain = parseFloat(document.getElementById('site-film-grain')?.value || 14) / 500;
+  updateNavBrand();
+  await saveToGitHub();
+  await patchIndexOgTags();
+}
+
+function updateFaviconPreview() {
+  const val  = document.getElementById('site-favicon-input').value.trim() || 'favicon.png';
+  const wrap = document.getElementById('favicon-preview-wrap');
+  const prev = document.getElementById('favicon-preview');
+  const lbl  = document.getElementById('favicon-preview-label');
+  const dark = document.getElementById('favicon-preview-dark');
+  const darkLbl = document.getElementById('favicon-preview-label-dark');
+  const name = siteConfig.ownerName || 'Your Site';
+  if (lbl) lbl.textContent = name;
+  if (darkLbl) darkLbl.textContent = name;
+  wrap.style.display = 'flex';
+  // Use the value as-is: relative paths resolve from site root, https:// URLs work directly
+  const setImg = (img, src) => {
+    if (!img) return;
+    img.style.opacity = '1';
+    img.onerror = () => {
+      if (src === 'favicon.png') { img.src = DEFAULT_FAVICON; img.style.opacity = '1'; }
+      else { img.style.opacity = '0.3'; }
+    };
+    img.onload  = () => { img.style.opacity = '1'; };
+    // Force reload if src unchanged (e.g. after re-upload)
+    if (img.src === src || img.getAttribute('src') === src) {
+      img.src = '';
+    }
+    img.src = src;
+  };
+  setImg(prev, val);
+  setImg(dark, val);
+}
+
+function updateOgPreview() {
+  const val  = document.getElementById('site-og-input').value.trim();
+  const prev = document.getElementById('og-preview');
+  if (!val) { prev.style.display = 'none'; return; }
+  prev.src = val.startsWith('http') || val.includes('/') ? val : 'images/' + val;
+  prev.style.display = 'block';
+  prev.onerror = () => { prev.style.opacity = '0.3'; };
+  prev.onload  = () => { prev.style.opacity = '1'; };
+}
+
+function buildOgListItem(path, listEl, currentVal) {
+  const displayName = path.replace(/^(thumbs|images)\//, '');
+  const item = document.createElement('div');
+  item.className = 'thumb-file-item' + (path === currentVal ? ' selected' : '');
+  item.dataset.filename = path;
+
+  const name = document.createElement('span');
+  name.className = 'thumb-file-item-name';
+  name.textContent = displayName;
+  item.appendChild(name);
+
+  const folder = path.startsWith('images/') ? 'images' : 'thumbs';
+  const badge = document.createElement('span');
+  badge.style.cssText = 'font-size:8px;letter-spacing:0.08em;color:var(--fg-dim);flex-shrink:0;padding-left:6px';
+  badge.textContent = folder;
+  item.appendChild(badge);
+
+  item.addEventListener('click', () => {
+    document.getElementById('site-og-input').value = path;
+    updateOgPreview();
+    markDirty();
+    listEl.classList.remove('open');
+  });
+  listEl.appendChild(item);
+}
+
+function toggleOgList() {
+  const list = document.getElementById('og-file-list');
+  const isOpen = list.classList.toggle('open');
+  if (!isOpen) return;
+  list.innerHTML = '';
+  if (thumbFiles.length === 0) {
+    list.innerHTML = '<div class="thumb-file-item" style="cursor:default;color:var(--fg-dim)">No uploaded files found — open a project first</div>';
+    return;
+  }
+  const current = document.getElementById('site-og-input').value.trim();
+  const thumbsGroup = thumbFiles.filter(p => p.startsWith('thumbs/'));
+  const imagesGroup = thumbFiles.filter(p => p.startsWith('images/'));
+  if (thumbsGroup.length && imagesGroup.length) {
+    const makeHeader = (label, first) => {
+      const h = document.createElement('div');
+      h.style.cssText = `font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-dim);padding:6px 10px 3px;cursor:default${first ? '' : ';border-top:1px solid var(--fg-dimmer);margin-top:2px'}`;
+      h.textContent = label;
+      return h;
+    };
+    list.appendChild(makeHeader('/thumbs', true));
+    thumbsGroup.forEach(p => buildOgListItem(p, list, current));
+    list.appendChild(makeHeader('/images', false));
+    imagesGroup.forEach(p => buildOgListItem(p, list, current));
+  } else {
+    thumbFiles.forEach(path => buildOgListItem(path, list, current));
+  }
+}
+
+function toggleAboutPhotoList() {
+  const list = document.getElementById('about-photo-file-list');
+  const isOpen = list.classList.toggle('open');
+  if (!isOpen) return;
+  list.innerHTML = '';
+  const imagesGroup = thumbFiles.filter(p => p.startsWith('images/'));
+  if (imagesGroup.length === 0) {
+    list.innerHTML = '<div class="thumb-file-item" style="cursor:default;color:var(--fg-dim)">No files found in /images/</div>';
+    return;
+  }
+  const current = document.getElementById('about-photo-input').value.trim();
+  imagesGroup.forEach(path => {
+    const displayName = path.replace(/^images\//, '');
+    const item = document.createElement('div');
+    item.className = 'thumb-file-item' + (path === current ? ' selected' : '');
+    const name = document.createElement('span');
+    name.className = 'thumb-file-item-name';
+    name.textContent = displayName;
+    item.appendChild(name);
+    item.addEventListener('click', () => {
+      document.getElementById('about-photo-input').value = path;
+      updateAboutPhotoPreview();
+      markDirty();
+      list.classList.remove('open');
+    });
+    list.appendChild(item);
+  });
+}
+
+async function patchIndexOgTags() {
+  const ogImage = siteConfig.ogImage || '';
+  const website = siteConfig.website || (siteConfig.about && siteConfig.about.website) || '';
+  if (!ogImage || !website) return; // Can't build absolute URL without both
+
+  const base = website.replace(/\/$/, '');
+  const absImage = ogImage.startsWith('http') ? ogImage : `${base}/${ogImage.replace(/^\//, '')}`;
+  const ogTitle  = siteConfig.ownerName || '';
+  const ogDesc   = (siteConfig.about && siteConfig.about.bio) ? siteConfig.about.bio.replace(/<[^>]+>/g, '').slice(0, 200) : '';
+
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  const apiUrl = `https://api.github.com/repos/${o}/${r}/contents/index.html`;
+
+  try {
+    const getRes = await fetch(apiUrl + `?ref=${b}&t=${Date.now()}`, { headers: ghHeaders() });
+    if (!getRes.ok) return;
+    const getJson = await getRes.json();
+    let html = decodeURIComponent(escape(atob(getJson.content.replace(/\n/g, ''))));
+
+    html = html.replace(/(property="og:image"\s+content=")[^"]*(")/,       `$1${absImage}$2`);
+    html = html.replace(/(name="twitter:image"\s+content=")[^"]*(")/,      `$1${absImage}$2`);
+    if (ogTitle) html = html.replace(/(property="og:title"\s+content=")[^"]*(")/,   `$1${esc(ogTitle)}$2`);
+    if (ogDesc)  html = html.replace(/(property="og:description"\s+content=")[^"]*(")/,`$1${esc(ogDesc)}$2`);
+
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+    await fetch(apiUrl, {
+      method: 'PUT', headers: ghHeaders(),
+      body: JSON.stringify({ message: 'Update social preview meta tags', content: encoded, sha: getJson.sha, branch: b })
+    });
+  } catch(e) {
+    console.warn('Could not patch OG tags in index.html:', e);
+  }
+}
+
+function switchSettingsTab(tab) {
+  document.querySelectorAll('#pane-site .settings-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === tab);
+  });
+  document.querySelectorAll('#pane-site .settings-tab-pane').forEach(pane => {
+    pane.classList.toggle('active', pane.id === 'stab-' + tab);
+  });
+  localStorage.setItem(K_STAB, tab);
+}
+
+function updateNavBrand() {
+  const name = siteConfig.ownerName;
+  const el = document.querySelector('#app .nav-brand');
+  if (!el) return;
+  el.innerHTML = name ? `${esc(name)} <span>/ Admin</span>` : 'Admin';
+  document.title = name ? `Admin — ${name}` : 'Admin';
+}
+
+// ─── CATEGORY VISIBILITY ─────────────────────────────────────────────────────
+function toggleCatPublished(idx, val) {
+  siteConfig.categories[idx].published = val;
+  markDirty();
+  showToast(val ? 'Section set to visible.' : 'Section hidden from site.', 'success');
+}
+
+// ─── DRAG-AND-DROP UPLOAD ────────────────────────────────────────────────────
+function initDropZone(zoneId, onFileDrop) {
+  const zone = document.getElementById(zoneId);
+  if (!zone) return;
+  let counter = 0;
+  zone.addEventListener('dragenter', e => {
+    e.preventDefault(); e.stopPropagation();
+    counter++;
+    zone.classList.add('drag-active');
+  });
+  zone.addEventListener('dragover', e => {
+    e.preventDefault(); e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+  });
+  zone.addEventListener('dragleave', e => {
+    e.stopPropagation();
+    if (--counter <= 0) { counter = 0; zone.classList.remove('drag-active'); }
+  });
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); e.stopPropagation();
+    counter = 0;
+    zone.classList.remove('drag-active');
+    const files = e.dataTransfer.files;
+    if (files.length) onFileDrop(files[0]);
+  });
+}
+
+function initThumbDropZone() {
+  initDropZone('thumb-drop-zone', file => {
+    if (!file.type.startsWith('image/')) {
+      showToast('Wrong file type — please drop an image (JPG, PNG, WebP, etc.)', 'error'); return;
+    }
+    uploadThumbFile(file);
+  });
+  initDropZone('about-photo-drop-zone', file => {
+    if (!file.type.startsWith('image/')) {
+      showToast('Wrong file type — please drop an image (JPG, PNG, WebP, etc.)', 'error'); return;
+    }
+    uploadImageFile(file, 'images', 'about-photo-input', updateAboutPhotoPreview);
+  });
+  initDropZone('favicon-drop-zone', file => {
+    const ok = file.type.startsWith('image/') || /\.(ico|svg|png)$/i.test(file.name);
+    if (!ok) { showToast('Please drop an image, .ico, or .svg file.', 'error'); return; }
+    uploadFaviconFile(file);
+  });
+}
+
+// Shared GitHub file upload — returns true on success
+async function uploadToGitHub(file, filePath) {
+  const o = localStorage.getItem(K_OWNER);
+  const r = localStorage.getItem(K_REPO);
+  const b = localStorage.getItem(K_BRANCH);
+  if (!o || !r || !b) { showToast('GitHub config missing.', 'error'); return false; }
+
+  showToast('Uploading ' + file.name + '…', '');
+
+  let base64;
+  try {
+    base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  } catch(e) { showToast('Could not read file.', 'error'); return false; }
+
+  const apiUrl = `https://api.github.com/repos/${o}/${r}/contents/${filePath}`;
+  let existingSha = null;
+  const getRes = await fetch(apiUrl + `?ref=${b}&t=${Date.now()}`, { headers: ghHeaders() });
+  if (getRes.ok) existingSha = (await getRes.json()).sha;
+
+  const body = {
+    message: `Upload ${filePath} via admin`,
+    content: base64,
+    branch:  b,
+    ...(existingSha ? { sha: existingSha } : {})
+  };
+
+  try {
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      showToast('Upload failed — ' + (err.message || `HTTP ${putRes.status}`), 'error');
+      return false;
+    }
+  } catch(e) { showToast('Upload failed — ' + e.message, 'error'); return false; }
+
+  return true;
+}
+
+async function uploadThumbFile(file) {
+  const blobUrl = URL.createObjectURL(file);
+  const ok = await uploadToGitHub(file, 'thumbs/' + file.name);
+  if (!ok) { URL.revokeObjectURL(blobUrl); return; }
+  const newPath = 'thumbs/' + file.name;
+  if (!thumbFiles.includes(newPath)) thumbFiles.unshift(newPath);
+  document.getElementById('f-thumbnail').value = file.name;
+  // Use blob URL for instant preview — bypasses CDN propagation delay
+  const preview   = document.getElementById('thumb-preview');
+  const empty     = document.getElementById('thumb-empty-state');
+  const dropZone  = document.getElementById('thumb-drop-zone');
+  if (empty) empty.style.display = 'none';
+  if (dropZone) dropZone.classList.add('has-image');
+  if (preview) {
+    preview.style.display = 'block';
+    preview.style.opacity = '1';
+    preview.onload  = () => { preview.style.opacity = '1'; URL.revokeObjectURL(blobUrl); };
+    preview.onerror = () => { preview.style.opacity = '0.3'; URL.revokeObjectURL(blobUrl); };
+    preview.src = blobUrl;
+  }
+  markDirty();
+  showToast('"' + file.name + '" uploaded and selected!', 'success');
+}
+
+async function uploadFaviconFile(file) {
+  const blobUrl = URL.createObjectURL(file);
+  const ok = await uploadToGitHub(file, file.name);
+  if (!ok) { URL.revokeObjectURL(blobUrl); return; }
+  document.getElementById('site-favicon-input').value = file.name;
+  // Show blob URL on both tab preview images immediately — bypasses CDN delay
+  const prev = document.getElementById('favicon-preview');
+  const dark = document.getElementById('favicon-preview-dark');
+  const wrap = document.getElementById('favicon-preview-wrap');
+  if (wrap) wrap.style.display = 'flex';
+  let revoked = false;
+  const revoke = () => { if (!revoked) { revoked = true; URL.revokeObjectURL(blobUrl); } };
+  [prev, dark].forEach(img => {
+    if (!img) return;
+    img.style.opacity = '1';
+    img.onload  = () => { img.style.opacity = '1'; revoke(); };
+    img.onerror = () => { img.style.opacity = '0.3'; revoke(); };
+    img.src = blobUrl;
+  });
+  markDirty();
+  showToast('"' + file.name + '" uploaded!', 'success');
+  await saveGeneralSettings();
+}
+
+async function uploadImageFile(file, folder, inputId, previewFn) {
+  const blobUrl  = URL.createObjectURL(file);
+  const filePath = folder ? `${folder}/${file.name}` : file.name;
+  const ok = await uploadToGitHub(file, filePath);
+  if (!ok) { URL.revokeObjectURL(blobUrl); return; }
+  if (inputId) document.getElementById(inputId).value = filePath;
+  // Find the preview img for this field and show blob URL instantly
+  const previewIds = { 'about-photo-input': 'about-photo-preview', 'site-og-input': 'og-preview', 'site-favicon-input': 'favicon-preview' };
+  const previewEl = inputId ? document.getElementById(previewIds[inputId]) : null;
+  if (previewEl) {
+    previewEl.style.opacity = '1';
+    previewEl.onload  = () => { previewEl.style.opacity = '1'; URL.revokeObjectURL(blobUrl); };
+    previewEl.onerror = () => { previewEl.style.opacity = '0.3'; URL.revokeObjectURL(blobUrl); };
+    previewEl.src = blobUrl;
+  } else {
+    URL.revokeObjectURL(blobUrl);
+  }
+  if (previewFn) previewFn();
+  markDirty();
+  showToast('"' + file.name + '" uploaded!', 'success');
+}
+
+// ─── FIELD UTILITIES ─────────────────────────────────────────────────────────
+function clearField(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = '';
+  el.dispatchEvent(new Event('input'));
+  el.focus();
+}
+
+function handleFileInput(input, type) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = ''; // reset so same file can be re-picked
+
+  // Per-type size limits (MB)
+  const limitsMB = { photo: 2, thumb: 1, og: 2, favicon: 0.5 };
+  const limitMB = limitsMB[type] ?? 5;
+  if (file.size > limitMB * 1024 * 1024) {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+    showToast(`File too large (${sizeMB} MB) — max ${limitMB} MB for this field.`, 'error');
+    return;
+  }
+
+  if (type === 'thumb') {
+    uploadThumbFile(file);
+  } else if (type === 'photo') {
+    uploadImageFile(file, 'images', 'about-photo-input', updateAboutPhotoPreview);
+  } else if (type === 'favicon') {
+    uploadFaviconFile(file);
+  } else if (type === 'og') {
+    uploadImageFile(file, 'images', null, () => {
+      document.getElementById('site-og-input').value = file.name;
+      updateOgPreview();
+    });
+  }
+}
+
 // ─── KEYBOARD ────────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeModal();
     closeDelete();
+    closeFileManager();
   }
 });
 
@@ -1367,10 +4388,22 @@ window.addEventListener('beforeunload', e => {
 // ─── BOOT ────────────────────────────────────────────────────────────────────
 if (isSetupDone()) {
   document.getElementById('screen-setup').classList.add('hidden');
-  document.getElementById('screen-login').classList.remove('hidden');
-  setTimeout(() => document.getElementById('login-pw').focus(), 50);
+  if (sessionStorage.getItem(K_SESSION)) {
+    // Active session — skip login on reload, restore last tab
+    showApp(true);
+  } else {
+    document.getElementById('screen-login').classList.remove('hidden');
+    const subEl = document.getElementById('login-subtitle');
+    if (subEl) {
+      subEl.textContent = localStorage.getItem('cr_site_website')
+        || localStorage.getItem(K_REPO)
+        || 'Admin Panel';
+    }
+    setTimeout(() => document.getElementById('login-pw').focus(), 50);
+  }
 }
 // else: setup screen is shown by default
 </script>
+<div id="version-badge" style="position:fixed;bottom:12px;right:14px;font-size:9px;letter-spacing:0.12em;color:var(--fg-dimmer);pointer-events:none;z-index:9999">v<span id="admin-version-display"></span></div>
 </body>
 </html>

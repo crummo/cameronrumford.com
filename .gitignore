@@ -1,9 +1,13 @@
+.DS_Store
+**/.DS_Store
+
 #folder for hidden notes
 _internal/
 
 
 # Project Instructions
 instructions.md
+claude.md
 
 # macOS Metadata / Thumbnails
 .DS_Store
@@ -23,3 +27,4 @@ Icon
 .TemporaryItems
 .Trashes
 .VolumeIcon.icns
+

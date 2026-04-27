@@ -1,0 +1,15 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#c9a96e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+  <!-- Outer rectangle -->
+  <rect x="2" y="8" width="28" height="16" />
+  <!-- Sprocket zone dividers -->
+  <line x1="2"  y1="11.5" x2="30" y2="11.5" />
+  <line x1="2"  y1="20.5" x2="30" y2="20.5" />
+  <!-- Frame divider -->
+  <line x1="16" y1="11.5" x2="16" y2="20.5" />
+  <!-- Top sprocket holes — one centred per frame -->
+  <rect x="9"   y="9"    width="2.5" height="2" />
+  <rect x="20.5" y="9"   width="2.5" height="2" />
+  <!-- Bottom sprocket holes -->
+  <rect x="9"   y="21.5" width="2.5" height="2" />
+  <rect x="20.5" y="21.5" width="2.5" height="2" />
+</svg>

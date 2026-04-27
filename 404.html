@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 — Cameron Rumford</title>
-  <link rel="icon" type="image/x-icon" href="/favicon.png" />
+  <title>404</title>
+  <link rel="icon" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
@@ -115,9 +115,42 @@
 
   <div class="num">404</div>
   <div class="rule"></div>
-  <p class="heading">This cut didn't make the final edit.</p>
-  <p class="sub">The page you're looking for has been moved, renamed, or was left on the cutting room floor.</p>
-  <a class="back" href="/">Back to the reel</a>
+  <p class="heading" id="nf-heading">This cut didn't make the final edit.</p>
+  <p class="sub" id="nf-sub">The page you're looking for has been moved, renamed, or was left on the cutting room floor.</p>
+  <a class="back" href="/" id="nf-back">Back to the reel</a>
+
+  <script>
+    const isPreview = new URLSearchParams(location.search).get('preview') === '1';
+
+    function applyData(data) {
+      if (!data) return;
+      const n = data.notFound;
+      if (n && n.heading) document.getElementById('nf-heading').textContent = n.heading;
+      if (n && n.sub)     document.getElementById('nf-sub').textContent     = n.sub;
+      if (n && n.back)    document.getElementById('nf-back').textContent    = n.back;
+      if (data.ownerName) document.title = '404 — ' + data.ownerName;
+      if (isPreview) {
+        const banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:var(--accent);color:#1a1714;text-align:center;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:5px 12px;font-weight:600;z-index:999';
+        banner.textContent = 'Preview mode — changes not saved to live site';
+        document.body.prepend(banner);
+      }
+    }
+
+    if (isPreview) {
+      try {
+        const data = JSON.parse(sessionStorage.getItem('cr_preview') || '');
+        applyData(data.siteConfig || data);
+      } catch(e) {
+        applyData(null);
+      }
+    } else {
+      fetch('site.json')
+        .then(r => r.ok ? r.json() : null)
+        .then(applyData)
+        .catch(() => {});
+    }
+  </script>
 
 </body>
 </html>

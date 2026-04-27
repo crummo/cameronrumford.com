@@ -4,16 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cameron Rumford — Editor</title>
-  <link rel="icon" type="image/x-icon" href="favicon.png" />
+  <meta name="description"        content="Los Angeles editor with 20+ years in post-production. Branded content, documentary &amp; commercial. Telly Award winner. Asst. editor, Oscar-winning Undefeated." />
+  <meta property="og:type"        content="website" />
+  <meta property="og:title"       content="Cameron Rumford" />
+  <meta property="og:description" content="Los Angeles editor with 20+ years in post-production. Branded content, documentary &amp; commercial. Telly Award winner. Asst. editor, Oscar-winning Undefeated." />
+  <meta property="og:image"       content="https://www.cameronrumford.com/images/AWS_FarmCityFence01.jpeg" />
+  <meta property="og:url"         content="https://www.cameronrumford.com" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <meta name="twitter:image"      content="https://www.cameronrumford.com/images/AWS_FarmCityFence01.jpeg" />
+  <link rel="canonical"           href="" id="site-canonical" />
+  <link rel="icon" id="site-favicon" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23c9a96e' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpolygon points='16,2 28,9 16,16 4,9'/%3E%3Cpolygon points='28,9 28,23 16,30 16,16'/%3E%3Cpolygon points='4,9 16,16 16,30 4,23'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+
+  <script>
+    /* Runs before paint to prevent theme flash */
+    (function() {
+      function _applyTheme(mode) {
+        var resolved = mode === 'light' ? 'light'
+          : mode === 'dark' ? 'dark'
+          : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', resolved);
+      }
+      try {
+        var s = JSON.parse(sessionStorage.getItem('cr_preview') || '{}');
+        var cfg = s.siteConfig || s;
+        _applyTheme(cfg.themeMode || 'auto');
+      } catch(e) { _applyTheme('auto'); }
+    })();
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:         #131110;
       --bg2:        #1c1917;
+      --bg3:        #231f1c;
       --fg:         #ede8e0;
       --fg-mid:     #a89e90;
       --fg-dim:     #5a5248;
@@ -25,21 +53,23 @@
       --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    html {
-      background: var(--bg);
-      color: var(--fg);
-      font-family: var(--font-sans);
-      font-weight: 300;
-      -webkit-font-smoothing: antialiased;
+    [data-theme="light"] {
+      --bg:        #f0ece6;
+      --bg2:       #e8e3dc;
+      --bg3:       #ddd8d0;
+      --fg:        #1a1714;
+      --fg-mid:    #5a5248;
+      --fg-dim:    #8a8078;
+      --fg-dimmer: #ccc7be;
     }
 
+    html { background: var(--bg); color: var(--fg); font-family: var(--font-sans); font-weight: 300; -webkit-font-smoothing: antialiased; }
     body { min-height: 100vh; }
 
-    /* subtle film grain */
+    /* film grain */
     body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 9999;
-      pointer-events: none; opacity: 0.028;
+      content: ''; position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: var(--film-grain-opacity, 0.028);
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size: 180px 180px;
     }
@@ -54,32 +84,19 @@
       border-bottom: 1px solid var(--fg-dimmer);
     }
 
-    .nav-brand {
-      display: flex; align-items: baseline; gap: 14px;
-      cursor: pointer; text-decoration: none;
-    }
-    .nav-brand-name {
-      font-family: var(--font-serif);
-      font-size: 19px; font-weight: 500;
-      letter-spacing: 0.02em; color: var(--fg); line-height: 1;
-    }
+    .nav-brand { display: flex; align-items: baseline; gap: 14px; cursor: pointer; text-decoration: none; flex-shrink: 0; }
+    .nav-brand-name { font-family: var(--font-serif); font-size: 19px; font-weight: 500; letter-spacing: 0.02em; color: var(--fg); line-height: 1; }
     .nav-brand-rule { width: 1px; height: 13px; background: var(--fg-dim); }
-    .nav-brand-title {
-      font-size: 10px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--fg-mid); font-weight: 300;
-    }
+    .nav-brand-title { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #a89e90; font-weight: 300; }
 
-    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
     .nav-links a {
-      text-decoration: none; font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--fg-dim); transition: color 0.25s var(--ease);
-      font-weight: 400; cursor: pointer;
-      position: relative; padding-bottom: 3px;
+      text-decoration: none; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--fg-dim); transition: color 0.25s var(--ease); font-weight: 400;
+      cursor: pointer; position: relative; padding-bottom: 3px; white-space: nowrap;
     }
     .nav-links a::after {
-      content: ''; position: absolute;
-      bottom: -2px; left: 0; right: 0;
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
       height: 1px; background: var(--accent);
       transform: scaleX(0); transform-origin: left;
       transition: transform 0.3s var(--ease);
@@ -89,545 +106,292 @@
     .nav-links a.active { color: var(--fg); }
     .nav-links a.active::after { transform: scaleX(1); }
 
-    /* hamburger — mobile only */
-    .nav-hamburger {
-      display: none; flex-direction: column; gap: 5px;
-      background: none; border: none; cursor: pointer; padding: 4px;
-    }
-    .nav-hamburger span {
-      display: block; width: 22px; height: 1px;
-      background: var(--fg-mid); transition: all 0.25s var(--ease);
-    }
+    .nav-right { display: flex; align-items: center; gap: 6px; }
 
-    /* mobile nav drawer */
+    .theme-toggle { background: none; border: none; cursor: pointer; color: var(--fg-dim); font-size: 14px; padding: 4px 6px; transition: color 0.2s; line-height: 1; }
+    .theme-toggle:hover { color: var(--fg); }
+    .theme-toggle.hidden { display: none; }
+
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 1px; background: var(--fg-mid); transition: all 0.25s var(--ease); }
+
     .nav-drawer {
-      position: fixed;
-      top: var(--nav-h); left: 0; right: 0;
-      background: var(--bg);
-      border-bottom: 1px solid var(--fg-dimmer);
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--bg); border-bottom: 1px solid var(--fg-dimmer);
       padding: 0 24px; z-index: 190;
       max-height: 0; overflow: hidden;
       transition: max-height 0.35s var(--ease), padding 0.35s var(--ease);
     }
-    .nav-drawer.open {
-      max-height: 300px;
-      padding: 16px 24px 20px;
-    }
+    .nav-drawer.open { max-height: 500px; padding: 16px 24px 20px; }
     .nav-drawer a {
-      display: block; text-decoration: none;
-      font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--fg-dim); padding: 14px 0;
-      border-bottom: 1px solid var(--fg-dimmer);
-      cursor: pointer;
-      transition: color 0.25s var(--ease);
-      font-weight: 400;
+      display: block; text-decoration: none; font-size: 12px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--fg-dim); padding: 14px 0;
+      border-bottom: 1px solid var(--fg-dimmer); cursor: pointer;
+      transition: color 0.25s var(--ease); font-weight: 400;
     }
     .nav-drawer a:last-child { border-bottom: none; }
-    .nav-drawer a:hover, .nav-drawer a.active { color: var(--fg); }
-    .nav-drawer a.active {
-      color: var(--accent);
-    }
+    .nav-drawer a:hover { color: var(--fg); }
+    .nav-drawer a.active { color: var(--accent); }
 
     /* ── MAIN ── */
     main { padding-top: var(--nav-h); }
-
     .page { display: none; }
     .page.visible { display: block; animation: pageIn 0.35s var(--ease) both; }
-
-    @keyframes pageIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
     /* ── GRID — DESKTOP ── */
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px; padding: 3px;
-    }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px; }
 
     .grid-item {
-      position: relative;
-      aspect-ratio: 16/9;
-      overflow: hidden; cursor: pointer;
-      background: var(--bg2);
-      animation: gridIn 0.45s var(--ease) both;
+      position: relative; aspect-ratio: 16/9; overflow: hidden; cursor: pointer;
+      background: var(--bg2); animation: gridIn 0.45s var(--ease) both;
     }
-    .grid-item:nth-child(1)  { animation-delay: 0.02s; }
-    .grid-item:nth-child(2)  { animation-delay: 0.07s; }
-    .grid-item:nth-child(3)  { animation-delay: 0.12s; }
-    .grid-item:nth-child(4)  { animation-delay: 0.17s; }
-    .grid-item:nth-child(5)  { animation-delay: 0.22s; }
-    .grid-item:nth-child(6)  { animation-delay: 0.27s; }
-    .grid-item:nth-child(n+7){ animation-delay: 0.32s; }
+    .grid-item:nth-child(1)   { animation-delay: 0.02s; }
+    .grid-item:nth-child(2)   { animation-delay: 0.07s; }
+    .grid-item:nth-child(3)   { animation-delay: 0.12s; }
+    .grid-item:nth-child(4)   { animation-delay: 0.17s; }
+    .grid-item:nth-child(5)   { animation-delay: 0.22s; }
+    .grid-item:nth-child(6)   { animation-delay: 0.27s; }
+    .grid-item:nth-child(n+7) { animation-delay: 0.32s; }
+    @keyframes gridIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
 
-    @keyframes gridIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to   { opacity: 1; transform: scale(1); }
-    }
+    .grid-thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.65s var(--ease), filter 0.65s var(--ease); filter: saturate(0.8) brightness(0.85); }
+    .grid-item:hover .grid-thumb { transform: scale(1.04); filter: saturate(0.55) brightness(0.28); }
 
-    .grid-thumb {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-      transition: transform 0.65s var(--ease), filter 0.65s var(--ease);
-      filter: saturate(0.8) brightness(0.85);
-    }
-    .grid-item:hover .grid-thumb {
-      transform: scale(1.04);
-      filter: saturate(0.55) brightness(0.28);
-    }
-
-    /* radial scrim — darkens center behind text at rest, fades out on hover */
-    .grid-scrim {
-      position: absolute; inset: 0; pointer-events: none;
-      opacity: 1;
-      transition: opacity 0.4s var(--ease);
-    }
+    .grid-scrim { position: absolute; inset: 0; pointer-events: none; opacity: 1; transition: opacity 0.4s var(--ease); }
     .grid-item:hover .grid-scrim { opacity: 0; }
 
-    .grid-placeholder {
-      width: 100%; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg2);
-      transition: background 0.5s var(--ease);
-    }
+    .grid-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg2); transition: background 0.5s var(--ease); }
     .grid-item:hover .grid-placeholder { background: #1e1b17; }
 
-    /* play icon — hidden at rest, fades in on hover */
-    .grid-placeholder-icon {
-      width: 28px; height: 20px;
-      border: 1.5px solid var(--fg-dim);
-      border-radius: 2px; position: relative;
-      opacity: 0;
-      transition: opacity 0.4s var(--ease);
-    }
+    .grid-placeholder-icon { width: 28px; height: 20px; border: 1.5px solid var(--fg-dim); border-radius: 2px; position: relative; opacity: 0; transition: opacity 0.4s var(--ease); }
     .grid-item:hover .grid-placeholder-icon { opacity: 0.45; }
-    .grid-placeholder-icon::after {
-      content: ''; position: absolute; left: 50%; top: 50%;
-      transform: translate(-38%, -50%);
-      border-left: 7px solid var(--fg-dim);
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-    }
+    .grid-placeholder-icon::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-38%,-50%); border-left: 7px solid var(--fg-dim); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
 
-    /* play icon — absolutely centered in cell, not in flex flow */
-    .grid-play {
-      position: absolute;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      width: 36px; height: 25px;
-      border: 1.5px solid rgba(237,232,224,0.35);
-      border-radius: 2px;
-      opacity: 0;
-      transition: opacity 0.4s var(--ease);
-      pointer-events: none;
-    }
-    .grid-play::after {
-      content: ''; position: absolute; left: 50%; top: 50%;
-      transform: translate(-38%, -50%);
-      border-left: 7px solid rgba(237,232,224,0.35);
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-    }
+    .grid-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 36px; height: 25px; border: 1.5px solid rgba(237,232,224,0.35); border-radius: 2px; opacity: 0; transition: opacity 0.4s var(--ease); pointer-events: none; }
+    .grid-play::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-38%,-50%); border-left: 7px solid rgba(237,232,224,0.35); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
     .grid-item:hover .grid-play { opacity: 1; }
 
-    /* ── CENTERED TEXT — DESKTOP ── */
-    .grid-center {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      padding: 12px 18px;
-      gap: 4px;
-      pointer-events: none;
-    }
+    .grid-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 12px 18px; gap: 4px; pointer-events: none; }
+    /* grid text always light — it sits on dark thumbnails regardless of site theme */
+    .grid-client { font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: #c9a96e; font-weight: 500; line-height: 1; transition: font-size 0.4s var(--ease), letter-spacing 0.4s var(--ease), opacity 0.4s var(--ease), transform 0.4s var(--ease); }
+    .grid-title { font-family: var(--font-serif); font-size: 9px; font-style: italic; font-weight: 500; color: #ede8e0; line-height: 1.35; transition: font-size 0.4s var(--ease), opacity 0.4s var(--ease), transform 0.4s var(--ease); }
+    .grid-award { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; color: #c9a96e; font-weight: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s 0.1s var(--ease); }
 
-    .grid-client {
-      font-size: 8px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--accent);
-      font-weight: 500; line-height: 1;
-      transition: font-size 0.4s var(--ease),
-                  letter-spacing 0.4s var(--ease),
-                  opacity 0.4s var(--ease),
-                  transform 0.4s var(--ease);
-    }
-
-    .grid-title {
-      font-family: var(--font-serif);
-      font-size: 9px; font-style: italic; font-weight: 500;
-      color: var(--fg); line-height: 1.35;
-      transition: font-size 0.4s var(--ease),
-                  opacity 0.4s var(--ease),
-                  transform 0.4s var(--ease);
-    }
-
-    .grid-award {
-      position: absolute; bottom: 10px;
-      left: 0; right: 0; text-align: center;
-      font-size: 7px; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--accent);
-      font-weight: 400;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s 0.1s var(--ease);
-    }
-
-    /* hover — slide client up, title down, away from center */
     .grid-item:hover .grid-center { gap: 0; }
-    .grid-item:hover .grid-client {
-      font-size: 10px; letter-spacing: 0.26em; opacity: 1 !important;
-      transform: translateY(-22px);
-    }
-    .grid-item:hover .grid-title  {
-      font-size: 14px; opacity: 1 !important;
-      transform: translateY(34px);
-    }
+    .grid-item:hover .grid-client { font-size: 10px; letter-spacing: 0.26em; opacity: 1 !important; transform: translateY(-22px); }
+    .grid-item:hover .grid-title  { font-size: 14px; opacity: 1 !important; transform: translateY(34px); }
     .grid-item:hover .grid-award  { opacity: 1; }
 
-    /* title-only items */
+    /* solo — title only, no client */
     .grid-center.solo .grid-title { font-size: 10px; opacity: 0.55; }
     .grid-item:hover .grid-center.solo .grid-title { font-size: 15px; opacity: 1; transform: none; }
 
-    /* short film items — category label smaller, title bigger */
-    .grid-item:hover .grid-center.short .grid-client {
-      font-size: 8px; letter-spacing: 0.2em; opacity: 0.6;
-      transform: translateY(-22px);
+    /* editorial — slightly favors title at rest; client more subdued on hover */
+    .grid-center.overlay-editorial .grid-title { font-size: 11px; }
+    .grid-center.overlay-editorial .grid-client { font-size: 7px; opacity: 0.75; }
+    .grid-item:hover .grid-center.overlay-editorial .grid-client { font-size: 8px; letter-spacing: 0.18em; opacity: 0.55; transform: translateY(-22px); }
+    .grid-item:hover .grid-center.overlay-editorial .grid-title  { font-size: 17px; opacity: 1; transform: translateY(36px); }
+
+    /* centered — title only, single line, no play/client/award */
+    .grid-center.overlay-centered .grid-client,
+    .grid-center.overlay-centered .grid-play,
+    .grid-center.overlay-centered .grid-award { display: none !important; }
+    .grid-center.overlay-centered .grid-title {
+      font-size: 11px; opacity: 0.6;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 90%; transform: none;
     }
-    .grid-item:hover .grid-center.short .grid-title {
-      font-size: 17px; opacity: 1; transform: translateY(34px);
+    .grid-item:hover .grid-center.overlay-centered .grid-title {
+      font-size: 17px; opacity: 1 !important; transform: none !important;
     }
 
-    /* ── MOBILE LIST VIEW ── */
+    /* reveal — hide the whole overlay container at rest, fade in on hover */
+    /* Children stay at full opacity so parent fade-in is the only transition; default hover transforms still apply */
+    .grid-center.overlay-reveal { opacity: 0 !important; transition: opacity 0.4s var(--ease); }
+    .grid-center.overlay-reveal .grid-client { opacity: 1 !important; }
+    .grid-center.overlay-reveal .grid-title  { opacity: 1 !important; }
+    .grid-center.overlay-reveal .grid-play   { opacity: 1 !important; }
+    .grid-center.overlay-reveal .grid-award  { opacity: 1 !important; }
+    .grid-item:hover .grid-center.overlay-reveal { opacity: 1 !important; }
+    .grid-item .grid-center.overlay-none,
+    .grid-item:hover .grid-center.overlay-none { display: none; }
+
+    /* ── MOBILE LIST ── */
     .mobile-list { display: none; }
-
-    .mobile-item {
-      display: flex; flex-direction: column;
-      border-bottom: 1px solid var(--fg-dimmer);
-      cursor: pointer;
-      transition: background 0.3s var(--ease);
-      animation: gridIn 0.5s var(--ease) both;
-      position: relative;
-    }
+    .mobile-item { display: flex; flex-direction: column; border-bottom: 1px solid var(--fg-dimmer); cursor: pointer; transition: background 0.3s var(--ease); animation: gridIn 0.5s var(--ease) both; position: relative; }
     .mobile-item:nth-child(2) { animation-delay: 0.06s; }
     .mobile-item:nth-child(3) { animation-delay: 0.12s; }
     .mobile-item:nth-child(4) { animation-delay: 0.18s; }
     .mobile-item:nth-child(n+5) { animation-delay: 0.24s; }
     .mobile-item:active { background: var(--bg2); }
-
-    .mobile-thumb-wrap {
-      width: 100%; flex-shrink: 0;
-      aspect-ratio: 16/9; overflow: hidden;
-      background: var(--bg2);
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-    }
-    .mobile-thumb-wrap img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: saturate(0.85) brightness(0.9);
-      transition: transform 0.5s var(--ease);
-    }
-    .mobile-item:active .mobile-thumb-wrap img {
-      transform: scale(1.02);
-    }
-    /* subtle gradient overlay on thumbnails */
-    .mobile-thumb-wrap::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(
-        to bottom,
-        transparent 40%,
-        rgba(19, 17, 16, 0.65) 100%
-      );
-      pointer-events: none;
-    }
-    .mobile-placeholder-icon {
-      width: 28px; height: 20px;
-      border: 1.5px solid var(--fg-dim);
-      border-radius: 2px; position: relative; opacity: 0.15;
-    }
-    .mobile-placeholder-icon::after {
-      content: ''; position: absolute; left: 50%; top: 50%;
-      transform: translate(-38%, -50%);
-      border-left: 7px solid var(--fg-dim);
-      border-top: 4px solid transparent;
-      border-bottom: 4px solid transparent;
-    }
-
-    .mobile-meta {
-      padding: 14px 18px 18px;
-      display: flex; flex-direction: column; justify-content: center; gap: 4px;
-    }
-    .mobile-client {
-      font-size: 9px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--accent); font-weight: 400;
-    }
-    .mobile-title {
-      font-family: var(--font-serif);
-      font-size: 17px; font-style: italic; font-weight: 400;
-      color: var(--fg); line-height: 1.35;
-    }
-    .mobile-award {
-      font-size: 8px; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--accent);
-      opacity: 0.8; margin-top: 3px;
-    }
+    .mobile-thumb-wrap { width: 100%; flex-shrink: 0; aspect-ratio: 16/9; overflow: hidden; background: var(--bg2); display: flex; align-items: center; justify-content: center; position: relative; }
+    .mobile-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) brightness(0.9); transition: transform 0.5s var(--ease); }
+    .mobile-item:active .mobile-thumb-wrap img { transform: scale(1.02); }
+    .mobile-thumb-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(19,17,16,0.65) 100%); pointer-events: none; }
+    .mobile-placeholder-icon { width: 28px; height: 20px; border: 1.5px solid var(--fg-dim); border-radius: 2px; position: relative; opacity: 0.15; }
+    .mobile-placeholder-icon::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-38%,-50%); border-left: 7px solid var(--fg-dim); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+    .mobile-meta { padding: 14px 18px 18px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+    .mobile-client { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 400; }
+    .mobile-title { font-family: var(--font-serif); font-size: 17px; font-style: italic; font-weight: 400; color: var(--fg); line-height: 1.35; }
+    .mobile-award { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-top: 3px; }
 
     /* ── LIGHTBOX ── */
-    .lightbox {
-      display: none; position: fixed; inset: 0; z-index: 500;
-      background: rgba(9, 7, 6, 0.97);
-      flex-direction: column;
-      align-items: center; justify-content: center;
-    }
-    .lightbox.open {
-      display: flex;
-      animation: lbIn 0.28s var(--ease);
-    }
-
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(9,7,6,0.97); flex-direction: column; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; animation: lbIn 0.28s var(--ease); }
     @keyframes lbIn { from { opacity: 0; } to { opacity: 1; } }
-
-    .lb-inner {
-      width: 100%; max-width: 1020px;
-      padding: 0 24px;
-      display: flex; flex-direction: column; align-items: center;
-    }
-
-    .lb-image-wrap {
-      width: 100%; aspect-ratio: 16/9;
-      background: var(--bg2);
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
+    .lb-inner { width: 100%; max-width: 1020px; padding: 0 24px; display: flex; flex-direction: column; align-items: center; }
+    .lb-image-wrap { width: 100%; aspect-ratio: 16/9; background: var(--bg2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .lb-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-    .lb-ph {
-      display: flex; align-items: center; justify-content: center;
-      width: 100%; height: 100%;
-    }
-    .lb-ph-icon {
-      width: 52px; height: 36px;
-      border: 2px solid var(--fg-dim);
-      border-radius: 3px; position: relative; opacity: 0.15;
-    }
-    .lb-ph-icon::after {
-      content: ''; position: absolute; left: 50%; top: 50%;
-      transform: translate(-38%, -50%);
-      border-left: 14px solid var(--fg-dim);
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent;
-    }
-
-    .lb-meta {
-      width: 100%; margin-top: 20px;
-      display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 24px;
-    }
-    .lb-info {}
-    .lb-client {
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 6px;
-    }
-    .lb-title {
-      font-family: var(--font-serif);
-      font-size: 21px; font-weight: 400; font-style: italic;
-      color: var(--fg); line-height: 1.3;
-    }
-    .lb-award {
-      margin-top: 7px; font-size: 10px;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); display: none;
-    }
-    .lb-link {
-      display: none; margin-top: 10px;
-      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--fg-dim); text-decoration: none; transition: color 0.2s;
-    }
-    .lb-link:hover { color: var(--accent); }
-
-    .lb-controls {
-      display: flex; align-items: center; gap: 16px; flex-shrink: 0;
-    }
-    .lb-btn {
-      background: none; border: 1px solid var(--fg-dimmer);
-      color: var(--fg-mid); cursor: pointer;
-      font-family: var(--font-sans); font-size: 10px;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      padding: 8px 16px; transition: border-color 0.2s, color 0.2s;
-    }
+    .lb-ph { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+    .lb-ph-icon { width: 52px; height: 36px; border: 2px solid var(--fg-dim); border-radius: 3px; position: relative; opacity: 0.15; }
+    .lb-ph-icon::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-38%,-50%); border-left: 14px solid var(--fg-dim); border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+    .lb-meta { width: 100%; margin-top: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+    .lb-client { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .lb-title { font-family: var(--font-serif); font-size: 21px; font-weight: 400; font-style: italic; color: var(--fg); line-height: 1.3; }
+    .lb-award { margin-top: 7px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: none; }
+    .lb-desc { margin-top: 12px; font-size: 12px; line-height: 1.7; color: var(--fg-mid); max-width: 480px; display: none; white-space: pre-wrap; max-height: calc(1.7em * 5); overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%); mask-image: linear-gradient(to bottom, black 55%, transparent 100%); }
+    .lb-controls { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .lb-btn { background: none; border: 1px solid var(--fg-dimmer); color: var(--fg-mid); cursor: pointer; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 16px; transition: border-color 0.2s, color 0.2s; }
     .lb-btn:hover { border-color: var(--fg-dim); color: var(--fg); }
     .lb-btn:disabled { opacity: 0.18; cursor: default; }
-
-    .lb-counter {
-      font-size: 11px; color: var(--fg-dim);
-      letter-spacing: 0.08em; min-width: 48px; text-align: center;
-    }
-
-    .lb-close {
-      position: fixed; top: 22px; right: 30px;
-      background: none; border: none; cursor: pointer;
-      color: var(--fg-dim); font-size: 11px;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      font-family: var(--font-sans); transition: color 0.2s;
-    }
+    .lb-counter { font-size: 11px; color: var(--fg-dim); letter-spacing: 0.08em; min-width: 48px; text-align: center; }
+    .lb-close { position: fixed; top: 22px; right: 30px; background: none; border: none; cursor: pointer; color: var(--fg-dim); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-family: var(--font-sans); transition: color 0.2s; }
     .lb-close:hover { color: var(--fg); }
 
     /* ── ABOUT ── */
-    .about-wrap {
-      max-width: 680px; margin: 0 auto;
-      padding: 72px 44px 100px;
-    }
-    .about-eyebrow {
-      font-size: 9px; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--fg-dim); margin-bottom: 36px;
-    }
-    .about-photo {
-      width: 120px; height: 120px;
-      border-radius: 50%; object-fit: cover;
-      margin-bottom: 32px;
-      border: 1px solid var(--fg-dimmer);
-      display: block;
-    }
-    .about-bio {
-      font-family: var(--font-serif);
-      font-size: 20px; font-weight: 400;
-      line-height: 1.75; color: var(--fg); margin-bottom: 12px;
-    }
-    .about-bio2 {
-      font-family: var(--font-serif);
-      font-size: 17px; font-weight: 400;
-      line-height: 1.8; color: var(--fg-mid); margin-bottom: 36px;
-    }
-    .about-contact {
-      font-size: 12px; color: var(--fg-dim);
-      font-style: italic; margin-bottom: 56px;
-    }
-    .about-contact a {
-      color: var(--accent); text-decoration: none; transition: color 0.2s;
-    }
-    .about-contact a:hover { color: var(--fg); }
-    .about-divider {
-      width: 40px; height: 1px;
-      background: var(--fg-dimmer); margin-bottom: 44px;
-    }
-    .about-cols {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 48px; margin-bottom: 52px;
-    }
-    .about-col-label {
-      font-size: 9px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--fg-dim); margin-bottom: 16px;
-    }
+    .about-wrap { max-width: 680px; margin: 0 auto; padding: 72px 44px 100px; }
+    .about-eyebrow { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 36px; }
+    .about-layout { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
+    .about-layout.placement-left  { flex-direction: row; align-items: flex-start; }
+    .about-layout.placement-right { flex-direction: row-reverse; align-items: flex-start; }
+    .about-photo-frame { flex-shrink: 0; overflow: hidden; position: relative; border: 1px solid var(--fg-dimmer); }
+    .about-photo-frame.shape-circle { width: 150px; height: 150px; border-radius: 50%; }
+    .about-photo-frame.shape-square { width: 150px; height: 150px; border-radius: 3px; }
+    .about-photo-frame.shape-natural { border-radius: 2px; }
+    .about-photo-img { display: block; }
+    .about-photo-frame.shape-circle .about-photo-img,
+    .about-photo-frame.shape-square .about-photo-img { width: 100%; height: 100%; object-fit: cover; }
+    .about-photo-frame.shape-natural .about-photo-img { max-width: var(--photo-natural-maxw, 380px); max-height: var(--photo-natural-maxh, 280px); width: auto; height: auto; }
+    .about-layout.placement-above .about-photo-frame.shape-natural.photo-full-width { width: 100%; }
+    .about-layout.placement-above .about-photo-frame.shape-natural.photo-full-width .about-photo-img { width: 100%; max-width: none; max-height: none; height: auto; }
+    .about-content { flex: 1; }
+    .about-bio { font-family: var(--font-serif); font-size: 20px; font-weight: 400; line-height: 1.75; color: var(--fg); margin-bottom: 12px; }
+    .about-bio2 { font-family: var(--font-serif); font-size: 17px; font-weight: 400; line-height: 1.8; color: var(--fg-mid); margin-bottom: 36px; }
+    .about-contact-line { font-size: 12px; color: var(--fg-dim); font-style: italic; margin-bottom: 56px; }
+    .about-contact-line a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    .about-contact-line a:hover { color: var(--fg); }
+    .about-divider { width: 40px; height: 1px; background: var(--fg-dimmer); margin-bottom: 44px; }
+    .about-social-divider { height: 1px; background: var(--fg-dimmer); margin-top: 44px; margin-bottom: 44px; margin-left: -44px; margin-right: -44px; }
+    .about-col-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-dim); margin-bottom: 16px; }
     .about-col-list { list-style: none; }
-    .about-col-list li {
-      font-family: var(--font-serif);
-      font-size: 15px; color: var(--fg-mid); line-height: 2;
-    }
-    .about-awards { margin-bottom: 52px; }
-    .award-item {
-      font-family: var(--font-serif);
-      font-size: 15px; font-style: italic;
-      color: var(--fg-mid); line-height: 2;
-    }
-    .award-badge {
-      font-style: normal; font-size: 9px;
-      letter-spacing: 0.13em; text-transform: uppercase;
-      color: var(--accent); font-family: var(--font-sans);
-      font-weight: 400; margin-left: 10px;
-    }
-    .about-footer {
-      border-top: 1px solid var(--fg-dimmer); padding-top: 28px;
-    }
-    .about-footer p {
-      font-size: 12px; color: var(--fg-dim); line-height: 2.4;
-    }
-    .about-footer a {
-      color: var(--fg-dim); text-decoration: none;
-      transition: color 0.2s;
-    }
-    .about-footer a:hover { color: var(--accent); }
+    .about-col-list li { font-family: var(--font-serif); font-size: 15px; color: var(--fg-mid); line-height: 2; }
+    .about-footer { border-top: 1px solid var(--fg-dimmer); padding-top: 28px; margin-top: 28px; margin-left: -44px; margin-right: -44px; padding-left: 44px; padding-right: 44px; }
+    .about-footer p { font-size: 12px; color: var(--fg-dim); line-height: 2.4; }
+    .about-social-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 56px; align-items: center; }
+    .about-social-links a { display: flex; align-items: center; color: var(--accent); text-decoration: none; transition: opacity 0.2s; opacity: 0.5; }
+    .about-social-links a:hover { opacity: 1; }
+    .about-social-links svg { display: block; }
+
+    /* logo wall */
+    .about-logo-wall { --logo-gold: grayscale(1) sepia(0.75) saturate(1.7) hue-rotate(5deg) brightness(0.88); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 24px; margin-top: 16px; padding-bottom: 8px; }
+    .about-logo-wall img { height: 28px; width: auto; max-width: 160px; object-fit: contain; display: block; transition: filter 0.25s ease, opacity 0.25s ease; }
+    /* dark mode: all logos gold at rest, reveal true on hover */
+    .about-logo-wall img                 { filter: var(--logo-gold); opacity: 0.7; }
+    .about-logo-wall img:hover           { filter: none;              opacity: 1; }
+    .about-logo-wall img.logo-dark       { filter: grayscale(1) invert(1) var(--logo-gold); opacity: 0.7; }
+    .about-logo-wall img.logo-dark:hover { filter: grayscale(1) invert(1);                  opacity: 1; }
+    .about-logo-wall img.logo-color       { filter: var(--logo-gold); opacity: 0.7; }
+    .about-logo-wall img.logo-color:hover { filter: none;             opacity: 1; }
+    /* light mode: same gold logic, white logos need invert first */
+    [data-theme="light"] .about-logo-wall img                 { filter: invert(1) var(--logo-gold); opacity: 0.7; }
+    [data-theme="light"] .about-logo-wall img:hover           { filter: invert(1);                  opacity: 1; }
+    [data-theme="light"] .about-logo-wall img.logo-dark       { filter: var(--logo-gold);            opacity: 0.7; }
+    [data-theme="light"] .about-logo-wall img.logo-dark:hover { filter: none;                       opacity: 1; }
+    [data-theme="light"] .about-logo-wall img.logo-color       { filter: var(--logo-gold);           opacity: 0.7; }
+    [data-theme="light"] .about-logo-wall img.logo-color:hover { filter: none;                      opacity: 1; }
+
+    /* ── CONTACT ── */
+    .contact-wrap { max-width: 560px; margin: 0 auto; padding: 72px 44px 100px; }
+    .contact-card { margin-bottom: 52px; }
+    .contact-card-name { font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--fg); margin-bottom: 10px; }
+    .contact-card-email { display: inline-block; font-size: 13px; color: var(--accent); text-decoration: none; letter-spacing: 0.04em; transition: opacity 0.2s; }
+    .contact-card-email:hover { opacity: 0.7; }
+    .contact-card-divider { height: 1px; background: var(--fg-dimmer); margin: 32px 0; }
+    .contact-field { margin-bottom: 22px; }
+    .contact-field label { display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--fg-mid); margin-bottom: 8px; font-weight: 400; }
+    .contact-field input,
+    .contact-field textarea { width: 100%; background: var(--bg2); border: 1px solid var(--fg-dimmer); border-radius: 3px; padding: 10px 14px; color: var(--fg); font-family: var(--font-sans); font-size: 14px; font-weight: 300; transition: border-color 0.2s; outline: none; }
+    .contact-field input:focus,
+    .contact-field textarea:focus { border-color: var(--fg-dim); }
+    .contact-field textarea { resize: vertical; min-height: 130px; }
+    .contact-submit { background: none; border: 1px solid var(--fg-dim); color: var(--fg-mid); font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; padding: 12px 32px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+    .contact-submit:hover { border-color: var(--accent); color: var(--fg); }
+    .contact-submit:disabled { opacity: 0.4; cursor: default; }
+    .contact-result { margin-top: 18px; font-size: 13px; color: var(--fg-mid); min-height: 20px; }
+
+    /* ── SPLASH ── */
+    #splash { position: fixed; inset: 0; z-index: 800; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s var(--ease); }
+    #splash.fading { opacity: 0; pointer-events: none; }
+    #splash.gone { display: none; }
+    .splash-video-bg { position: absolute; inset: 0; overflow: hidden; }
+    .splash-video-bg iframe,
+    .splash-video-bg video { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 140%; height: 140%; object-fit: cover; pointer-events: none; }
+    .splash-overlay { position: absolute; inset: 0; background: rgba(19,17,16,0.6); }
+    .splash-content { position: relative; z-index: 1; text-align: center; }
+    .splash-name { font-family: var(--font-serif); font-size: clamp(28px, 5vw, 52px); font-weight: 400; font-style: italic; color: var(--fg); letter-spacing: 0.02em; margin-bottom: 10px; }
+    .splash-title-text { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--fg-mid); margin-bottom: 40px; }
+    .splash-skip { background: none; border: none; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-dim); cursor: pointer; transition: color 0.2s; font-family: var(--font-sans); }
+    .splash-skip:hover { color: var(--accent); }
+
+    /* ── PREVIEW ── */
+    .preview-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 210; background: var(--accent); color: #1a1714; text-align: center; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 12px; font-weight: 600; }
+    body.is-preview { padding-top: 28px; }
+    body.is-preview nav { top: 28px; }
+    .grid-item .preview-hide-btn { position: absolute; top: 6px; right: 6px; z-index: 10; width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(0,0,0,0.65); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.15s; }
+    .grid-item:hover .preview-hide-btn { opacity: 1; }
+    .grid-draft-badge { position: absolute; top: 6px; left: 6px; z-index: 10; background: rgba(0,0,0,0.65); color: var(--accent); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; pointer-events: none; }
+    .mobile-item .preview-hide-btn { margin-left: auto; flex-shrink: 0; background: var(--bg3); border: 1px solid var(--fg-dimmer); color: var(--fg-dim); width: 24px; height: 24px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .preview-tray { padding: 16px 6px 24px; border-top: 1px solid var(--fg-dimmer); margin-top: 3px; }
+    .preview-tray-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-dim); margin-bottom: 10px; }
+    .preview-tray-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .preview-chip { background: var(--bg2); border: 1px solid var(--fg-dimmer); color: var(--fg-dim); border-radius: 20px; padding: 4px 12px; font-size: 11px; letter-spacing: 0.04em; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s, color 0.15s; }
+    .preview-chip:hover { border-color: var(--accent); color: var(--fg); }
+    .preview-chip-restore { color: var(--accent); font-size: 13px; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      :root {
-        --nav-h: 56px;
-      }
-
-      nav {
-        padding: 0 20px;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        background: rgba(19, 17, 16, 0.92);
-      }
+      :root { --nav-h: 56px; }
+      nav { padding: 0 20px; }
       .nav-brand-name { font-size: 17px; }
       .nav-brand-rule, .nav-brand-title { display: none; }
       .nav-links { display: none; }
       .nav-hamburger { display: flex; }
-
-      /* switch to cards on mobile */
       .gallery-grid { display: none; }
-      .mobile-list {
-        display: block;
-        padding: 4px 0 32px;
-      }
-
-      /* about page */
-      .about-wrap {
-        padding: 52px 22px 80px;
-      }
-      .about-eyebrow {
-        font-size: 8px; letter-spacing: 0.28em;
-        margin-bottom: 28px;
-      }
-      .about-bio {
-        font-size: 19px; line-height: 1.7;
-      }
-      .about-bio2 {
-        font-size: 15px; line-height: 1.75;
-      }
-      .about-contact {
-        font-size: 13px;
-      }
-      .about-cols {
-        grid-template-columns: 1fr; gap: 32px;
-      }
-      .about-col-label {
-        margin-bottom: 12px;
-      }
-      .about-col-list li {
-        font-size: 14px; line-height: 2.1;
-      }
-      .award-item {
-        font-size: 14px; line-height: 2.1;
-      }
-      .award-badge {
-        display: block;
-        margin-left: 0; margin-top: 2px;
-        font-size: 8px;
-      }
-
-      /* lightbox */
+      .mobile-list { display: block; padding: 4px 0 32px; }
+      .about-wrap { padding: 52px 22px 80px; }
+      .contact-wrap { padding: 52px 22px 80px; }
+      .about-layout.placement-left,
+      .about-layout.placement-right { flex-direction: column; }
+      .about-photo-frame.shape-circle,
+      .about-photo-frame.shape-square { width: 120px; height: 120px; }
+      .about-photo-frame.shape-natural .about-photo-img { max-width: min(var(--photo-natural-maxw, 380px), 100%); max-height: var(--photo-natural-maxh, 280px); }
+      .about-layout.placement-above .about-photo-frame.shape-natural.photo-full-width .about-photo-img { max-width: none; max-height: none; }
+      .about-eyebrow { font-size: 8px; letter-spacing: 0.28em; margin-bottom: 28px; }
+      .about-bio { font-size: 19px; line-height: 1.7; }
+      .about-bio2 { font-size: 15px; line-height: 1.75; }
+      .about-contact-line { font-size: 13px; }
+      .about-col-list li { font-size: 14px; line-height: 2.1; }
       .lb-inner { padding: 0 12px; }
-      .lb-meta {
-        flex-direction: column; gap: 18px;
-        margin-top: 16px;
-      }
+      .lb-meta { flex-direction: column; gap: 18px; margin-top: 16px; }
       .lb-client { font-size: 9px; margin-bottom: 4px; }
       .lb-title { font-size: 18px; }
-      .lb-controls {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .lb-btn {
-        font-size: 9px;
-        padding: 10px 18px;
-      }
-      .lb-close {
-        top: 16px; right: 18px;
-        font-size: 10px;
-      }
+      .lb-controls { width: 100%; justify-content: space-between; }
+      .lb-btn { font-size: 9px; padding: 10px 18px; }
+      .lb-close { top: 16px; right: 18px; font-size: 10px; }
+      .lb-desc { font-size: 11px; max-height: calc(1.7em * 3); }
     }
 
-    /* extra refinements for very small screens */
     @media (max-width: 400px) {
       .mobile-title { font-size: 15px; }
       .mobile-meta { padding: 12px 16px 16px; }
@@ -638,396 +402,714 @@
 </head>
 <body>
 
-<nav>
-  <a class="nav-brand" onclick="showFirst()">
-    <span class="nav-brand-name">Cameron Rumford</span>
-    <span class="nav-brand-rule"></span>
-    <span class="nav-brand-title">Editor</span>
-  </a>
-  <ul class="nav-links" id="nav-cat-links">
-    <li><a id="nav-about" onclick="showPage('about')">About</a></li>
-  </ul>
-  <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+  <!-- Splash -->
+  <div id="splash" class="gone">
+    <div class="splash-video-bg" id="splash-video-bg"></div>
+    <div class="splash-overlay"></div>
+    <div class="splash-content">
+      <div class="splash-name" id="splash-name"></div>
+      <div class="splash-title-text" id="splash-title"></div>
+      <button class="splash-skip" onclick="dismissSplash()">Enter ↗</button>
+    </div>
+  </div>
 
-<div class="nav-drawer" id="drawer">
-  <a id="dnav-about" onclick="showPage('about');closeDrawer()">About</a>
-</div>
+  <!-- Nav -->
+  <nav>
+    <a class="nav-brand" href="#" onclick="event.preventDefault();showFirst()">
+      <span class="nav-brand-name" id="nav-name"></span>
+      <span class="nav-brand-rule" id="nav-rule" style="display:none"></span>
+      <span class="nav-brand-title" id="nav-title-el"></span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-links"></ul>
+      <button class="theme-toggle hidden" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme">◐</button>
+      <button class="nav-hamburger" onclick="toggleDrawer()"><span></span><span></span></button>
+    </div>
+  </nav>
 
-<main id="main-content">
-  <!-- category pages are injected here by buildPages() -->
+  <div class="nav-drawer" id="nav-drawer"></div>
 
-  <div id="page-about" class="page">
-    <div class="about-wrap">
-      <p class="about-eyebrow">About</p>
-      <img id="about-photo" class="about-photo" alt="Cameron Rumford" style="display:none" />
-      <p class="about-bio"   id="about-bio"></p>
-      <p class="about-bio2"  id="about-bio2"></p>
-      <p class="about-contact">For work inquiries: <a id="about-email" href=""></a></p>
-      <div class="about-divider"></div>
-      <div class="about-cols">
-        <div>
-          <p class="about-col-label">Agencies &amp; Production</p>
-          <ul class="about-col-list">
-            <li>Lifeboat Productions</li><li>Ayzenberg Group</li><li>eMotion Studios</li>
-            <li>Space.Camp</li><li>Image Line Media</li><li>Color Creative</li>
-            <li>Blacksmith Productions</li><li>Curator Pictures</li><li>42 Entertainment</li>
-            <li>Yeti Films</li><li>Xlantic</li><li>Ferguson Presents</li>
-            <li>Endomol</li><li>Light in the Attic Records</li>
-            <li>Animal Style Productions</li><li>BQ Productions</li>
-          </ul>
+  <main id="main-content"></main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" onclick="closeLbOverlay(event)">
+    <button class="lb-close" onclick="closeLb()">Close</button>
+    <div class="lb-inner" onclick="event.stopPropagation()">
+      <div class="lb-image-wrap" id="lb-frame"></div>
+      <div class="lb-meta">
+        <div class="lb-info">
+          <div class="lb-client" id="lb-client"></div>
+          <h2 class="lb-title" id="lb-title"></h2>
+          <div class="lb-award" id="lb-award"></div>
+          <div class="lb-desc" id="lb-desc"></div>
         </div>
-        <div>
-          <p class="about-col-label">Clients</p>
-          <ul class="about-col-list">
-            <li>Gates Foundation</li><li>Microsoft</li><li>Adobe</li><li>Intel</li>
-            <li>Oculus</li><li>Mattel</li><li>Bethesda Game Studio</li>
-            <li>Disney Interactive</li><li>Interscope Records</li><li>Nordstrom</li>
-            <li>Nestlé</li><li>Ford</li><li>American Express</li>
-            <li>Hollywood Reporter</li><li>SAP</li><li>Condé Nast</li>
-            <li>Restoration Hardware</li><li>Allure</li><li>OPI</li><li>Teen Vogue</li>
-          </ul>
+        <div class="lb-controls">
+          <button class="lb-btn" id="lb-prev" onclick="lbNav(-1)">Prev</button>
+          <div class="lb-counter"><span id="lb-current">1</span> / <span id="lb-total">1</span></div>
+          <button class="lb-btn" id="lb-next" onclick="lbNav(1)">Next</button>
         </div>
-      </div>
-      <div class="about-awards">
-        <p class="about-col-label">Awards</p>
-        <p class="award-item"><em>The Power of a Postcard</em> (editor)<span class="award-badge">Golden &amp; Bronze Telly, 2023</span></p>
-        <p class="award-item"><em>Undefeated</em> (assistant editor)<span class="award-badge">Oscar — Best Documentary, 2012</span></p>
-      </div>
-      <div class="about-footer">
-        <p>
-          <a id="about-email-footer" href=""></a><br>
-          <a href="http://www.imdb.com/name/nm2801725/" target="_blank" rel="noopener">IMDB Profile ↗</a>
-        </p>
       </div>
     </div>
   </div>
-</main>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" onclick="closeLb()">✕ &nbsp;close</button>
-  <div class="lb-inner">
-    <div class="lb-image-wrap" id="lb-img"></div>
-    <div class="lb-meta">
-      <div class="lb-info">
-        <div class="lb-client" id="lb-client"></div>
-        <div class="lb-title"  id="lb-title"></div>
-        <div class="lb-award"  id="lb-award"></div>
-      </div>
-      <div class="lb-controls">
-        <button class="lb-btn" id="lb-prev" onclick="lbNav(-1)">← Prev</button>
-        <span   class="lb-counter" id="lb-counter"></span>
-        <button class="lb-btn" id="lb-next" onclick="lbNav(1)">Next →</button>
-      </div>
-    </div>
-  </div>
-</div>
+  <script>
+    /* ── MODULE-LEVEL CONSTANTS ── */
+    const _params     = new URLSearchParams(location.search);
+    const isPreview   = _params.get('preview') === '1';
+    const forceSplash = _params.get('splash')  === '1';
+    const SPLASH_SEEN_KEY = 'cr_splash_seen';
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ─────────────────────────────────────────────────────────────────────────────
-// HOW TO ADD A NEW PROJECT
-// Open projects.json and add an entry to the array:
-//
-// {
-//   "category": "unscripted",        ← unscripted | scripted | videogames
-//   "title": "Project Name",
-//   "client": "Client Name",         ← shown small at rest, golden accent
-//   "thumbnail": "thumbs/name.jpg",  ← path to your still image
-//   "url": "https://vimeo.com/...",  ← optional link to video
-//   "award": "Telly Award 2023"      ← optional, leave "" if none
-// }
-//
-// Save the file. That's it — desktop and mobile both update automatically.
-// ─────────────────────────────────────────────────────────────────────────────
+    /* ── STATE ── */
+    let siteConfig = { categories: [], about: {}, contact: {}, splash: {} };
+    let projects   = [];
+    const builtCats    = new Set();
+    const previewHidden = new Set();
+    let lbCat    = '';
+    let lbIdx    = 0;
+    let lbShared = null; // project object when opened via share link
+    let _currentThemeSetting = 'auto';
+    let _aboutRendered = false;
 
-let projects   = [];
-let siteConfig = { categories: [], about: {} };
-let lbCat = '', lbIdx = 0;
+    /* ── XSS HELPER ── */
+    function x(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
 
-async function init() {
-  // Load site config first (drives nav + pages)
-  try {
-    const res = await fetch('site.json');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    siteConfig = await res.json();
-  } catch(e) {
-    console.error('Failed to load site.json:', e.message);
-    // Fall back to hardcoded defaults so the site still works
-    siteConfig = {
-      categories: [
-        { id: 'unscripted', label: 'Unscripted' },
-        { id: 'scripted',   label: 'Scripted'   },
-        { id: 'videogames', label: 'Video Games' }
-      ],
-      about: { bio: '', bio2: '', contactEmail: '' }
-    };
-  }
+    /* ── INIT ── */
+    async function init() {
+      try {
+        if (isPreview) {
+          const raw  = JSON.parse(sessionStorage.getItem('cr_preview') || '{}');
+          siteConfig = raw.siteConfig || raw || {};
+          projects   = raw.projects   || [];
+          projects.forEach((p, gi) => { if (p.published === false) previewHidden.add(gi); });
+        } else {
+          const [sRes, pRes] = await Promise.all([fetch('site.json'), fetch('projects.json')]);
+          if (sRes.ok) siteConfig = await sRes.json();
+          if (pRes.ok) projects   = await pRes.json();
+        }
+      } catch(e) {
+        console.error('Failed to load site data', e);
+      }
 
-  buildNav(siteConfig.categories);
-  buildPages(siteConfig.categories);
-  renderAbout(siteConfig.about);
+      siteConfig.categories = siteConfig.categories || [];
+      projects = Array.isArray(projects) ? projects : [];
 
-  // Load projects
-  try {
-    const res = await fetch('projects.json');
-    if (!res.ok) throw new Error('HTTP ' + res.status + ' — ' + res.url);
-    projects = await res.json();
-  } catch(e) {
-    projects = [];
-    console.error('Failed to load projects.json:', e.message);
-    document.body.insertAdjacentHTML('afterbegin', '<div style="color:red;padding:20px;font-family:monospace;">Error: ' + e.message + '</div>');
-  }
+      applyConfig();
 
-  buildAll();
-  showFirst();
-}
+      const publishedCats = siteConfig.categories.filter(c => c.published !== false);
+      const allCats       = siteConfig.categories;
 
-/* ── Build nav links from site.json ── */
-function buildNav(categories) {
-  const ul      = document.getElementById('nav-cat-links');
-  const aboutLi = ul.querySelector('li:last-child'); // the About item
-  const drawer  = document.getElementById('drawer');
-  const dAbout  = document.getElementById('dnav-about');
+      buildNav(publishedCats);
+      buildPages(isPreview ? allCats : publishedCats);
 
-  // Show/hide About based on site.json toggle
-  const showAbout = siteConfig.about?.show !== false;
-  aboutLi.style.display = showAbout ? '' : 'none';
-  if (dAbout) dAbout.style.display = showAbout ? '' : 'none';
+      if (isPreview) {
+        document.body.classList.add('is-preview');
+        const banner = document.createElement('div');
+        banner.className = 'preview-banner';
+        banner.textContent = 'Preview mode — changes not saved to live site';
+        document.body.prepend(banner);
+        if (forceSplash) {
+          sessionStorage.removeItem(SPLASH_SEEN_KEY);
+          maybeShowSplash();
+        }
+      } else {
+        maybeShowSplash();
+      }
 
-  categories.forEach(cat => {
-    // Desktop nav
-    const li = document.createElement('li');
-    li.innerHTML = `<a id="nav-${cat.id}" onclick="showPage('${cat.id}')">${cat.label}</a>`;
-    ul.insertBefore(li, aboutLi);
+      showFirst();
 
-    // Mobile drawer
-    const da = document.createElement('a');
-    da.id = `dnav-${cat.id}`;
-    da.textContent = cat.label;
-    da.onclick = () => { showPage(cat.id); closeDrawer(); };
-    drawer.insertBefore(da, dAbout);
-  });
-}
+      // Share link: ?share=ID&key=SHAREKEY — opens any project (incl. unpublished) directly
+      const _sp = new URLSearchParams(location.search);
+      const _shareId  = _sp.get('share');
+      const _shareKey = _sp.get('key');
+      if (_shareId && _shareKey) {
+        const _shared = projects.find(p => String(p.id) === _shareId && p.shareKey === _shareKey);
+        if (_shared) openLbDirect(_shared);
+      }
+    }
 
-/* ── Build page divs from site.json ── */
-function buildPages(categories) {
-  const main   = document.getElementById('main-content');
-  const aboutEl = document.getElementById('page-about');
+    /* ── APPLY CONFIG ── */
+    function applyConfig() {
+      const cfg = siteConfig;
+      const ownerName  = cfg.ownerName  || '';
+      const ownerTitle = cfg.ownerTitle || '';
 
-  categories.forEach(cat => {
-    const div = document.createElement('div');
-    div.id        = `page-${cat.id}`;
-    div.className = 'page';
-    div.innerHTML = `<div class="gallery-grid" id="grid-${cat.id}"></div>
-                     <div class="mobile-list"  id="mlist-${cat.id}"></div>`;
-    main.insertBefore(div, aboutEl);
-  });
-}
+      if (ownerName) document.title = ownerTitle ? `${ownerName} — ${ownerTitle}` : ownerName;
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', ownerName);
+      if (cfg.metaDescription) {
+        document.querySelector('meta[name="description"]')?.setAttribute('content', cfg.metaDescription);
+        document.querySelector('meta[property="og:description"]')?.setAttribute('content', cfg.metaDescription);
+      }
+      if (cfg.website) {
+        document.querySelector('meta[property="og:url"]')?.setAttribute('content', cfg.website);
+        const canonical = document.getElementById('site-canonical');
+        if (canonical) canonical.href = cfg.website;
+      }
 
-/* ── Render About section from site.json ── */
-function renderAbout(about) {
-  const bioEl   = document.getElementById('about-bio');
-  const bio2El  = document.getElementById('about-bio2');
-  const emailEl = document.getElementById('about-email');
-  const emailFt = document.getElementById('about-email-footer');
-  const photoEl = document.getElementById('about-photo');
+      document.getElementById('nav-name').textContent    = ownerName;
+      document.getElementById('nav-title-el').textContent = ownerTitle;
+      const rule = document.getElementById('nav-rule');
+      if (rule) rule.style.display = ownerTitle ? '' : 'none';
 
-  if (bioEl)   bioEl.innerHTML  = about.bio  || '';
-  if (bio2El)  bio2El.innerHTML = about.bio2 || '';
-  if (about.contactEmail) {
-    if (emailEl) { emailEl.href = `mailto:${about.contactEmail}`; emailEl.textContent = about.contactEmail; }
-    if (emailFt) { emailFt.href = `mailto:${about.contactEmail}`; emailFt.textContent = about.contactEmail; }
-  }
-  if (photoEl && about.photo) {
-    photoEl.src = about.photo;
-    photoEl.style.display = 'block';
-  }
-}
+      document.getElementById('splash-name').textContent  = ownerName;
+      document.getElementById('splash-title').textContent = ownerTitle;
 
-/* ── Show first category page ── */
-function showFirst() {
-  const first = siteConfig.categories[0];
-  if (first) { showPage(first.id); return; }
-  if (siteConfig.about?.show !== false) showPage('about');
-}
+      if (cfg.accentColor) {
+        document.documentElement.style.setProperty('--accent', cfg.accentColor);
+      }
+      if (cfg.filmGrain !== undefined) {
+        document.documentElement.style.setProperty('--film-grain-opacity', cfg.filmGrain);
+      }
 
-function buildAll() {
-  siteConfig.categories.forEach(cat => {
-    const items = projects.filter(p => p.category === cat.id);
-    buildDesktopGrid(cat.id, items);
-    buildMobileList(cat.id, items);
-  });
-}
+      const mode = cfg.themeMode || 'auto';
+      _currentThemeSetting = mode;
+      applyTheme(mode);
 
-/* ── Desktop grid ── */
-function buildDesktopGrid(cat, items) {
-  document.getElementById('grid-' + cat).innerHTML = items.map((p, i) => {
-    const hasClient  = p.client && p.client.trim();
-    const isShort    = p.type === 'short';
-    const clientOp   = p.opacity !== undefined ? p.opacity : 1;
-    const titleOp    = p.opacity !== undefined ? p.opacity : 0.8;
-    const scrimVal   = p.vignette !== undefined ? p.vignette : 0.3;
-    const scrimHtml  = scrimVal > 0
-      ? `<div class="grid-scrim" style="background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,${scrimVal}) 0%, transparent 100%)"></div>`
-      : '';
-    return `
-      <div class="grid-item" onclick="openLb('${cat}',${i})">
-        ${p.thumbnail
-          ? `<img class="grid-thumb" src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
-          : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`}
-        ${scrimHtml}
-        <div class="grid-center${hasClient ? '' : ' solo'}${isShort ? ' short' : ''}">
-          ${isShort
-            ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>
-               ${p.url ? `<div class="grid-play"></div>` : ''}
-               <div class="grid-title" style="opacity:${titleOp}">${x(p.title)}</div>`
-            : `${hasClient ? `<div class="grid-client" style="opacity:${clientOp}">${x(p.client)}</div>` : ''}
-               ${(p.url && hasClient) ? `<div class="grid-play"></div>` : ''}
-               <div class="grid-title" style="opacity:${titleOp}">${x(p.title)}</div>`
-          }
-          ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (toggleBtn) toggleBtn.classList.toggle('hidden', !cfg.allowThemeToggle);
+
+      if (cfg.favicon) document.getElementById('site-favicon').href = cfg.favicon;
+      if (cfg.ogImage) {
+        document.querySelector('meta[property="og:image"]')?.setAttribute('content', cfg.ogImage);
+        document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', cfg.ogImage);
+      }
+    }
+
+    function applyTheme(mode) {
+      const resolved = mode === 'light' ? 'light'
+        : mode === 'dark'  ? 'dark'
+        : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', resolved);
+    }
+
+    function toggleTheme() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      applyTheme(isLight ? 'dark' : 'light');
+    }
+
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+      if (_currentThemeSetting === 'auto') applyTheme('auto');
+    });
+
+    /* ── NAV ── */
+    function buildNav(cats) {
+      const linksEl  = document.getElementById('nav-links');
+      const drawerEl = document.getElementById('nav-drawer');
+      linksEl.innerHTML  = '';
+      drawerEl.innerHTML = '';
+
+      function addLink(id, label) {
+        const li = document.createElement('li');
+        const a  = document.createElement('a');
+        a.href = '#' + id;
+        a.dataset.page = id;
+        a.textContent = label;
+        a.onclick = e => { e.preventDefault(); showPage(id); };
+        li.appendChild(a);
+        linksEl.appendChild(li);
+
+        const da = document.createElement('a');
+        da.href = '#' + id;
+        da.dataset.page = id;
+        da.textContent = label;
+        da.onclick = e => { e.preventDefault(); showPage(id); closeDrawer(); };
+        drawerEl.appendChild(da);
+      }
+
+      cats.forEach(cat => addLink(cat.id, cat.label));
+      if (siteConfig.about?.show !== false) addLink('about', 'About');
+      if ((siteConfig.contact?.enabled || siteConfig.contact?.mode === 'card-only') && siteConfig.contact?.mode !== 'email-nav') addLink('contact', 'Contact');
+      if (siteConfig.contact?.mode === 'email-nav' && siteConfig.about?.contactEmail) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `mailto:${siteConfig.about.contactEmail}`;
+        a.textContent = siteConfig.about.contactEmail;
+        li.appendChild(a);
+        document.getElementById('nav-links').appendChild(li);
+      }
+    }
+
+    /* ── PAGES ── */
+    function buildPages(cats) {
+      const main = document.getElementById('main-content');
+      main.innerHTML = '';
+
+      cats.forEach(cat => {
+        const sec = document.createElement('section');
+        sec.id = 'page-' + cat.id;
+        sec.className = 'page';
+        sec.innerHTML = [
+          `<div class="gallery-grid" id="grid-${x(cat.id)}"></div>`,
+          `<div class="mobile-list"  id="mlist-${x(cat.id)}"></div>`,
+          isPreview ? `<div class="preview-tray" id="preview-tray-${x(cat.id)}" style="display:none"></div>` : ''
+        ].join('');
+        main.appendChild(sec);
+      });
+
+      // About
+      const abt = document.createElement('section');
+      abt.id = 'page-about';
+      abt.className = 'page';
+      abt.innerHTML = '<div class="about-wrap" id="about-container"></div>';
+      main.appendChild(abt);
+
+      // Contact
+      const ctc = document.createElement('section');
+      ctc.id = 'page-contact';
+      ctc.className = 'page';
+      const cc = siteConfig.contact || {};
+      const isCardOnly = cc.mode === 'card-only';
+      const showCard = isCardOnly || cc.showCard;
+      const cardHtml = showCard && siteConfig.about ? (() => {
+        const name  = siteConfig.ownerName || '';
+        const email = siteConfig.about.contactEmail || '';
+        return `<div class="contact-card">
+          ${name  ? `<div class="contact-card-name">${x(name)}</div>` : ''}
+          ${email ? `<a class="contact-card-email" href="mailto:${x(email)}">${x(email)}</a>` : ''}
         </div>
-      </div>`;
-  }).join('');
-}
+        ${!isCardOnly ? `<div class="contact-card-divider"></div>` : ''}`;
+      })() : '';
+      ctc.innerHTML = `
+        <div class="contact-wrap">
+          <h2 class="about-eyebrow">Get in Touch</h2>
+          ${cardHtml}
+          ${!isCardOnly ? `<form id="contact-form" onsubmit="handleContact(event)">
+            <div class="contact-field"><label>Name</label><input type="text" name="name" required placeholder="Your name"></div>
+            <div class="contact-field"><label>Email</label><input type="email" name="email" required placeholder="your@email.com"></div>
+            <div class="contact-field"><label>Message</label><textarea name="message" required placeholder="Tell me about your project..."></textarea></div>
+            <button type="submit" id="contact-submit" class="contact-submit">Send Message</button>
+            <div id="contact-result" class="contact-result"></div>
+          </form>` : ''}
+        </div>`;
+      main.appendChild(ctc);
+    }
 
-/* ── Mobile list ── */
-function buildMobileList(cat, items) {
-  document.getElementById('mlist-' + cat).innerHTML = items.map((p, i) => `
-    <div class="mobile-item" onclick="openLb('${cat}',${i})">
-      <div class="mobile-thumb-wrap">
-        ${p.thumbnail
-          ? `<img src="${x(p.thumbnail)}" alt="${x(p.title)}" loading="lazy">`
-          : `<div class="mobile-placeholder-icon"></div>`}
-      </div>
-      <div class="mobile-meta">
-        ${p.client ? `<div class="mobile-client">${x(p.client)}</div>` : ''}
-        <div class="mobile-title">${x(p.title)}</div>
-        ${p.award ? `<div class="mobile-award">${x(p.award)}</div>` : ''}
-      </div>
-    </div>`).join('');
-}
+    /* ── SHOW PAGE ── */
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+      const pg = document.getElementById('page-' + id);
+      if (!pg) return;
+      pg.classList.add('visible');
+      history.replaceState(null, '', '#' + id);
+      window.scrollTo(0, 0);
 
-/* ── Page nav ── */
-function showPage(name) {
-  const allIds = [...siteConfig.categories.map(c => c.id), 'about'];
-  allIds.forEach(p => {
-    const pageEl = document.getElementById('page-'+p);
-    if (pageEl) pageEl.classList.remove('visible');
-    const navEl  = document.getElementById('nav-'+p);
-    if (navEl)  navEl.classList.remove('active');
-    const dnavEl = document.getElementById('dnav-'+p);
-    if (dnavEl) dnavEl.classList.remove('active');
-  });
-  const target = document.getElementById('page-'+name);
-  if (target) target.classList.add('visible');
-  const nav = document.getElementById('nav-'+name);
-  if (nav) nav.classList.add('active');
-  const dnav = document.getElementById('dnav-'+name);
-  if (dnav) dnav.classList.add('active');
-  window.scrollTo(0,0);
-}
+      // update active nav
+      document.querySelectorAll('#nav-links a, #nav-drawer a').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === id);
+      });
 
-/* ── Mobile drawer ── */
-function toggleDrawer() {
-  document.getElementById('drawer').classList.toggle('open');
-}
-function closeDrawer() {
-  document.getElementById('drawer').classList.remove('open');
-}
+      // lazy build
+      const cats = isPreview
+        ? siteConfig.categories
+        : siteConfig.categories.filter(c => c.published !== false);
+      if (cats.some(c => c.id === id)) buildCat(id);
 
-/* ── Lightbox ── */
-function openLb(cat, idx) {
-  lbCat = cat; lbIdx = idx;
-  renderLb();
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeLb() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.getElementById('lb-img').innerHTML = ''; // stops video playback
-  document.body.style.overflow = '';
-}
-function lbNav(dir) {
-  const items = projects.filter(p => p.category === lbCat);
-  lbIdx = Math.max(0, Math.min(items.length-1, lbIdx+dir));
-  renderLb();
-}
-function renderLb() {
-  const items = projects.filter(p => p.category === lbCat);
-  const p = items[lbIdx]; if (!p) return;
+      if (id === 'about') renderAbout();
+    }
 
-  // show embed if URL exists, otherwise thumbnail
-  const wrap = document.getElementById('lb-img');
-  if (p.url) {
-    wrap.innerHTML = `<iframe src="${embedUrl(p.url)}" style="width:100%;height:100%;border:none;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-  } else {
-    wrap.innerHTML = p.thumbnail
-      ? `<img src="${x(p.thumbnail)}" alt="${x(p.title)}">`
-      : `<div class="lb-ph"><div class="lb-ph-icon"></div></div>`;
-  }
+    function showFirst() {
+      const hash = location.hash.slice(1);
+      if (hash === 'about')   { showPage('about');   return; }
+      if (hash === 'contact') { showPage('contact'); return; }
+      const visible = isPreview
+        ? siteConfig.categories
+        : siteConfig.categories.filter(c => c.published !== false);
+      if (hash && visible.some(c => c.id === hash)) { showPage(hash); return; }
+      const first = visible[0];
+      if (first) { showPage(first.id); return; }
+      if (siteConfig.about?.show !== false) showPage('about');
+    }
 
-  const clientEl = document.getElementById('lb-client');
-  clientEl.textContent = p.client || '';
-  clientEl.style.display = p.client ? 'block' : 'none';
+    /* ── AUTO THUMBNAILS ── */
+    const _vimeoThumbCache = {};
 
-  document.getElementById('lb-title').textContent = p.title;
+    function getAutoThumb(p) {
+      if (p.thumbnail || !p.url) return null;
+      const yt = p.url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if (yt) return { type: 'url', url: `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg` };
+      if (/vimeo\.com\/\d+/.test(p.url)) return { type: 'vimeo', vimeoUrl: p.url };
+      return null;
+    }
 
-  const awardEl = document.getElementById('lb-award');
-  awardEl.textContent = p.award || '';
-  awardEl.style.display = p.award ? 'block' : 'none';
+    async function fetchVimeoThumb(vimeoUrl) {
+      if (_vimeoThumbCache[vimeoUrl]) return _vimeoThumbCache[vimeoUrl];
+      try {
+        const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(vimeoUrl)}`);
+        if (res.ok) {
+          const d = await res.json();
+          if (d.thumbnail_url) { _vimeoThumbCache[vimeoUrl] = d.thumbnail_url; return d.thumbnail_url; }
+        }
+      } catch(e) {}
+      return null;
+    }
 
-  document.getElementById('lb-counter').textContent = `${lbIdx+1} / ${items.length}`;
-  document.getElementById('lb-prev').disabled = lbIdx === 0;
-  document.getElementById('lb-next').disabled = lbIdx === items.length-1;
-}
+    function resolveVimeoThumbs(container) {
+      container.querySelectorAll('[data-vimeo-url]').forEach(img => {
+        fetchVimeoThumb(img.dataset.vimeoUrl).then(url => {
+          if (!url) return;
+          img.src = url;
+          img.style.display = '';
+          const ph = img.nextElementSibling;
+          if (ph?.dataset.vimeoPh !== undefined) ph.remove();
+        });
+      });
+    }
 
-// Convert any YouTube or Cloudflare Stream URL to an embeddable src
-function embedUrl(url) {
-  if (!url) return '';
+    /* ── BUILD CATEGORY ── */
+    function buildCat(catId) {
+      if (!isPreview && builtCats.has(catId)) return;
+      builtCats.add(catId);
+      const items = previewGetItems(catId);
+      buildDesktopGrid(catId, items);
+      buildMobileList(catId, items);
+      if (isPreview) renderPreviewTray(catId);
+    }
 
-  // YouTube — handle all common formats:
-  // https://www.youtube.com/watch?v=ID
-  // https://youtu.be/ID
-  // https://youtube.com/shorts/ID
-  const ytMatch = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  );
-  if (ytMatch) {
-    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0&modestbranding=1`;
-  }
+    function buildDesktopGrid(cat, items) {
+      const grid = document.getElementById('grid-' + cat);
+      if (!grid) return;
+      grid.innerHTML = '';
+      items.forEach((p, i) => {
+        const overlayClass = p.overlay || (p.opacity === 0 ? 'reveal' : 'default');
+        const hideBtn = isPreview
+          ? `<button class="preview-hide-btn" onclick="event.stopPropagation();previewHideProject(${p._gi},'${x(cat)}')" title="Hide">×</button>`
+          : '';
+        const draftBadge = (isPreview && p.published === false)
+          ? `<div class="grid-draft-badge">Draft</div>` : '';
+        const auto = getAutoThumb(p);
+        const thumbAlt = x(p.alt || p.title || '');
+        const thumbHtml = p.thumbnail
+          ? `<img src="${x(p.thumbnail)}" class="grid-thumb" loading="lazy" alt="${thumbAlt}">`
+          : auto?.type === 'url'
+            ? `<img src="${x(auto.url)}" class="grid-thumb" loading="lazy" alt="${thumbAlt}">`
+            : auto?.type === 'vimeo'
+              ? `<img class="grid-thumb" data-vimeo-url="${x(auto.vimeoUrl)}" style="display:none" alt="${thumbAlt}"><div class="grid-placeholder" data-vimeo-ph><div class="grid-placeholder-icon"></div></div>`
+              : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`;
+        const el = document.createElement('div');
+        el.className = 'grid-item';
+        el.onclick = () => openLb(cat, i);
+        el.innerHTML = `
+          ${hideBtn}${draftBadge}
+          ${thumbHtml}
+          <div class="grid-scrim" style="background:radial-gradient(circle,rgba(19,17,16,${p.vignette ?? 0.35}) 0%,transparent 70%)"></div>
+          <div class="grid-center overlay-${x(overlayClass)}${!p.client ? ' solo' : ''}">
+            ${p.client ? `<div class="grid-client">${x(p.client)}</div>` : ''}
+            <div class="grid-title">${x(p.title)}</div>
+            <div class="grid-play"></div>
+            ${p.award ? `<div class="grid-award">${x(p.award)}</div>` : ''}
+          </div>`;
+        grid.appendChild(el);
+      });
+      resolveVimeoThumbs(grid);
+    }
 
-  // Cloudflare Stream — handle formats:
-  // https://customer-xyz.cloudflarestream.com/TOKEN/watch
-  // https://customer-xyz.cloudflarestream.com/TOKEN/iframe
-  const cfMatch = url.match(/cloudflarestream\.com\/([a-zA-Z0-9]+)/);
-  if (cfMatch) {
-    return `https://${url.match(/customer-[^/]+\.cloudflarestream\.com/)?.[0] || 'cloudflarestream.com'}/${cfMatch[1]}/iframe?autoplay=true`;
-  }
+    function buildMobileList(cat, items) {
+      const list = document.getElementById('mlist-' + cat);
+      if (!list) return;
+      list.innerHTML = '';
+      items.forEach((p, i) => {
+        const auto = getAutoThumb(p);
+        const mobileThumbAlt = x(p.alt || p.title || '');
+        const mobileThumbHtml = p.thumbnail
+          ? `<img src="${x(p.thumbnail)}" loading="lazy" alt="${mobileThumbAlt}">`
+          : auto?.type === 'url'
+            ? `<img src="${x(auto.url)}" loading="lazy" alt="${mobileThumbAlt}">`
+            : auto?.type === 'vimeo'
+              ? `<img data-vimeo-url="${x(auto.vimeoUrl)}" style="display:none" alt=""><div class="mobile-placeholder-icon" data-vimeo-ph></div>`
+              : `<div class="mobile-placeholder-icon"></div>`;
+        const el = document.createElement('div');
+        el.className = 'mobile-item';
+        el.onclick = () => openLb(cat, i);
+        el.innerHTML = `
+          <div class="mobile-thumb-wrap">
+            ${mobileThumbHtml}
+          </div>
+          <div class="mobile-meta">
+            ${p.client ? `<div class="mobile-client">${x(p.client)}</div>` : ''}
+            <div class="mobile-title">${x(p.title)}</div>
+            ${p.award ? `<div class="mobile-award">${x(p.award)}</div>` : ''}
+            ${isPreview ? `<button class="preview-hide-btn" onclick="event.stopPropagation();previewHideProject(${p._gi},'${x(cat)}')">×</button>` : ''}
+          </div>`;
+        list.appendChild(el);
+      });
+      resolveVimeoThumbs(list);
+    }
 
-  // Fallback — return as-is (handles pre-formatted embed URLs)
-  return url;
-}
+    /* ── PREVIEW HELPERS ── */
+    function previewGetItems(catId) {
+      if (isPreview) {
+        return projects
+          .map((p, gi) => ({ ...p, _gi: gi }))
+          .filter(p => p.category === catId && !previewHidden.has(p._gi));
+      }
+      return projects
+        .map((p, gi) => ({ ...p, _gi: gi }))
+        .filter(p => p.category === catId && p.published !== false);
+    }
 
-/* keyboard */
-document.addEventListener('keydown', e => {
-  if (!document.getElementById('lightbox').classList.contains('open')) return;
-  if (e.key === 'ArrowRight') lbNav(1);
-  if (e.key === 'ArrowLeft')  lbNav(-1);
-  if (e.key === 'Escape') closeLb();
-});
-document.getElementById('lightbox').addEventListener('click', e => {
-  if (e.target === document.getElementById('lightbox')) closeLb();
-});
+    function previewHideProject(gi, catId) {
+      previewHidden.add(gi);
+      builtCats.delete(catId);
+      buildCat(catId);
+      renderPreviewTray(catId);
+    }
 
-function x(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+    function previewRestoreProject(gi, catId) {
+      previewHidden.delete(gi);
+      builtCats.delete(catId);
+      buildCat(catId);
+      renderPreviewTray(catId);
+    }
 
-init();
-</script>
+    function renderPreviewTray(catId) {
+      const tray = document.getElementById('preview-tray-' + catId);
+      if (!tray) return;
+      const hidden = projects
+        .map((p, gi) => ({ ...p, gi }))
+        .filter(p => p.category === catId && previewHidden.has(p.gi));
+      if (!hidden.length) { tray.style.display = 'none'; tray.innerHTML = ''; return; }
+      tray.style.display = '';
+      tray.innerHTML = `
+        <div class="preview-tray-label">Hidden from preview</div>
+        <div class="preview-tray-chips">
+          ${hidden.map(p => `
+            <button class="preview-chip" onclick="previewRestoreProject(${p.gi},'${x(catId)}')">
+              ${x(p.title)} <span class="preview-chip-restore">+</span>
+            </button>`).join('')}
+        </div>`;
+    }
+
+    /* ── ABOUT ── */
+    function renderAbout() {
+      if (_aboutRendered) return;
+      _aboutRendered = true;
+      const container = document.getElementById('about-container');
+      if (!container) return;
+      const a = siteConfig.about || {};
+
+      let photoHtml = '';
+      if (a.photo) {
+        const shape = a.photoShape || 'natural';
+        const ox    = (a.photoX != null ? a.photoX : 50) + '%';
+        const oy    = (a.photoY != null ? a.photoY : 50) + '%';
+        const zoom  = a.photoZoom != null ? a.photoZoom : 1;
+        const posStyle = (shape === 'circle' || shape === 'square')
+          ? `object-fit:cover;object-position:${ox} ${oy};transform:scale(${zoom});transform-origin:${ox} ${oy};`
+          : '';
+        const fullWidthClass = (shape === 'natural' && a.photoFullWidth) ? ' photo-full-width' : '';
+        photoHtml = `<div class="about-photo-frame shape-${x(shape)}${fullWidthClass}"><img src="${x(a.photo)}" class="about-photo-img" style="${posStyle}" alt="${x(a.photoAlt||siteConfig.ownerName||'')}"></div>`;
+      }
+
+      const resumeLink = a.resume
+        ? `<a href="${x(a.resume)}" target="_blank" style="display:inline-block;margin-top:14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-dim);text-decoration:none;border-bottom:1px solid var(--fg-dimmer);padding-bottom:2px">Download Résumé ↓</a>`
+        : '';
+
+      // Social
+      const soc = a.social || {};
+      const socialIcons = {
+        imdb:      `<svg width="39" height="17" viewBox="0 0 46 20" fill="currentColor"><rect x="0.75" y="0.75" width="44.5" height="18.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="23" y="10" dominant-baseline="central" text-anchor="middle" font-size="13" font-weight="900" font-family="Arial,sans-serif" textLength="32" lengthAdjust="spacingAndGlyphs">IMDb</text></svg>`,
+        vimeo:     `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.787 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.256-.796 2.265-2.385 1.004-1.589 1.54-2.797 1.612-3.628.144-1.371-.395-2.061-1.614-2.061-.574 0-1.167.121-1.777.391 1.186-3.868 3.434-5.757 6.762-5.637 2.473.06 3.628 1.664 3.48 4.807z"/></svg>`,
+        instagram: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+        linkedin:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+        youtube:   `<svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>`,
+        twitter:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+      };
+      const socialDefs = ['imdb','vimeo','instagram','linkedin','youtube','twitter'];
+      const socialHtml = socialDefs
+        .filter(k => soc[k])
+        .map(k => `<a href="${x(soc[k])}" target="_blank" rel="noopener" title="${k}">${socialIcons[k]}</a>`)
+        .join('');
+
+      // Clients
+      const clients = a.clients || [];
+      let clientsSection = '';
+      if (clients.length) {
+        const hasLogos = clients.some(c => typeof c === 'object' && c.logo);
+        if (hasLogos) {
+          clientsSection = `
+            <div style="height:1px;background:var(--fg-dimmer);margin:44px -44px 28px"></div>
+            <div class="about-col-label">Selected Clients</div>
+            <div class="about-logo-wall">
+              ${clients.map(c => { const cls = c.type === 'dark' ? 'logo-dark' : c.type === 'color' ? 'logo-color' : ''; const style = c.height ? `height:${c.height}px` : ''; return `<img src="${x(c.logo)}" alt="${x(c.name||c)}" title="${x(c.name||c)}"${cls ? ` class="${cls}"` : ''}${style ? ` style="${style}"` : ''} onerror="this.style.display='none'">`;}).join('')}
+            </div>`;
+        } else {
+          clientsSection = `
+            <div style="height:1px;background:var(--fg-dimmer);margin:44px -44px 28px"></div>
+            <div class="about-col-label">Selected Clients</div>
+            <ul class="about-col-list">
+              ${clients.map(c => `<li>${x(typeof c === 'string' ? c : c.name)}</li>`).join('')}
+            </ul>`;
+        }
+      }
+
+      container.innerHTML = `
+        <h2 class="about-eyebrow">About</h2>
+        <div class="about-layout placement-${x(a.photoPlacement || 'above')}">
+          ${photoHtml}
+          <div class="about-content">
+            ${a.bio  ? `<div class="about-bio">${a.bio}</div>`   : ''}
+            ${a.bio2 ? `<div class="about-bio2">${a.bio2}</div>` : ''}
+            ${a.contactEmail ? `<div class="about-contact-line">Reach me at <a href="mailto:${x(a.contactEmail)}">${x(a.contactEmail)}</a></div>` : ''}
+            ${resumeLink}
+          </div>
+        </div>
+        ${clientsSection}
+        ${socialHtml ? `<div class="about-social-links">${socialHtml}</div>` : ''}
+        <footer class="about-footer">
+          <p>&copy; ${new Date().getFullYear()} ${x(siteConfig.ownerName || '')}. All rights reserved.</p>
+        </footer>`;
+    }
+
+    /* ── CONTACT ── */
+    async function handleContact(e) {
+      e.preventDefault();
+      const endpoint = siteConfig.contact?.endpoint;
+      const btn = document.getElementById('contact-submit');
+      const res = document.getElementById('contact-result');
+      if (!endpoint) { res.textContent = 'Contact form is not configured.'; return; }
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      try {
+        const r = await fetch(endpoint, {
+          method: 'POST',
+          body: new FormData(e.target),
+          headers: { Accept: 'application/json' }
+        });
+        res.textContent = r.ok ? 'Thanks! Your message has been sent.' : 'Something went wrong. Please try again.';
+        if (r.ok) e.target.reset();
+      } catch {
+        res.textContent = 'Network error. Please try again.';
+      }
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+    }
+
+    /* ── LIGHTBOX ── */
+    function openLb(catId, idx) {
+      lbShared = null;
+      lbCat = catId;
+      lbIdx = idx;
+      renderLb();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openLbDirect(p) {
+      lbShared = p;
+      lbCat    = null;
+      lbIdx    = 0;
+      renderLb();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLb() {
+      lbShared = null;
+      document.getElementById('lightbox').classList.remove('open');
+      document.getElementById('lb-frame').innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    function closeLbOverlay(e) {
+      if (e.target === document.getElementById('lightbox')) closeLb();
+    }
+
+    function lbNav(dir) {
+      if (lbShared) return; // single-project share — no navigation
+      const items = previewGetItems(lbCat);
+      lbIdx = Math.max(0, Math.min(items.length - 1, lbIdx + dir));
+      renderLb();
+    }
+
+    function renderLb() {
+      const isShare = !!lbShared;
+      const items   = isShare ? [lbShared] : previewGetItems(lbCat);
+      const p       = items[lbIdx];
+      if (!p) return;
+      const frame = document.getElementById('lb-frame');
+      frame.innerHTML = p.url
+        ? `<iframe src="${x(getEmbedUrl(p.url))}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%"></iframe>`
+        : p.thumbnail
+          ? `<img src="${x(p.thumbnail)}" alt="" style="width:100%;height:100%;object-fit:cover">`
+          : `<div class="lb-ph"><div class="lb-ph-icon"></div></div>`;
+      document.getElementById('lb-client').textContent = p.client || '';
+      document.getElementById('lb-title').textContent  = p.title  || '';
+      const aw = document.getElementById('lb-award');
+      aw.textContent  = p.award || ''; aw.style.display = p.award ? 'block' : 'none';
+      const desc = document.getElementById('lb-desc');
+      desc.textContent = p.description || ''; desc.style.display = p.description ? 'block' : 'none';
+      // Hide nav controls when opened via share link (single project)
+      const controls = document.getElementById('lb-prev').closest('.lb-controls');
+      if (controls) controls.style.display = isShare ? 'none' : '';
+      document.getElementById('lb-current').textContent = lbIdx + 1;
+      document.getElementById('lb-total').textContent   = items.length;
+      document.getElementById('lb-prev').disabled = lbIdx === 0;
+      document.getElementById('lb-next').disabled = lbIdx === items.length - 1;
+    }
+
+    /* ── EMBED URL ── */
+    function getEmbedUrl(url) {
+      if (!url) return '';
+      const yt = url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/);
+      if (yt) {
+        const t = url.match(/[?&#]t=(\d+)/);
+        return `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0&modestbranding=1${t ? '&start=' + t[1] : ''}`;
+      }
+      const vi = url.match(/vimeo\.com\/(\d+)(?:\/([a-f0-9]+))?/);
+      if (vi) {
+        const t = url.match(/#t=(\d+)s?/);
+        return `https://player.vimeo.com/video/${vi[1]}?autoplay=1&title=0&byline=0&portrait=0&background_color=000000${vi[2] ? '&h=' + vi[2] : ''}${t ? '#t=' + t[1] + 's' : ''}`;
+      }
+      const wi = url.match(/(?:wistia\.(?:com|net)\/(?:medias|embed\/iframe)\/)([a-zA-Z0-9]+)/);
+      if (wi) return `https://fast.wistia.net/embed/iframe/${wi[1]}?autoPlay=true&fitStrategy=fill&playerColor=131110`;
+      return url;
+    }
+
+    /* ── SPLASH ── */
+    function maybeShowSplash() {
+      const sp = siteConfig.splash;
+      if (!sp?.enabled) return;
+      if (sp.skipReturning && sessionStorage.getItem(SPLASH_SEEN_KEY)) return;
+      sessionStorage.setItem(SPLASH_SEEN_KEY, '1');
+      const el = document.getElementById('splash');
+      el.classList.remove('gone');
+      // Video bg
+      if (sp.video) {
+        const bg = document.getElementById('splash-video-bg');
+        const embed = getEmbedUrl(sp.video);
+        if (embed !== sp.video) {
+          // is youtube/vimeo — use iframe with muted background flags
+          const viFrame = sp.video.match(/vimeo/) ? `${embed}&background=1&muted=1&loop=1` : `${embed}&mute=1&loop=1&playlist=${embed.split('/').pop()?.split('?')[0]}`;
+          bg.innerHTML = `<iframe src="${x(viFrame)}" frameborder="0" allow="autoplay"></iframe>`;
+        } else {
+          bg.innerHTML = `<video src="${x(sp.video)}" autoplay muted loop playsinline></video>`;
+        }
+      }
+      const dur = ((sp.duration || 5) * 1000);
+      setTimeout(dismissSplash, dur);
+    }
+
+    function dismissSplash() {
+      const el = document.getElementById('splash');
+      el.classList.add('fading');
+      setTimeout(() => el.classList.add('gone'), 650);
+    }
+
+    /* ── NAV DRAWER ── */
+    function toggleDrawer() { document.getElementById('nav-drawer').classList.toggle('open'); }
+    function closeDrawer()  { document.getElementById('nav-drawer').classList.remove('open'); }
+
+    /* ── KEYBOARD ── */
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') lbNav(1);
+      if (e.key === 'ArrowLeft')  lbNav(-1);
+      if (e.key === 'Escape')     closeLb();
+    });
+
+    init();
+  </script>
 </body>
 </html>
