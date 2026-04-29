@@ -127,7 +127,7 @@
   },
   {
     "id": 16,
-    "category": "unscripted",
+    "category": "scripted",
     "title": "Windows 10 Pro | Remote Desktop",
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_RemoteDesktop_sml.jpeg",

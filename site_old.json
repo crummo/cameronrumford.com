@@ -2,38 +2,32 @@
   "categories": [
     {
       "id": "unscripted",
-      "label": "Unscripted",
-      "type": "gallery"
+      "label": "Unscripted"
     },
     {
       "id": "scripted",
       "label": "Scripted",
-      "published": true,
-      "type": "gallery"
+      "published": true
     },
     {
       "id": "videogames",
       "label": "Gaming",
-      "published": true,
-      "type": "gallery"
+      "published": true
     },
     {
       "id": "social",
       "label": "Social",
-      "published": false,
-      "type": "gallery"
+      "published": false
     },
     {
       "id": "color",
       "label": "Color",
-      "published": false,
-      "type": "gallery"
+      "published": false
     },
     {
       "id": "mixing",
       "label": "Mixing",
-      "published": false,
-      "type": "gallery"
+      "published": false
     }
   ],
   "about": {
@@ -189,7 +183,6 @@
     "provider": "",
     "id": ""
   },
-  "navStyle": "top",
   "allowThemeToggle": false,
   "themeMode": "dark",
   "filmGrain": 0.066
