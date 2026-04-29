@@ -918,7 +918,7 @@
           <div class="field">
             <label>Your Name</label>
             <div class="field-clearable">
-              <input type="text" id="site-name-input" placeholder="e.g. Alex Morgan" />
+              <input type="text" id="site-name-input" placeholder="e.g. Alex Morgan" oninput="markDirty()" />
               <button class="field-clear-btn" type="button" onclick="clearField('site-name-input')" title="Clear">×</button>
             </div>
             <div class="field-hint">Shown in the nav bar on the public site and admin panel.</div>
@@ -926,7 +926,7 @@
           <div class="field">
             <label>Title / Role <span style="color:var(--fg-dim);font-size:9px;text-transform:none;letter-spacing:0">(shown next to your name in the nav)</span></label>
             <div class="field-clearable">
-              <input type="text" id="site-title-input" placeholder="e.g. Editor, Photographer, Director" />
+              <input type="text" id="site-title-input" placeholder="e.g. Editor, Photographer, Director" oninput="markDirty()" />
               <button class="field-clear-btn" type="button" onclick="clearField('site-title-input')" title="Clear">×</button>
             </div>
           </div>

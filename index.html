@@ -8,10 +8,10 @@
   <meta property="og:type"        content="website" />
   <meta property="og:title"       content="Cameron Rumford" />
   <meta property="og:description" content="Los Angeles editor with 20+ years in post-production. Branded content, documentary &amp; commercial. Telly Award winner. Asst. editor, Oscar-winning Undefeated." />
-  <meta property="og:image"       content="https://www.cameronrumford.com/images/AWS_FarmCityFence01.jpeg" />
+  <meta property="og:image"       content="https://www.cameronrumford.com/images/social.jpg" />
   <meta property="og:url"         content="https://www.cameronrumford.com" />
   <meta name="twitter:card"       content="summary_large_image" />
-  <meta name="twitter:image"      content="https://www.cameronrumford.com/images/AWS_FarmCityFence01.jpeg" />
+  <meta name="twitter:image"      content="https://www.cameronrumford.com/images/social.jpg" />
   <link rel="canonical"           href="" id="site-canonical" />
   <link rel="icon" id="site-favicon" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23c9a96e' stroke-width='1.5' stroke-linejoin='round'%3E%3Cpolygon points='16,2 28,9 16,16 4,9'/%3E%3Cpolygon points='28,9 28,23 16,30 16,16'/%3E%3Cpolygon points='4,9 16,16 16,30 4,23'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -216,6 +216,7 @@
     .grid-item:hover .grid-center.overlay-reveal { opacity: 1 !important; }
     .grid-item .grid-center.overlay-none,
     .grid-item:hover .grid-center.overlay-none { display: none; }
+    .grid-item.overlay-none:hover .grid-thumb { filter: saturate(1) brightness(1) !important; }
 
     /* ── MOBILE LIST ── */
     .mobile-list { display: none; }
@@ -572,8 +573,10 @@
 
       if (cfg.favicon) document.getElementById('site-favicon').href = cfg.favicon;
       if (cfg.ogImage) {
-        document.querySelector('meta[property="og:image"]')?.setAttribute('content', cfg.ogImage);
-        document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', cfg.ogImage);
+        const base = (cfg.website || '').replace(/\/$/, '');
+        const ogAbs = cfg.ogImage.startsWith('http') ? cfg.ogImage : `${base}/${cfg.ogImage}`;
+        document.querySelector('meta[property="og:image"]')?.setAttribute('content', ogAbs);
+        document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', ogAbs);
       }
     }
 
@@ -788,7 +791,7 @@
               ? `<img class="grid-thumb" data-vimeo-url="${x(auto.vimeoUrl)}" style="display:none" alt="${thumbAlt}"><div class="grid-placeholder" data-vimeo-ph><div class="grid-placeholder-icon"></div></div>`
               : `<div class="grid-placeholder"><div class="grid-placeholder-icon"></div></div>`;
         const el = document.createElement('div');
-        el.className = 'grid-item';
+        el.className = 'grid-item' + (overlayClass === 'none' ? ' overlay-none' : '');
         el.onclick = () => openLb(cat, i);
         el.innerHTML = `
           ${hideBtn}${draftBadge}
@@ -903,7 +906,7 @@
       }
 
       const resumeLink = a.resume
-        ? `<a href="${x(a.resume)}" target="_blank" style="display:inline-block;margin-top:14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-dim);text-decoration:none;border-bottom:1px solid var(--fg-dimmer);padding-bottom:2px">Download Résumé ↓</a>`
+        ? `<a href="${x(a.resume)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:14px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fg-dim);text-decoration:none;border-bottom:1px solid var(--fg-dimmer);padding-bottom:2px">Download Résumé ↓</a>`
         : '';
 
       // Social
@@ -919,7 +922,7 @@
       const socialDefs = ['imdb','vimeo','instagram','linkedin','youtube','twitter'];
       const socialHtml = socialDefs
         .filter(k => soc[k])
-        .map(k => `<a href="${x(soc[k])}" target="_blank" rel="noopener" title="${k}">${socialIcons[k]}</a>`)
+        .map(k => `<a href="${x(soc[k])}" target="_blank" rel="noopener noreferrer" title="${k}">${socialIcons[k]}</a>`)
         .join('');
 
       // Clients
@@ -1030,9 +1033,9 @@
       if (!p) return;
       const frame = document.getElementById('lb-frame');
       frame.innerHTML = p.url
-        ? `<iframe src="${x(getEmbedUrl(p.url))}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%"></iframe>`
+        ? `<iframe title="${x(p.title || '')}" src="${x(getEmbedUrl(p.url))}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%"></iframe>`
         : p.thumbnail
-          ? `<img src="${x(p.thumbnail)}" alt="" style="width:100%;height:100%;object-fit:cover">`
+          ? `<img src="${x(p.thumbnail)}" alt="${x(p.title || '')}" style="width:100%;height:100%;object-fit:cover">`
           : `<div class="lb-ph"><div class="lb-ph-icon"></div></div>`;
       document.getElementById('lb-client').textContent = p.client || '';
       document.getElementById('lb-title').textContent  = p.title  || '';

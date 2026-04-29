@@ -8,6 +8,7 @@ _internal/
 # Project Instructions
 instructions.md
 claude.md
+AUDIT.md
 
 # macOS Metadata / Thumbnails
 .DS_Store

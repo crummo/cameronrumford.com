@@ -5,7 +5,7 @@
     "title": "I Was There",
     "client": "Short Documentary",
     "thumbnail": "thumbs/iwasthere_sml.jpeg",
-    "url": "https://youtu.be/mgthUaDaYIY?rel=0?version=3&autoplay=1&controls=0&&loop=1",
+    "url": "https://youtu.be/mgthUaDaYIY",
     "award": "",
     "description": "",
     "published": true,
@@ -59,7 +59,7 @@
   },
   {
     "id": 1776705806758,
-    "category": "unscripted",
+    "category": "scripted",
     "title": "Windows 10 Pro | Windows Ink",
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_Ink01_sml.jpeg",
@@ -361,7 +361,7 @@
     "title": "Meet the Windows Insiders",
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_WindowsInsider01.jpeg",
-    "url": "https://youtu.be/hc7ErWr_gvs?list=PLhr1KZpdzukczOkH9qcMj2XEl6-npF33g",
+    "url": "https://youtu.be/7yhbRmYWSQ4",
     "award": "",
     "vignette": 0.4,
     "published": false
@@ -695,17 +695,6 @@
     "published": false
   },
   {
-    "id": 49,
-    "category": "scripted",
-    "title": "Jurassic World Alive: Sanctuaries Out Now!",
-    "client": "Universal Interactive",
-    "thumbnail": "thumbs/JurassicWorldAlive01.jpeg",
-    "url": "https://www.youtube.com/watch?v=N9zi10NQLqs",
-    "award": "",
-    "vignette": 0.4,
-    "published": false
-  },
-  {
     "id": 52,
     "category": "scripted",
     "title": "Lumia 950 Lumia 950XL",
@@ -717,18 +706,6 @@
     "published": false
   },
   {
-    "id": 55,
-    "category": "scripted",
-    "title": "Rage 2 DLC: Raging Planet",
-    "client": "Bethesda Softworks",
-    "thumbnail": "thumbs/Rage2_RagingPlanet_sml.jpeg",
-    "url": "https://youtu.be/p3VUcFdDkK0",
-    "award": "",
-    "opacity": 0,
-    "vignette": 0,
-    "published": false
-  },
-  {
     "id": 56,
     "category": "scripted",
     "title": "X-Box Game Pass | The Lot",
@@ -737,18 +714,6 @@
     "url": "https://youtu.be/zkr_xnPBJt0",
     "award": "",
     "vignette": 0.4,
-    "published": false
-  },
-  {
-    "id": 57,
-    "category": "scripted",
-    "title": "RAGE 2 DLC - Insanity Never Ends",
-    "client": "Bethesda Softworks",
-    "thumbnail": "thumbs/Rage2_Update2Highlights01.jpeg",
-    "url": "",
-    "award": "",
-    "opacity": 0,
-    "vignette": 0,
     "published": false
   },
   {
@@ -793,16 +758,6 @@
     "url": "https://www.youtube.com/watch?v=i3Vkn_hMv4k",
     "award": "",
     "vignette": 0.4,
-    "published": false
-  },
-  {
-    "id": 1776141782518,
-    "category": "poop",
-    "title": "Test",
-    "client": "Boogie",
-    "thumbnail": "thumbs/GV_Savor_sml.jpeg",
-    "url": "https://www.youtube.com/watch?v=p2XZdUjCrLM",
-    "award": "Bigones",
     "published": false
   },
   {
@@ -889,40 +844,5 @@
     "url": "https://www.youtube.com/watch?v=dhy6v4naMUo",
     "award": "",
     "published": false
-  },
-  {
-    "id": 1776982300603,
-    "category": "blarg",
-    "title": "Vimeo test",
-    "client": "Vimeo test 2",
-    "thumbnail": "",
-    "url": "https://vimeo.com/78058789?fl=pl&fe=cm#t=15s",
-    "award": "",
-    "description": "",
-    "published": true,
-    "overlay": "centered"
-  },
-  {
-    "id": 1777047900040,
-    "category": "blarg",
-    "title": "vimeo 2",
-    "client": "test reveal",
-    "thumbnail": "",
-    "url": "https://vimeo.com/1179947837",
-    "award": "",
-    "description": "",
-    "published": true,
-    "overlay": "reveal"
-  },
-  {
-    "id": 1777049892943,
-    "category": "blarg",
-    "title": "YouTube test",
-    "client": "YouTube test line 2",
-    "thumbnail": "",
-    "url": "https://youtu.be/wIlG7KDyYd0?t=491",
-    "award": "",
-    "description": "",
-    "published": true
   }
 ]
