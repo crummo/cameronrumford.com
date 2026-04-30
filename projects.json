@@ -126,6 +126,17 @@
     "published": true
   },
   {
+    "id": 7,
+    "category": "unscripted",
+    "title": "Azure Quantum + NASA's JPL",
+    "client": "Microsoft",
+    "thumbnail": "thumbs/MS_quantum_sml.jpeg",
+    "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
+    "award": "",
+    "vignette": 0.5,
+    "published": true
+  },
+  {
     "id": 16,
     "category": "unscripted",
     "title": "Windows 10 Pro | Remote Desktop",
@@ -133,7 +144,7 @@
     "thumbnail": "thumbs/MS_RemoteDesktop_sml.jpeg",
     "url": "https://youtu.be/OX4oEYIkhi4",
     "award": "",
-    "published": true
+    "published": false
   },
   {
     "id": 46,
@@ -332,17 +343,6 @@
     "award": "",
     "vignette": 0.6,
     "published": false
-  },
-  {
-    "id": 7,
-    "category": "unscripted",
-    "title": "Azure Quantum + NASA's JPL",
-    "client": "Microsoft",
-    "thumbnail": "thumbs/MS_quantum_sml.jpeg",
-    "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
-    "award": "",
-    "vignette": 0.5,
-    "published": true
   },
   {
     "id": 8,
