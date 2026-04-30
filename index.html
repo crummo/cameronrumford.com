@@ -736,6 +736,8 @@
       const yt = p.url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
       if (yt) return { type: 'url', url: `https://img.youtube.com/vi/${yt[1]}/hqdefault.jpg` };
       if (/vimeo\.com\/\d+/.test(p.url)) return { type: 'vimeo', vimeoUrl: p.url };
+      const bn = p.url.match(/(?:player|iframe)\.mediadelivery\.net\/(?:play|embed)\/\d+\/([a-zA-Z0-9-]+)/);
+      if (bn && siteConfig.bunny?.cdnHostname) return { type: 'url', url: `https://${siteConfig.bunny.cdnHostname}/${bn[1]}/thumbnail.jpg` };
       return null;
     }
 
@@ -1070,6 +1072,8 @@
       }
       const wi = url.match(/(?:wistia\.(?:com|net)\/(?:medias|embed\/iframe)\/)([a-zA-Z0-9]+)/);
       if (wi) return `https://fast.wistia.net/embed/iframe/${wi[1]}?autoPlay=true&fitStrategy=fill&playerColor=131110`;
+      const bn = url.match(/player\.mediadelivery\.net\/play\/(\d+)\/([a-zA-Z0-9-]+)/);
+      if (bn) return `https://iframe.mediadelivery.net/embed/${bn[1]}/${bn[2]}?autoplay=true&preload=true`;
       return url;
     }
 
