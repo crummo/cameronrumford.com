@@ -231,11 +231,12 @@
     "title": "RAGE 2 DLC - Insanity Never Ends",
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_Update2Highlights01.jpeg",
-    "url": "https://www.youtube.com/watch?v=9zEwUvC5eEY",
+    "url": "https://player.mediadelivery.net/play/650059/d628212c-296a-4eaf-b06a-0fbb4843b511",
     "award": "",
-    "opacity": 0,
-    "vignette": 0,
-    "published": true
+    "description": "",
+    "published": true,
+    "overlay": "reveal",
+    "vignette": 0
   },
   {
     "id": 78,
