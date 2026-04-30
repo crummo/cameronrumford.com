@@ -185,9 +185,6 @@
     "skipReturning": false
   },
   "accentColor": "#c9a96e",
-  "bunny": {
-    "cdnHostname": ""
-  },
   "analytics": {
     "provider": "",
     "id": ""
