@@ -86,8 +86,9 @@
     "title": "Surface Studio App Partners",
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_StudioAppPartners_sml.jpeg",
-    "url": "https://youtu.be/VJRFuIICc1s",
+    "url": "https://player.mediadelivery.net/play/650059/07e720fa-de73-43c6-a6e3-373ffe3557cd",
     "award": "",
+    "description": "",
     "published": true
   },
   {
@@ -126,6 +127,18 @@
     "published": true
   },
   {
+    "id": 7,
+    "category": "unscripted",
+    "title": "Azure Quantum + NASA's JPL",
+    "client": "Microsoft",
+    "thumbnail": "thumbs/MS_quantum_sml.jpeg",
+    "url": "https://player.mediadelivery.net/play/650059/5812159b-4d7c-4084-bf11-4c16abeb7a5a",
+    "award": "",
+    "description": "",
+    "published": true,
+    "vignette": 0.5
+  },
+  {
     "id": 16,
     "category": "unscripted",
     "title": "Windows 10 Pro | Remote Desktop",
@@ -133,7 +146,7 @@
     "thumbnail": "thumbs/MS_RemoteDesktop_sml.jpeg",
     "url": "https://youtu.be/OX4oEYIkhi4",
     "award": "",
-    "published": true
+    "published": false
   },
   {
     "id": 46,
@@ -218,11 +231,12 @@
     "title": "RAGE 2 DLC - Insanity Never Ends",
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_Update2Highlights01.jpeg",
-    "url": "https://www.youtube.com/watch?v=9zEwUvC5eEY",
+    "url": "https://player.mediadelivery.net/play/650059/d628212c-296a-4eaf-b06a-0fbb4843b511",
     "award": "",
-    "opacity": 0,
-    "vignette": 0,
-    "published": true
+    "description": "",
+    "published": true,
+    "overlay": "reveal",
+    "vignette": 0
   },
   {
     "id": 78,
@@ -332,17 +346,6 @@
     "award": "",
     "vignette": 0.6,
     "published": false
-  },
-  {
-    "id": 7,
-    "category": "unscripted",
-    "title": "Azure Quantum + NASA's JPL",
-    "client": "Microsoft",
-    "thumbnail": "thumbs/MS_quantum_sml.jpeg",
-    "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
-    "award": "",
-    "vignette": 0.5,
-    "published": true
   },
   {
     "id": 8,
