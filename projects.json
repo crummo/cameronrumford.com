@@ -131,10 +131,11 @@
     "title": "Azure Quantum + NASA's JPL",
     "client": "Microsoft",
     "thumbnail": "thumbs/MS_quantum_sml.jpeg",
-    "url": "https://www.youtube.com/watch?v=pqfd4t9ISHY",
+    "url": "https://player.mediadelivery.net/play/650059/5812159b-4d7c-4084-bf11-4c16abeb7a5a",
     "award": "",
-    "vignette": 0.5,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0.5
   },
   {
     "id": 16,
