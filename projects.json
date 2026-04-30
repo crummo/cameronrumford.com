@@ -312,10 +312,11 @@
     "title": "X-Box Game Pass | Chicken Dinner",
     "client": "Microsoft",
     "thumbnail": "thumbs/XBOX_chicken_sml.jpeg",
-    "url": "https://youtu.be/EE2p3U1ONjw",
+    "url": "https://player.mediadelivery.net/play/650059/3293451b-49b5-442e-bdca-dffae839e209",
     "award": "",
-    "vignette": 0.3,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0.3
   },
   {
     "id": 3,
