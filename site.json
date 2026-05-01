@@ -17,7 +17,8 @@
       "id": "videogames",
       "label": "Gaming",
       "published": true,
-      "type": "gallery"
+      "type": "lightbox",
+      "layout": "grid"
     },
     {
       "id": "social",
