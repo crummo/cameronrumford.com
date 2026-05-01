@@ -10,7 +10,8 @@
       "id": "scripted",
       "label": "Scripted",
       "published": true,
-      "type": "gallery"
+      "type": "lightbox",
+      "layout": "grid"
     },
     {
       "id": "videogames",
