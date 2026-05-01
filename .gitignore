@@ -4,6 +4,13 @@
 #folder for hidden notes
 _internal/
 
+# Dev utilities
+scripts/
+
+# Site-specific data — keep out of template repo
+site.json
+projects.json
+
 
 # Project Instructions
 instructions.md
@@ -29,3 +36,4 @@ Icon
 .Trashes
 .VolumeIcon.icns
 
+.DS_Store
