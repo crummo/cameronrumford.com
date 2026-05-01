@@ -6,6 +6,7 @@ _internal/
 
 # Dev utilities
 scripts/
+dashboard.html
 
 # Site-specific data — keep out of template repo
 site.json
