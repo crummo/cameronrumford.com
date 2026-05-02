@@ -3,7 +3,8 @@
     {
       "id": "unscripted",
       "label": "Unscripted",
-      "type": "gallery"
+      "type": "lightbox",
+      "layout": "grid"
     },
     {
       "id": "scripted",
@@ -49,6 +50,7 @@
     "bio": "<strong>Cameron Rumford</strong> is a Los Angeles based editor with over 20 years in post-production, specializing in branded content, documentary, and commercial work for some of the world's leading companies.",
     "bio2": "His work spans the full post-production pipeline—<strong>editing, color grading, and audio mixing</strong>—with fluency across <strong>Adobe Premiere, Avid and DaVinci Resolve</strong>. Recent work includes a <strong>Golden and Bronze Telly Award</strong>-winning piece for Amazon Web Services. Earlier credits include assistant editor on <em>Undefeated</em>, the <strong>2012 Academy Award winner</strong> for Best Documentary.",
     "contactEmail": "camrumford@gmail.com",
+    "showEmail": true,
     "resume": "",
     "social": {
       "imdb": "https://www.imdb.com/name/nm2801725/",
@@ -176,7 +178,10 @@
   "contact": {
     "enabled": false,
     "showCard": false,
-    "endpoint": "https://formspree.io/f/xlgalgwv"
+    "endpoint": "https://formspree.io/f/xlgalgwv",
+    "email": "",
+    "photo": "",
+    "showEmailInDrawer": false
   },
   "splash": {
     "enabled": false,
@@ -192,5 +197,10 @@
   "navStyle": "top",
   "allowThemeToggle": false,
   "themeMode": "dark",
-  "filmGrain": 0.066
+  "filmGrain": 0.066,
+  "allowIndexing": true,
+  "viewerBg": "auto",
+  "thumbnailFilter": 0,
+  "zoomLock": false,
+  "mobileThumbsNative": false
 }
