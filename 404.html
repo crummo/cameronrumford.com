@@ -12,15 +12,22 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #131110;
-      --fg:         #ede8e0;
-      --fg-mid:     #a89e90;
-      --fg-dim:     #5a5248;
-      --fg-dimmer:  #2a2623;
+      --bg:         #f0ece6;
+      --fg:         #1a1714;
+      --fg-mid:     #5a5248;
+      --fg-dim:     #8a8078;
+      --fg-dimmer:  #ccc7be;
       --accent:     #c9a96e;
       --font-serif: 'Playfair Display', Georgia, serif;
       --font-sans:  'DM Sans', sans-serif;
       --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    [data-theme="dark"] {
+      --bg:        #131110;
+      --fg:        #ede8e0;
+      --fg-mid:    #a89e90;
+      --fg-dim:    #5a5248;
+      --fg-dimmer: #2a2623;
     }
 
     html, body {
@@ -115,9 +122,9 @@
 
   <div class="num">404</div>
   <div class="rule"></div>
-  <p class="heading" id="nf-heading">This cut didn't make the final edit.</p>
-  <p class="sub" id="nf-sub">The page you're looking for has been moved, renamed, or was left on the cutting room floor.</p>
-  <a class="back" href="/" id="nf-back">Back to the reel</a>
+  <p class="heading" id="nf-heading">Pulled for another shoot.</p>
+  <p class="sub" id="nf-sub">The page you're after isn't on this rack.</p>
+  <a class="back" href="/" id="nf-back">Back to home</a>
 
   <script>
     const isPreview = new URLSearchParams(location.search).get('preview') === '1';
@@ -130,6 +137,12 @@
       if (n && n.back)    document.getElementById('nf-back').textContent    = n.back;
       if (data.ownerName) document.title = '404 — ' + data.ownerName;
       if (data.favicon)   document.getElementById('nf-favicon').href = data.favicon;
+      if (data.accentColor) document.documentElement.style.setProperty('--accent', data.accentColor);
+      const mode = data.themeMode || 'light';
+      const resolved = mode === 'dark' ? 'dark'
+        : mode === 'light' ? 'light'
+        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', resolved);
       if (isPreview) {
         const banner = document.createElement('div');
         banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:var(--accent);color:#1a1714;text-align:center;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:5px 12px;font-weight:600;z-index:999';

@@ -709,8 +709,8 @@
          landscape uses a top bar, not a side nav. Tighter padding to
          nudge content toward the top, matching portrait spacing. */
       body.nav-left .about-wrap { left: 0; }
-      .about-wrap { padding: 16px 44px 12px; }
-      .contact-wrap { padding: 16px 44px 24px; }
+      .about-wrap { padding: 16px 16px 12px 0; }
+      .contact-wrap { padding: 16px 16px 24px; }
       /* Tight eyebrow gap in landscape — was 36px which created a big
          band above the photo/text block. Pulls block up toward heading. */
       .about-eyebrow { margin-bottom: 8px; }
@@ -721,20 +721,33 @@
       .about-layout {
         flex-direction: row !important;
         align-items: flex-start;
-        gap: 24px;
+        gap: 16px;
       }
+      /* Offset the half-leading above the first line of bio text so the
+         text visually aligns with the top of the photo. */
+      .about-content { margin-top: -7px; }
+      .about-bio  { font-size: 15px; line-height: 1.6; }
+      .about-bio2 { font-size: 13px; line-height: 1.65; }
       .about-photo-frame.shape-natural.photo-full-width {
         width: auto !important;
       }
       .about-photo-frame.shape-natural .about-photo-img,
       .about-photo-frame.shape-natural.photo-full-width .about-photo-img {
         width: auto !important;
-        max-width: 40vw;
+        max-width: 28vw;
         /* Use svh (smallest viewport height) instead of dvh so the photo
            stays the same size when iOS Safari's URL bar collapses on
            scroll — sized once for URL-bar-visible state and stays put. */
         max-height: calc(100svh - 120px);
         height: auto;
+      }
+      /* The desktop placement-above full-width rule sets max-width/max-height: none
+         with higher specificity than the rule above, overriding the landscape
+         constraints. Re-assert them here at matching specificity. */
+      .about-layout.placement-above .about-photo-frame.shape-natural.photo-full-width .about-photo-img {
+        width: auto !important;
+        max-width: 28vw !important;
+        max-height: calc(100svh - 120px) !important;
       }
 
       /* Viewer covers the full viewport — sits above the nav (z-index 200) */
