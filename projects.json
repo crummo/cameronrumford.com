@@ -108,10 +108,11 @@
     "title": "X-Box Game Pass Enemy Containment",
     "client": "Microsoft",
     "thumbnail": "thumbs/xboxEnemyContainment.jpeg",
-    "url": "https://youtu.be/cuMQvxtiLro",
+    "url": "https://player.mediadelivery.net/play/650059/0f95d289-88d6-49b2-a567-409253e50d5b",
     "award": "",
-    "vignette": 0.4,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0.4
   },
   {
     "id": 50,
