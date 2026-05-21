@@ -17,11 +17,12 @@
     "title": "Adobe Stock Artist Spotlight | Patrick Masse",
     "client": "Adobe",
     "thumbnail": "thumbs/adobe_patrick_sml.jpeg",
-    "url": "https://youtu.be/bNpwoq_KIFQ",
+    "url": "https://player.mediadelivery.net/play/650059/b278e5a7-2e3f-456f-8f30-c42edb2d3cb9",
     "award": "",
+    "description": "",
     "published": true,
-    "vignette": 0,
-    "opacity": 0
+    "overlay": "reveal",
+    "vignette": 0
   },
   {
     "id": 2,
