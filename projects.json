@@ -53,10 +53,11 @@
     "title": "Flikshop: The Power of a Postcard",
     "client": "Amazon Web Services",
     "thumbnail": "thumbs/AWS_Flikshop_sml.jpeg",
-    "url": "https://youtu.be/Jpy2O2zcq-0",
+    "url": "https://player.mediadelivery.net/play/650059/48f1a2c0-a49b-41ea-82b7-74d10b3cb6d2",
     "award": "Winner of a Golden and Bronze Telly Award, 2023",
-    "vignette": 0.4,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0.4
   },
   {
     "id": 1776705806758,
