@@ -265,10 +265,11 @@
     "title": "Discover Game Pass for PC",
     "client": "Microsoft",
     "thumbnail": "thumbs/XBOX_GamepassForPC_sml.jpeg",
-    "url": "https://youtu.be/rO9XrQsjixA",
+    "url": "https://player.mediadelivery.net/play/650059/f8c786c2-df53-4697-a1cf-f70b139f4e16",
     "award": "",
-    "vignette": 0.5,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0.5
   },
   {
     "id": 66,
