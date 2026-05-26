@@ -204,11 +204,12 @@
     "title": "Gloss",
     "client": "L'Oreal",
     "thumbnail": "thumbs/loreal_glossy01.jpeg",
-    "url": "https://youtu.be/flV-AXmr7u0",
+    "url": "https://player.mediadelivery.net/play/650059/7902c344-e04d-497e-a546-d5cc97f40813",
     "award": "",
-    "opacity": 0,
-    "vignette": 0,
-    "published": true
+    "description": "",
+    "published": true,
+    "overlay": "reveal",
+    "vignette": 0
   },
   {
     "id": 54,
