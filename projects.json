@@ -218,10 +218,11 @@
     "title": "X-box Game Pass | Big Day",
     "client": "Microsoft",
     "thumbnail": "thumbs/xboxBigDay01.jpeg",
-    "url": "https://youtu.be/SdfNYigTqU0",
+    "url": "https://player.mediadelivery.net/play/650059/90790b6a-be46-4035-a3f7-013ddc3130e9",
     "award": "",
-    "vignette": 0,
-    "published": true
+    "description": "",
+    "published": true,
+    "vignette": 0
   },
   {
     "id": 65,
@@ -229,7 +230,7 @@
     "title": "Rage 2 DLC | Raging Planet",
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_RagingPlanet_sml.jpeg",
-    "url": "https://youtu.be/p3VUcFdDkK0",
+    "url": "https://player.mediadelivery.net/play/650059/db77a36c-0861-4583-9c4e-8b79f79341da",
     "award": "",
     "description": "",
     "published": true,
@@ -255,7 +256,7 @@
     "title": "X-Box Game Pass | More Adventure :06",
     "client": "Microsoft",
     "thumbnail": "thumbs/XBOX_adventure_sml.jpeg",
-    "url": "https://youtu.be/9WJeI6JKbCk",
+    "url": "https://player.mediadelivery.net/play/650059/e069db71-9b98-4706-b888-5c8fb85c5e2d",
     "award": "",
     "description": "",
     "published": true,
@@ -303,8 +304,9 @@
     "title": "Rage 2 DLC | What Squirms Beneath",
     "client": "Bethesda Softworks",
     "thumbnail": "thumbs/Rage2_WhatSquirms_sml.jpeg",
-    "url": "https://youtu.be/RT4qbyqnACo",
+    "url": "https://player.mediadelivery.net/play/650059/a1cc9a76-81cf-4a0d-be36-abe3beee2d7f",
     "award": "",
+    "description": "",
     "published": true
   },
   {
