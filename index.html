@@ -351,6 +351,8 @@
     .lb-award { margin-top: 7px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: none; }
     .lb-desc { margin-top: 12px; font-size: 12px; line-height: 1.7; color: var(--lb-fg-mid); max-width: 480px; display: none; white-space: pre-wrap; max-height: calc(1.7em * 5); overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%); mask-image: linear-gradient(to bottom, black 55%, transparent 100%); }
     .lb-controls { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .lb-share { display: block; margin-top: 12px; padding: 0; background: none; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lb-fg-dim); transition: color 0.2s; }
+    .lb-share:hover { color: var(--lb-fg); }
     .lb-btn { background: none; border: 1px solid var(--lb-fg-dimmer); color: var(--lb-fg-mid); cursor: pointer; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 16px; transition: border-color 0.2s, color 0.2s; }
     .lb-btn:hover { border-color: var(--lb-fg-dim); color: var(--lb-fg); }
     .lb-btn:disabled { opacity: 0.18; cursor: default; }
@@ -923,6 +925,7 @@
           <div class="lb-award" id="lb-award"></div>
           <div class="lb-desc" id="lb-desc"></div>
           <div class="lb-lowres" id="lb-lowres">Low resolution image</div>
+          <button class="lb-share" id="lb-share" onclick="sharePiece()">Copy link</button>
         </div>
         <div class="lb-controls">
           <button class="lb-btn" id="lb-prev" onclick="lbNav(-1)">Prev</button>
@@ -998,6 +1001,8 @@
       const _shareId  = _sp.get('share');
       const _shareKey = _sp.get('key');
       const _isShareLink = !!(_shareId && _shareKey);
+      // Piece link: #category/slug — opens that piece directly, so skip the splash
+      const _deepPiece = !_isShareLink && pieceFromHash();
 
       if (isPreview) {
         document.body.classList.add('is-preview');
@@ -1007,13 +1012,14 @@
         document.body.prepend(banner);
         if (forceSplash) {
           sessionStorage.removeItem(SPLASH_SEEN_KEY);
-          if (!_isShareLink) maybeShowSplash();
+          if (!_isShareLink && !_deepPiece) maybeShowSplash();
         }
       } else {
-        if (!_isShareLink) maybeShowSplash();
+        if (!_isShareLink && !_deepPiece) maybeShowSplash();
       }
 
-      showFirst();
+      if (_deepPiece) openPiece(_deepPiece);
+      else showFirst();
 
       if (_isShareLink) {
         const _shared = projects.find(p => String(p.id) === _shareId && p.shareKey === _shareKey);
@@ -1708,7 +1714,7 @@
       window.visualViewport.addEventListener('scroll', fitLightboxToViewport);
     }
 
-    function openLb(catId, idx) {
+    function openLb(catId, idx, fromHistory) {
       lbShared = null;
       lbCat = catId;
       lbIdx = idx;
@@ -1717,7 +1723,83 @@
       document.getElementById('lightbox').classList.add('open');
       document.body.classList.add('lb-open');
       lockScroll();
+      syncPieceUrl(fromHistory ? 'replace' : 'push');
     }
+
+    /* ── PIECE LINKS ── */
+    // Each published lightbox piece has a URL: #category/slug. Opening a piece
+    // pushes it onto history (so Back closes it); Prev/Next replace it.
+    // /work/slug/ pages (built by .github/workflows/pages.yml) redirect here.
+    let _lbPushed = false;
+
+    function pieceKey(p) { return p.slug || String(p.id); }
+
+    function pieceFromHash() {
+      const m = location.hash.match(/^#([^/]+)\/(.+)$/);
+      if (!m) return null;
+      const key = decodeURIComponent(m[2]);
+      const cats = siteConfig.categories.filter(c =>
+        c.type !== 'gallery' && (isPreview || c.published !== false));
+      return projects.find(p =>
+        pieceKey(p) === key &&
+        cats.some(c => c.id === p.category) &&
+        (isPreview || p.published !== false)) || null;
+    }
+
+    function openPiece(p, fromHistory) {
+      if (!document.getElementById('page-' + p.category)?.classList.contains('visible')) showPage(p.category);
+      const gi  = projects.indexOf(p);
+      const idx = previewGetItems(p.category).findIndex(q => q._gi === gi);
+      if (idx !== -1) openLb(p.category, idx, fromHistory);
+    }
+
+    function currentLbPiece() {
+      return lbShared ? null : previewGetItems(lbCat)[lbIdx] || null;
+    }
+
+    function syncPieceUrl(mode) {
+      const p = currentLbPiece();
+      if (!p) return;
+      const hash = '#' + p.category + '/' + encodeURIComponent(pieceKey(p));
+      if (location.hash === hash) return;
+      if (mode === 'push') { history.pushState({ piece: true }, '', hash); _lbPushed = true; }
+      else history.replaceState(history.state, '', hash);
+    }
+
+    function pieceShareUrl(p) {
+      const base = (siteConfig.website || (location.origin + location.pathname.replace(/[^/]*$/, ''))).replace(/\/$/, '');
+      return base + '/work/' + encodeURIComponent(pieceKey(p)) + '/';
+    }
+
+    async function sharePiece() {
+      const p = currentLbPiece();
+      if (!p) return;
+      const url = pieceShareUrl(p);
+      const btn = document.getElementById('lb-share');
+      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+        try { await navigator.share({ title: p.title || '', url }); } catch (e) {}
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = 'Link copied';
+      } catch (e) {
+        prompt('Copy this link:', url);
+      }
+      clearTimeout(btn._t);
+      btn._t = setTimeout(() => { btn.textContent = 'Copy link'; }, 2000);
+    }
+
+    window.addEventListener('popstate', () => {
+      const lbOpen = document.getElementById('lightbox').classList.contains('open');
+      const p = pieceFromHash();
+      if (!p) {
+        if (lbOpen && !lbShared) { _lbPushed = false; closeLb(true); }
+        return;
+      }
+      const cur = lbOpen && currentLbPiece();
+      if (!cur || pieceKey(cur) !== pieceKey(p)) openPiece(p, true);
+    });
 
     async function hashStr(str) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -1754,7 +1836,13 @@
       lockScroll();
     }
 
-    function closeLb() {
+    function closeLb(fromHistory) {
+      const wasPiece = !lbShared && document.getElementById('lightbox').classList.contains('open');
+      if (wasPiece && !fromHistory) {
+        // Step back off the piece URL we pushed, or drop to the category hash
+        if (_lbPushed) { _lbPushed = false; history.back(); }
+        else history.replaceState(null, '', '#' + lbCat);
+      }
       lbShared = null;
       document.getElementById('lightbox').classList.remove('open');
       document.body.classList.remove('lb-open');
@@ -1776,6 +1864,7 @@
         const items = previewGetItems(lbCat);
         lbIdx = Math.max(0, Math.min(items.length - 1, lbIdx + dir));
         renderLb();
+        syncPieceUrl('replace');
         frame.style.transition = 'opacity 0.15s ease';
         frame.style.opacity = '1';
       }, 100);
@@ -1814,6 +1903,9 @@
       // Hide nav controls when opened via share link (single project)
       const controls = document.getElementById('lb-prev').closest('.lb-controls');
       if (controls) controls.style.display = isShare ? 'none' : '';
+      const shareBtn = document.getElementById('lb-share');
+      shareBtn.style.display = (isShare || isPreview) ? 'none' : '';
+      shareBtn.textContent = (navigator.share && matchMedia('(pointer: coarse)').matches) ? 'Share' : 'Copy link';
       document.getElementById('lb-current').textContent = lbIdx + 1;
       document.getElementById('lb-total').textContent   = items.length;
       document.getElementById('lb-prev').disabled = lbIdx === 0;

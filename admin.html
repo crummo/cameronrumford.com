@@ -2255,8 +2255,10 @@ async function saveProject() {
   if (vignetteRaw !== '') proj.vignette = parseFloat(vignetteRaw) / 100;
 
   if (editingIdx !== null) {
-    // Preserve shareKey — it's not in the form, so copy it forward if present
-    if (projects[editingIdx].shareKey) proj.shareKey = projects[editingIdx].shareKey;
+    // Preserve fields that aren't in the form — the slug keeps the piece's link stable across renames
+    for (const k of ['slug', 'shareKey', 'sharePass']) {
+      if (projects[editingIdx][k]) proj[k] = projects[editingIdx][k];
+    }
     projects[editingIdx] = proj;
   } else {
     // Insert after the last item of that category, or at the end

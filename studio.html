@@ -2695,6 +2695,7 @@ async function bulkDeleteSelected(catId) {
     const o = localStorage.getItem(K_OWNER), r = localStorage.getItem(K_REPO), b = localStorage.getItem(K_BRANCH);
     if (!o || !r || !b) { await saveToGitHub(); return; }
 
+    ensureSlugs();
     const projectsContent = JSON.stringify(projects, null, 2);
     for (let attempt = 1; attempt <= 3; attempt++) {
       if (attempt > 1) await new Promise(res => setTimeout(res, 1500 * attempt));
@@ -3052,6 +3053,7 @@ async function processBulkFiles(files, catId) {
   // ref update can fail if a previous commit hasn't fully propagated yet.
   // On failure we re-read the HEAD and rebuild the commit, up to 3 attempts.
   setProgress(total, 'Committing…');
+  ensureSlugs();
   const projectsContent = JSON.stringify(projects.map(p => { const q = {...p}; delete q._blobUrl; return q; }), null, 2);
   const commitMsg = `Bulk import ${total} image${total !== 1 ? 's' : ''} to ${folder}`;
   let committed = false;
@@ -3319,6 +3321,31 @@ function closeModal() {
   if (_thumbBlobUrl) { URL.revokeObjectURL(_thumbBlobUrl); _thumbBlobUrl = null; }
 }
 
+// ─── PIECE LINKS ─────────────────────────────────────────────────────────────
+// Every project gets a permanent slug (its link: /work/<slug>/), made from the
+// title the first time it's saved, and kept after that even if the title changes.
+function slugify(s) {
+  return String(s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/&/g, ' and ').replace(/['’‘`.]/g, '').replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '').slice(0, 60).replace(/-+$/, '') || 'piece';
+}
+
+function ensureSlugs() {
+  const used = new Set();
+  const missing = [];
+  projects.forEach(p => {
+    if (p.slug && !used.has(p.slug)) used.add(p.slug);
+    else missing.push(p); // no slug yet, or a duplicate (e.g. a copied project)
+  });
+  missing.forEach(p => {
+    const base = slugify(p.title);
+    let s = base, n = 2;
+    while (used.has(s)) s = `${base}-${n++}`;
+    p.slug = s;
+    used.add(s);
+  });
+}
+
 async function saveProject() {
   const title = document.getElementById('f-title').value.trim();
   if (!title) { showToast('Title is required.', 'error'); return; }
@@ -3345,8 +3372,10 @@ async function saveProject() {
   if (aspectRaw !== '')   proj.aspect   = parseFloat(aspectRaw);
 
   if (editingIdx !== null) {
-    // Preserve shareKey — it's not in the form, so copy it forward if present
-    if (projects[editingIdx].shareKey) proj.shareKey = projects[editingIdx].shareKey;
+    // Preserve fields that aren't in the form — the slug keeps the piece's link stable across renames
+    for (const k of ['slug', 'shareKey', 'sharePass']) {
+      if (projects[editingIdx][k]) proj[k] = projects[editingIdx][k];
+    }
     projects[editingIdx] = proj;
   } else {
     // Insert after the last item of that category, or at the end
@@ -5367,6 +5396,7 @@ async function saveToGitHub() {
 
   try {
     // Save sequentially to avoid any timing conflicts
+    ensureSlugs();
     const cleanProjects = projects.map(p => { const q = {...p}; delete q._blobUrl; return q; });
     const projResult = await putGhFile('projects.json', cleanProjects);
     projectsSha = projResult.fileSha;
