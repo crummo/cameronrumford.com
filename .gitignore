@@ -5,7 +5,7 @@
 _internal/
 
 # Dev utilities
-scripts/
+/scripts/
 dashboard.html
 
 # Site-specific data — keep out of template repo
